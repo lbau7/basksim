@@ -6,3 +6,5 @@
 #' @importFrom foreach %dopar%
 ## usethis namespace: end
 NULL
+
+utils::globalVariables("i")

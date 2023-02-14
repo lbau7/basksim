@@ -59,6 +59,7 @@ setup_ebcomb <- function(k, p0, shape1 = 1, shape2 = 1) {
 #'
 #' @template k
 #' @template p0
+#' @template p_target
 #' @template mu_bhm
 #'
 #' @details The class \code{bhm} implements the Bayesian Hierarchical Model

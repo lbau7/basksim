@@ -37,9 +37,9 @@ adjusting lambda.}
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the greatest estimated value for \code{lambda] with
+A list containing the greatest estimated value for \code{lambda} with
 \code{prec_digits} decimal places which controls the family wise error rate
-at level \code{alpha} (one-sided} and the estimated family wise error rate
+at level \code{alpha} (one-sided) and the estimated family wise error rate
 for the estimated \code{lambda}.
 }
 \description{

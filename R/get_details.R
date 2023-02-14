@@ -12,7 +12,7 @@
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   epsilon = 2, tau = 0, iter = 1000)
+#'   epsilon = 2, tau = 0, iter = 100)
 get_details <- function(design, ...) {
   UseMethod("get_details", design)
 }
@@ -34,7 +34,8 @@ get_details <- function(design, ...) {
 #'
 #' @examples
 #' design <- setup_bma(k = 3, p0 = 0.2)
-#' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, pmp0 = 1)
+#' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, pmp0 = 1,
+#'   iter = 100)
 get_details.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
 
@@ -73,7 +74,7 @@ get_details.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
 #'
 #' @examples
 #' design <- setup_ebcomb(k = 3, p0 = 0.2)
-#' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95)
+#' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
 get_details.ebcomb <- function(design, n, p1, lambda, iter = 1000,
                                data = NULL, ...) {
   if (is.null(data)) {
@@ -115,24 +116,24 @@ get_details.ebcomb <- function(design, n, p1, lambda, iter = 1000,
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1)
+#'   tau_scale = 1, iter = 100)
 get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
                             data = NULL, ...) {
   if (length(p1) != design$k) stop("p1 must be of length k")
 
   if (is.null(data)) {
-    sim_data <- bhmbasket::simulateScenarios(
+    data <- bhmbasket::simulateScenarios(
       n_subjects_list = list(rep(n, design$k)),
       response_rates_list = list(p1),
       n_trials = iter
     )
   }
-  if (!is.null(data) & class(data) != "scenario_list") {
+  if (!is.null(data) & !inherits(data, "scenario_list")) {
     stop("data is not of class scenario_list")
   }
 
   analysis_list <- suppressMessages(bhmbasket::performAnalyses(
-    scenario_list = sim_data,
+    scenario_list = data,
     evidence_levels = lambda,
     method_names = "berry",
     target_rates = rep(design$p_target, design$k),
@@ -184,22 +185,22 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5)
+#'   tau_scale = 1, w = 0.5, iter = 100)
 get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
                               data = NULL, ...) {
   if (is.null(data)) {
-    sim_data <- bhmbasket::simulateScenarios(
+    data <- bhmbasket::simulateScenarios(
       n_subjects_list = list(rep(n, design$k)),
       response_rates_list = list(p1),
       n_trials = iter
     )
   }
-  if (!is.null(data) & class(data) != "scenario_list") {
+  if (!is.null(data) & !inherits(data, "scenario_list")) {
     stop("data is not of class scenario_list")
   }
 
   analysis_list <- suppressMessages(bhmbasket::performAnalyses(
-    scenario_list = sim_data,
+    scenario_list = data,
     evidence_levels = lambda,
     method_names = "exnex",
     prior_parameters_list = bhmbasket::setPriorParametersExNex(
@@ -252,9 +253,9 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' @examples
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   epsilon = 2, tau = 0, iter = 1000)
+#'   epsilon = 2, tau = 0, iter = 100)
 get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
-                                 iter = 1000, data = NULL...) {
+                                 iter = 1000, data = NULL, ...) {
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau)
 
@@ -299,7 +300,7 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
 #' @examples
 #' design <- setup_jsdgen(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   eps_pair = 2, eps_all = 2)
+#'   eps_pair = 2, eps_all = 2, iter = 100)
 get_details.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
                                iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
@@ -346,7 +347,7 @@ get_details.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
 #' @examples
 #' design <- setup_cpp(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1)
+#'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.cpp <- function(design, n, p1, lambda, tune_a, tune_b, iter = 1000,
                             data = NULL, ...) {
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -392,7 +393,7 @@ get_details.cpp <- function(design, n, p1, lambda, tune_a, tune_b, iter = 1000,
 #' @examples
 #' design <- setup_cppgen(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1, epsilon = 2)
+#'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
 get_details.cppgen <- function(design, n, p1, lambda, tune_a, tune_b, epsilon,
                                iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)

@@ -17,8 +17,8 @@
 
 \item{iter}{The number of iterations in the simulation.}
 
-\item{data}{A matrix with k column with the number of responses for each
-basket.}
+\item{data}{A data matrix with k column with the number of responses for each
+basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 
 \item{...}{Further arguments.}
 }
@@ -31,5 +31,5 @@ Get Details of a Basket Trial Simulation with the ebcomb Design
 }
 \examples{
 design <- setup_ebcomb(k = 3, p0 = 0.2)
-get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95)
+get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
 }

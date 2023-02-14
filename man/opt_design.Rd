@@ -25,12 +25,17 @@ opt_design(
 \item{design_params}{A list of params that is specific to the class of
 \code{design}.}
 
+\item{scenarios}{A matrix of scenarios.}
+
 \item{prec_digits}{Number of decimal places that are considered when
 adjusting lambda.}
 
 \item{iter}{The number of iterations in the simulation.}
 
 \item{...}{Further arguments.}
+}
+\value{
+A matrix with the expected number of correct decisions.
 }
 \description{
 Optimize a Basket Trial Design

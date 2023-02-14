@@ -4,12 +4,12 @@
 #' @template n
 #' @template alpha
 #' @template design_params
-#' @param scenarios
+#' @param scenarios A matrix of scenarios.
 #' @template prec_digits
 #' @template iter
 #' @template dotdotdot
 #'
-#' @return
+#' @return A matrix with the expected number of correct decisions.
 #' @export
 #'
 #' @examples
@@ -35,7 +35,7 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
 
     for (j in 1:ncol(scenarios)) {
       ecd_res[i, j] <- do.call(ecd, args = c(design = list(design), n = n,
-        p1 = list(scenarios[, i]), lambda = l$lambda, design_params,
+        p1 = list(scenarios[, i]), lambda = l$lambda, params_loop,
         iter = iter, data = NULL, ...))
     }
   }

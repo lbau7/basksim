@@ -16,12 +16,12 @@
 \item{lambda}{The posterior probability threshold.}
 
 \item{pmp0}{Power parameter that is used to compute prior probabilities. See
-\code{\link{bmabasket::bma}} for details.}
+\code{\link[bmabasket]{bma}} for details.}
 
 \item{iter}{The number of iterations in the simulation.}
 
-\item{data}{A matrix with k column with the number of responses for each
-basket.}
+\item{data}{A data matrix with k column with the number of responses for each
+basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 
 \item{...}{Further arguments.}
 }
@@ -36,5 +36,5 @@ Get Results for Simulation of a Basket Trial with the BMA Design
 \examples{
 design <- setup_bma(k = 3, p0 = 0.2)
 get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  pmp0 = 1, iter = 1000)
+  pmp0 = 1, iter = 100)
 }

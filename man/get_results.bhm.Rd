@@ -36,5 +36,5 @@ Get Results for Simulation of a Basket Trial with the BHM Design
 \examples{
 design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  tau_scale = 1, iter = 1000)
+  tau_scale = 1, iter = 100)
 }

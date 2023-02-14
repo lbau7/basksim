@@ -11,6 +11,8 @@ setup_bhm(k, p0, p_target, mu_mean = NULL, mu_sd = 100)
 
 \item{p0}{A common probability under the null hypothesis.}
 
+\item{p_target}{The response rate of interest. See details.}
+
 \item{mu_mean}{Mean of the normal prior distribution for the mean of the
 thetas. See details.}
 

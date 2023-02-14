@@ -23,5 +23,5 @@ Get Results for Simulation of Basket Trial Designs
 # Example for a basket trial with Fujikawa's Design
 design <- setup_fujikawa(k = 3, p0 = 0.2)
 get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  epsilon = 2, tau = 0, iter = 1000)
+  epsilon = 2, tau = 0, iter = 100)
 }
