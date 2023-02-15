@@ -47,3 +47,8 @@ jobs:
       - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
+
+      - name: Install jags (macOS)
+        if: runner.os == 'macOS'
+        run : |
+          brew install jags
