@@ -23,4 +23,4 @@ test_that("weight_ebcombined works", {
     nrow = 2, byrow = TRUE)
 
   expect_equal(res, val_res, tolerance = 1e-04)
-}
+})
