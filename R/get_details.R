@@ -47,7 +47,7 @@ get_details.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
     res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
       n = rep(n, design$k), pmp0 = pmp0)
     list(
-      ifelse(as.vector(res_temp$bmaProbs) >= lambda, 1, 0),
+      ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
       as.vector(res_temp$bmaMeans)
     )
   }
