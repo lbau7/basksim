@@ -1,12 +1,3 @@
-optim(par = c(2, 0),
-      fn = function(x){
-        get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-                    epsilon = x[1], tau = x[2], iter = 1000)$Rejection_Probabilities[3]
-      },
-      method = "SANN",
-      control = list(temp = 1000, tmax = 100))
-
-
 optim.basket <- function(design, par, method, control, utility, constraint, ...){
   if(utility == "Rejection_Probabilities[1]"){
     get_fn
@@ -21,7 +12,6 @@ get_fn <- function(design, utility, constraint, ...){
   if(utility_str %in% details_output & constraint %in% details_output){
     function(x){
       details <- get_details(design = design, epsilon = x[1], tau = x[2], ...)
-
     }
   }
 }
@@ -36,3 +26,4 @@ parse_utility <- function(utility){
   utility_i <- gsub("]", replacement = "", x = utility_split[2])
   return(list(utility_str = utility_str, utility_i = utility_i))
 }
+
