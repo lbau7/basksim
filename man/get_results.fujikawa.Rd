@@ -27,6 +27,9 @@ have to be that borrowing occur. See \code{\link{setup_fujikawa}}).}
 basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 
 \item{...}{Further arguments.}
+
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
 }
 \value{
 A matrix of results with \code{iter} rows. A 0 means, that the
