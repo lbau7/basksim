@@ -12,14 +12,14 @@ LazyData: true
 RoxygenNote: 7.2.1
 Imports: 
     arrangements,
-    baskexact,
     bhmbasket,
     bmabasket,
     doRNG,
     extraDistr,
     foreach,
     HDInterval
-Suggests: 
+Suggests:
+	baskexact,
     covr,
 	doFuture,
     testthat (>= 3.0.0)
