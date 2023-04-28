@@ -244,9 +244,10 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' @template tuning_fujikawa
 #' @template iter
 #' @template data
+#' @template exact
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -256,31 +257,51 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
 get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
-                                 iter = 1000, data = NULL, ...) {
-  weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau)
+                                 iter = 1000, data = NULL, exact = FALSE, ...) {
+  # Calculate exact operating characteristics using baskexact
+  if(exact){
+    design_exact <- baskexact::setupOneStageBasket(k = design$k,
+                                                   theta0 = design$p0)
+    res <- baskexact::pow(design_exact, theta1 = p1, n = n, lambda = lambda,
+                          epsilon = epsilon, tau = tau, results = "group")
+    list(
+      Rejection_Probabilities = res$rejection_probabilities,
+      Mean = numeric(),
+      MSE = numeric(),
+      Lower_CL = numeric(),
+      Upper_CL = numeric(),
+      FWER = res$ewp
+    )
+    # Calculate approximate operating characterstics from simulation
+  } else {
+    weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
+                               tau = tau)
 
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
+    if (is.null(data)) {
+      data <- get_data(k = design$k, n = n, p = p1, iter = iter)
+    }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
+    res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
       shape_loop <- beta_borrow_fujikawa(design = design, n = n, r = data[i, ],
-        weights = weights)
+                                         weights = weights)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-      hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-        shape1 = x[1], shape2 = x[2], credMass = lambda))
+      hdi_loop <- apply(shape_loop, 2,
+                        function(x) HDInterval::hdi(stats::qbeta,
+                                                    shape1 = x[1], shape2 = x[2],
+                                                    credMass = lambda))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
     }
-  list(
-    Rejection_Probabilities = colMeans(res[[1]]),
-    Mean = colMeans(res[[2]]),
-    MSE = colMeans(t(t(res[[2]]) - p1)^2),
-    Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]]),
-    FWER = mean(apply(res[[1]] == 1, 1, any))
-  )
+    list(
+      Rejection_Probabilities = colMeans(res[[1]]),
+      Mean = colMeans(res[[2]]),
+      MSE = colMeans(t(t(res[[2]]) - p1)^2),
+      Lower_CL = colMeans(res[[3]]),
+      Upper_CL = colMeans(res[[4]]),
+      FWER = mean(apply(res[[1]][, p1 == design$p0, drop = FALSE] == 1, 1, any)),
+      EWP = mean(apply(res[[1]][, p1 != design$p0, drop = FALSE] == 1, 1, any))
+    )
+  }
 }
 
 #' Get Details of a Basket Trial Simulation with the Power Prior Design

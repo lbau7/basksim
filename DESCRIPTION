@@ -12,6 +12,7 @@ LazyData: true
 RoxygenNote: 7.2.1
 Imports: 
     arrangements,
+    baskexact,
     bhmbasket,
     bmabasket,
     doRNG,
