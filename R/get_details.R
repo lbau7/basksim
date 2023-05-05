@@ -262,15 +262,19 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
   if(exact){
     design_exact <- baskexact::setupOneStageBasket(k = design$k,
                                                    theta0 = design$p0)
-    res <- baskexact::pow(design_exact, theta1 = p1, n = n, lambda = lambda,
-                          epsilon = epsilon, tau = tau, results = "group")
+    res_fwer <- baskexact::toer(design_exact, theta1 = p1, n = n, lambda = lambda,
+                          epsilon = epsilon, tau = tau, logbase = exp(1),
+                          results = "group")
+    ewp <- baskexact::pow(design_exact, theta1 = p1, n = n, lambda = lambda,
+                          epsilon = epsilon, tau = tau, logbase = exp(1))
     list(
-      Rejection_Probabilities = res$rejection_probabilities,
+      Rejection_Probabilities = res_fwer$rejection_probabilities,
       Mean = numeric(),
       MSE = numeric(),
       Lower_CL = numeric(),
       Upper_CL = numeric(),
-      FWER = res$ewp
+      FWER = res_fwer$fwer,
+      EWP = ewp
     )
     # Calculate approximate operating characterstics from simulation
   } else {
