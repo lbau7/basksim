@@ -1,3 +1,10 @@
+# Beta Posterior Distribution
+beta_post <- function(design, n, r) {
+  shape <- matrix(c(design$shape1 + r, design$shape2 + n - r), nrow = 2,
+                  byrow = TRUE)
+  rownames(shape) <- c("shape1post", "shape2post")
+  return(shape)
+}
 # Beta Borrowing for Fujikawa's Design
 beta_borrow_fujikawa <- function(design, n, r, weights) {
   shape <- matrix(c(design$shape1 + r, design$shape2 + n - r), nrow = 2,
