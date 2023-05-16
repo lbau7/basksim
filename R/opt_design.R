@@ -35,7 +35,7 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
 
     for (j in 1:ncol(scenarios)) {
       ecd_res[i, j] <- do.call(ecd, args = c(design = list(design), n = n,
-        p1 = list(scenarios[, i]), lambda = l$lambda, params_loop,
+        p1 = list(scenarios[, j]), lambda = l$lambda, params_loop,
         iter = iter, data = NULL, ...))
     }
   }

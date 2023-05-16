@@ -132,7 +132,7 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
     stop("data is not of class scenario_list")
   }
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "berry",
@@ -142,19 +142,19 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
       mu_sd = design$mu_sd,
       tau_scale = tau_scale
     ),
-    n_mcmc_iterations = 15000
+    n_mcmc_iterations = 10000
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
-    cohort_names = paste("p", 1:design$k, sep ="_"),
+    analyses_list = analyses,
+    cohort_names = paste("p", 1:design$k, sep = "_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
   )$scenario_1$decisions_list$berry[, -1]
 
-  est <- bhmbasket::getEstimates(analysis_list, point_estimator = "mean",
+  est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
     alpha_level = (1 - lambda))$berry
 
   list(
@@ -199,7 +199,7 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
     stop("data is not of class scenario_list")
   }
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "exnex",
@@ -210,20 +210,19 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
       mu_j = rep(design$basket_mean, design$k),
       tau_j = rep(design$basket_sd, design$k),
       w_j = w
-    ),
-    n_mcmc_iterations = 15000
+    )
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
+    analyses_list = analyses,
     cohort_names = paste("p", 1:design$k, sep ="_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
   )$scenario_1$decisions_list$exnex[, -1]
 
-  est <- bhmbasket::getEstimates(analysis_list, point_estimator = "mean",
+  est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
     alpha_level = (1 - lambda))$exnex
 
   list(
