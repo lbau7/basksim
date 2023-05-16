@@ -246,7 +246,8 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -277,7 +278,8 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    FWER = mean(apply(res[[1]] == 1, 1, any))
   )
 }
 
