@@ -38,7 +38,6 @@ get_details <- function(design, ...) {
 #'   iter = 100)
 get_details.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
-
   if (is.null(data)) {
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
@@ -188,6 +187,8 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
 #'   tau_scale = 1, w = 0.5, iter = 100)
 get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
                               data = NULL, ...) {
+  if (length(p1) != design$k) stop("p1 must be of length k")
+
   if (is.null(data)) {
     data <- bhmbasket::simulateScenarios(
       n_subjects_list = list(rep(n, design$k)),

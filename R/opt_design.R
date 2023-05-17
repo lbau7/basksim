@@ -23,7 +23,7 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
   }
 
   ecd_res <- matrix(nrow = lgrid, ncol = ncol(scenarios))
-  colnames(ecd_res) <- names(scenarios)
+  colnames(ecd_res) <- colnames(scenarios)
   lambdas <- numeric(lgrid)
 
   for (i in 1:lgrid) {
@@ -47,4 +47,31 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
       "Mean_ECD" = rowMeans(ecd_res))
     ecd_res[order(ecd_res[, ncol(ecd_res)], decreasing = TRUE), ]
   }
+}
+
+#' Create a Scenario Matrix
+#'
+#' Creates a default scenario matrix.
+#'
+#' @template design
+#' @param theta1 Probabilitiy under the alternative hypothesis.
+#'
+#' @details \code{get_scenarios} creates a default scenario matrix
+#' that can be used for \code{\link{opt_design}}. The function creates
+#' \code{k + 1} scenarios, from a global null to a global alternative scenario.
+#'
+#' @return A matrix with \code{k} rows and \code{k + 1} columns.
+#' @export
+#'
+#' @examples
+#' design <- setup_fujikawa(k = 3, p0 = 0.2)
+#' get_scenarios(design = design, theta1 = 0.5)
+get_scenarios <- function(design, theta1) {
+  scen_mat <- matrix(nrow = design$k, ncol = design$k + 1)
+  for (i in 0:design$k) {
+    scen_mat[, (i + 1)] <- c(rep(design$p0, design$k - i),
+      rep(theta1, i))
+  }
+  colnames(scen_mat) <- paste(0:design$k, "Active")
+  scen_mat
 }

@@ -37,6 +37,7 @@ test_that("get_details works for ebcomb", {
 })
 
 test_that("get_details works for bhm", {
+  set.seed(1)
   scenarios <- bhmbasket::simulateScenarios(
     n_subjects_list = list(rep(10, 3)),
     response_rates_list = list(c(0.15, 0.5, 0.5)),
@@ -79,11 +80,24 @@ test_that("get_details works for bhm", {
     alpha_level = 0.1
   )
 
+  # Results are equal with get_details and bhmbasket
   expect_equal(res1$Rejection_Probabilities, unname(unlist(res2))[-1])
   expect_equal(res1$Mean, unname(estim$berry[, 1]))
   expect_equal(res1$MSE, unname(estim$berry[, 7]))
   expect_equal(res1$Lower_CL, unname(estim$berry[, 3]))
   expect_equal(res1$Upper_CL, unname(estim$berry[, 5]))
+
+  # Works without supplied data
+  res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
+    lambda = 0.9, tau_scale = 0.75, iter = 100)
+  expect_equal(length(res3), 5)
+
+  # Error works
+  data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
+  expect_error(get_details(design, n = 20, p1 = c(0.2, 0.2, 0.5), lambda = 0.95,
+    tau_scale = 1, iter = 100, data = data))
+  expect_error(get_details(design, n = 20, p1 = 0.2, lambda = 0.95,
+    tau_scale = 1, iter = 100))
 })
 
 test_that("get_details works for exnex", {
@@ -131,11 +145,24 @@ test_that("get_details works for exnex", {
     alpha_level = 0.1
   )
 
+  # Results are equal with get_details and bhmbasket
   expect_equal(res1$Rejection_Probabilities, unname(unlist(res2))[-1])
   expect_equal(res1$Mean, unname(estim$exnex[, 1]))
   expect_equal(res1$MSE, unname(estim$exnex[, 7]))
   expect_equal(res1$Lower_CL, unname(estim$exnex[, 3]))
   expect_equal(res1$Upper_CL, unname(estim$exnex[, 5]))
+
+  # Works without supplied data
+  res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
+    lambda = 0.9, tau_scale = 0.75, w = 0.5, iter = 100)
+  expect_equal(length(res3), 5)
+
+  # Errors work
+  data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
+  expect_error(get_details(design, n = 20, p1 = c(0.2, 0.2, 0.5), lambda = 0.95,
+    tau_scale = 1, w = 0.5, iter = 100, data = data))
+  expect_error(get_details(design, n = 20, p1 = 0.2, lambda = 0.95,
+    tau_scale = 1, w = 0.5, iter = 100, data = scenarios))
 })
 
 test_that("get_details works for fujikawa", {
