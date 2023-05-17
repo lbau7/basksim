@@ -37,7 +37,7 @@ test_that("get_details works for ebcomb", {
 })
 
 test_that("get_details works for bhm", {
-  scenarios <- simulateScenarios(
+  scenarios <- bhmbasket::simulateScenarios(
     n_subjects_list = list(rep(10, 3)),
     response_rates_list = list(c(0.15, 0.5, 0.5)),
     n_trials = 100
@@ -73,7 +73,7 @@ test_that("get_details works for bhm", {
 
   res2 <- bhmbasket::getGoProbabilities(godec)
 
-  estim <- getEstimates(
+  estim <- bhmbasket::getEstimates(
     analyses_list = ana,
     point_estimator = "mean",
     alpha_level = 0.1
@@ -87,7 +87,7 @@ test_that("get_details works for bhm", {
 })
 
 test_that("get_details works for exnex", {
-  scenarios <- simulateScenarios(
+  scenarios <- bhmbasket::simulateScenarios(
     n_subjects_list = list(rep(10, 3)),
     response_rates_list = list(c(0.15, 0.5, 0.5)),
     n_trials = 100
