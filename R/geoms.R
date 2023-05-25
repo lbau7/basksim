@@ -7,8 +7,8 @@
 #' @inherit geom_prior.fujikawa examples
 #'
 #' @export
-geom_prior <- function(..., design) {
-  UseMethod("geom_prior", ..., design)
+geom_prior <- function(design, ...) {
+  UseMethod("geom_prior", design, ...)
 }
 #' Plot a Fujikawa basket trial's prior distribution
 #'
@@ -26,7 +26,7 @@ geom_prior <- function(..., design) {
 #' # Colour different baskets
 #' ggplot() +
 #'     geom_prior(aes(colour = basket), design)
-geom_prior.fujikawa <- function(..., design) {
+geom_prior.fujikawa <- function(design, ...) {
   purrr::pmap(data.frame(basket = (1:design$k)),
               function(basket) {
                 geom_function(
@@ -49,8 +49,8 @@ geom_prior.fujikawa <- function(..., design) {
 #' @inherit geom_posterior.fujikawa examples
 #'
 #' @export
-geom_posterior <- function(..., design, n, r) {
-  UseMethod("geom_posterior", ..., design, n, r)
+geom_posterior <- function(design, n, r, ...) {
+  UseMethod("geom_posterior", design, n, r, ...)
 }
 #' Plot a Fujikawa basket trial's posterior distribution
 #'
@@ -69,8 +69,8 @@ geom_posterior <- function(..., design, n, r) {
 #'     facet_wrap(vars(basket))
 #' # Colour different baskets
 #' ggplot() +
-#'     geom_posterior(aes(colour = basket), design, n, r)
-geom_posterior.fujikawa <- function(..., design, n, r) {
+#'     geom_posterior(design, n, r, aes(colour = basket))
+geom_posterior.fujikawa <- function(design, n, r, ...) {
   purrr::pmap(cbind(t(beta_post(design, n, r)),
                     data.frame(basket = (1:design$k))),
               function(shape1post, shape2post, basket) {
@@ -83,14 +83,14 @@ geom_posterior.fujikawa <- function(..., design, n, r) {
                 )
               })
 }
-#' Plot a Bayesian basket trial's posterior distribution after applying borrowing
+#' Plot a Bayesian basket trial's posterior distribution after borrowing
 #'
 #' @inherit geom_posterior params return
 #' @inherit geom_borrow.fujikawa examples
 #'
 #' @export
-geom_borrow <- function(..., design, n, r) {
-  UseMethod("geom_posterior", ..., design, n, r)
+geom_borrow <- function(design, n, r, ...) {
+  UseMethod("geom_borrow", design, n, r, ...)
 }
 #' Plot a Fujikawa basket trial's posterior distribution after borrowing
 #'
@@ -114,7 +114,7 @@ geom_borrow <- function(..., design, n, r) {
 #' ggplot() +
 #'     geom_borrow(aes(colour = basket), design, n, r, lambda, epsilon, tau)
 geom_borrow.fujikawa <-
-  function(..., design, n, r, lambda, epsilon, tau) {
+  function(design, n, r, lambda, epsilon, tau, ...) {
     weights <-
       get_weights_jsd(
         design = design,
@@ -122,17 +122,15 @@ geom_borrow.fujikawa <-
         epsilon = epsilon,
         tau = tau
       )
-    purrr::pmap(cbind(t(
-      beta_borrow_fujikawa(design, n, r, weights)
-    ),
-    data.frame(basket = (1:design$k))),
-    function(basket) {
-      geom_function(
-        ...,
-        data = data.frame(basket = basket),
-        fun = dbeta,
-        args = list(shape1 = design$shape1,
-                    shape2 = design$shape2)
-      )
+    purrr::pmap(cbind(t(beta_borrow_fujikawa(design, n, r, weights)),
+                      data.frame(basket = (1:design$k))),
+                function(shape1post, shape2post, basket) {
+                  geom_function(
+                    data = data.frame(basket = factor(basket, levels = (1:design$k))),
+                    fun = dbeta,
+                    args = list(shape1 = shape1post,
+                                shape2 = shape2post),
+                    ...
+                  )
     })
-  }
+}
