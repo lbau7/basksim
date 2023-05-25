@@ -4,7 +4,18 @@
 \alias{get_details.fujikawa}
 \title{Get Details of a Basket Trial Simulation with Fujikawa's Design}
 \usage{
-\method{get_details}{fujikawa}(design, n, p1, lambda, epsilon, tau, iter = 1000, data = NULL, ...)
+\method{get_details}{fujikawa}(
+  design,
+  n,
+  p1,
+  lambda,
+  epsilon,
+  tau,
+  iter = 1000,
+  data = NULL,
+  exact = FALSE,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{fujikawa}.}
@@ -26,11 +37,15 @@ have to be that borrowing occur. See \code{\link{setup_fujikawa}}).}
 \item{data}{A data matrix with k column with the number of responses for each
 basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 
+\item{exact}{An \code{logical} denoting whether operating characteristics
+should be calculated exactly.}
+
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilites, posterior means,
-mean squared errors and mean limits of HDI intervals for all baskets.
+A list containing the rejection probabilities, posterior means,
+mean squared errors and mean limits of HDI intervals for all baskets as well
+as the family-wise error rate.
 }
 \description{
 Get Details of a Basket Trial Simulation with Fujikawa's Design
