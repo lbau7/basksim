@@ -4,16 +4,10 @@
 \alias{geom_borrow}
 \title{Plot a Bayesian basket trial's posterior distribution after borrowing}
 \usage{
-geom_borrow(design, n, r, ...)
+geom_borrow(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
-
-\item{n}{The sample size per basket.}
-
-\item{r}{Vector of responses.}
-
-\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
@@ -26,14 +20,15 @@ Plot a Bayesian basket trial's posterior distribution after borrowing
 design <- setup_fujikawa(k = 3, p0 = 0.2)
 n <- 20
 r <- c(4, 5, 2)
-lambda <- 0.99
 epsilon <- 2
 tau <- 0.5
 # One facet per basket
+library(ggplot2)
 ggplot() +
-    geom_borrow(design, n, r, lambda, epsilon, tau) +
+    geom_borrow(design, n, r, epsilon, tau, logbase = exp(1)) +
     facet_wrap(vars(basket))
 # Colour different baskets
 ggplot() +
-    geom_borrow(aes(colour = basket), design, n, r, lambda, epsilon, tau)
+    geom_borrow(aes(colour = basket), design, n, r, epsilon, tau,
+                logbase = exp(1))
 }

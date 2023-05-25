@@ -8,8 +8,6 @@ geom_prior(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
-
-\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
@@ -21,6 +19,7 @@ Plot a Bayesian basket trial's prior distribution
 # Example for a basket trial with Fujikawa's Design
 design <- setup_fujikawa(k = 3, p0 = 0.2)
 # One facet per basket
+library(ggplot2)
 ggplot() +
     geom_prior(design) +
     facet_wrap(vars(basket))

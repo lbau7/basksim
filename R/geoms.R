@@ -1,6 +1,5 @@
 #' Plot a Bayesian basket trial's prior distribution
 #'
-#' @template dotdotdot_geom
 #' @template design
 #'
 #' @return A list of ggplot layers of type `geom_function`.
@@ -8,11 +7,13 @@
 #'
 #' @export
 geom_prior <- function(design, ...) {
-  UseMethod("geom_prior", design, ...)
+  UseMethod("geom_prior")
 }
 #' Plot a Fujikawa basket trial's prior distribution
 #'
-#' @inherit geom_prior params return
+#' @template dotdotdot_geom
+#' @template design
+#' @inherit geom_prior return
 #'
 #' @export
 #'
@@ -30,7 +31,7 @@ geom_prior <- function(design, ...) {
 geom_prior.fujikawa <- function(design, ...) {
   purrr::pmap(data.frame(basket = (1:design$k)),
               function(basket) {
-                ggplot::geom_function(
+                ggplot2::geom_function(
                   ...,
                   data = data.frame(basket = basket),
                   fun = dbeta,
@@ -41,21 +42,23 @@ geom_prior.fujikawa <- function(design, ...) {
 }
 #' Plot a Bayesian basket trial's posterior distribution
 #'
-#' @template dotdotdot_geom
 #' @template design
-#' @template n
-#' @template r
 #'
 #' @return A list of ggplot layers of type `geom_function`.
 #' @inherit geom_posterior.fujikawa examples
 #'
 #' @export
-geom_posterior <- function(design, n, r, ...) {
-  UseMethod("geom_posterior", design, n, r, ...)
+geom_posterior <- function(design, ...) {
+  UseMethod("geom_posterior")
 }
 #' Plot a Fujikawa basket trial's posterior distribution
 #'
-#' @inherit geom_posterior params return
+#' @template dotdotdot_geom
+#' @template design
+#' @template n
+#' @template r
+#'
+#' @inherit geom_posterior return
 #'
 #' @export
 #'
@@ -76,7 +79,7 @@ geom_posterior.fujikawa <- function(design, n, r, ...) {
   purrr::pmap(cbind(t(beta_post(design, n, r)),
                     data.frame(basket = (1:design$k))),
               function(shape1post, shape2post, basket) {
-                ggplot::geom_function(
+                ggplot2::geom_function(
                   data = data.frame(basket = factor(basket, levels = (1:design$k))),
                   fun = dbeta,
                   args = list(shape1 = shape1post,
@@ -91,12 +94,16 @@ geom_posterior.fujikawa <- function(design, n, r, ...) {
 #' @inherit geom_borrow.fujikawa examples
 #'
 #' @export
-geom_borrow <- function(design, n, r, ...) {
-  UseMethod("geom_borrow", design, n, r, ...)
+geom_borrow <- function(design, ...) {
+  UseMethod("geom_borrow")
 }
 #' Plot a Fujikawa basket trial's posterior distribution after borrowing
 #'
-#' @inherit geom_borrow params return
+#' @template dotdotdot_geom
+#' @template design
+#' @template n
+#' @template r
+#' @inherit geom_borrow  return
 #'
 #' @export
 #'
@@ -105,30 +112,31 @@ geom_borrow <- function(design, n, r, ...) {
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' n <- 20
 #' r <- c(4, 5, 2)
-#' lambda <- 0.99
 #' epsilon <- 2
 #' tau <- 0.5
 #' # One facet per basket
 #' library(ggplot2)
 #' ggplot() +
-#'     geom_borrow(design, n, r, lambda, epsilon, tau) +
+#'     geom_borrow(design, n, r, epsilon, tau, logbase = exp(1)) +
 #'     facet_wrap(vars(basket))
 #' # Colour different baskets
 #' ggplot() +
-#'     geom_borrow(aes(colour = basket), design, n, r, lambda, epsilon, tau)
+#'     geom_borrow(aes(colour = basket), design, n, r, epsilon, tau,
+#'                 logbase = exp(1))
 geom_borrow.fujikawa <-
-  function(design, n, r, lambda, epsilon, tau, ...) {
+  function(design, n, r, epsilon, tau, logbase, ...) {
     weights <-
       get_weights_jsd(
         design = design,
         n = n,
         epsilon = epsilon,
-        tau = tau
+        tau = tau,
+        logbase = logbase
       )
     purrr::pmap(cbind(t(beta_borrow_fujikawa(design, n, r, weights)),
                       data.frame(basket = (1:design$k))),
                 function(shape1post, shape2post, basket) {
-                  ggplot::geom_function(
+                  ggplot2::geom_function(
                     data = data.frame(basket = factor(basket, levels = (1:design$k))),
                     fun = dbeta,
                     args = list(shape1 = shape1post,

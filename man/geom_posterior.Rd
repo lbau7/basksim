@@ -4,16 +4,10 @@
 \alias{geom_posterior}
 \title{Plot a Bayesian basket trial's posterior distribution}
 \usage{
-geom_posterior(design, n, r, ...)
+geom_posterior(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
-
-\item{n}{The sample size per basket.}
-
-\item{r}{Vector of responses.}
-
-\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
@@ -27,6 +21,7 @@ design <- setup_fujikawa(k = 3, p0 = 0.2)
 n <- 20
 r <- c(4, 5, 2)
 # One facet per basket
+library(ggplot2)
 ggplot() +
     geom_posterior(design, n, r) +
     facet_wrap(vars(basket))

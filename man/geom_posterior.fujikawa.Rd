@@ -27,6 +27,7 @@ design <- setup_fujikawa(k = 3, p0 = 0.2)
 n <- 20
 r <- c(4, 5, 2)
 # One facet per basket
+library(ggplot2)
 ggplot() +
     geom_posterior(design, n, r) +
     facet_wrap(vars(basket))

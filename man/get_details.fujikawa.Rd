@@ -11,6 +11,7 @@
   lambda,
   epsilon,
   tau,
+  logbase = exp(1),
   iter = 1000,
   data = NULL,
   exact = FALSE,
@@ -32,6 +33,9 @@ See \code{\link{setup_fujikawa}}).}
 \item{tau}{Tuning parameter that determines how similar the baskets
 have to be that borrowing occur. See \code{\link{setup_fujikawa}}).}
 
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
+
 \item{iter}{The number of iterations in the simulation.}
 
 \item{data}{A data matrix with k column with the number of responses for each
@@ -41,9 +45,6 @@ basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 should be calculated exactly.}
 
 \item{...}{Further arguments.}
-
-\item{logbase}{Tuning parameter. The base of the logarithm that is used to
-calculate the Jensen-Shannon divergence.}
 }
 \value{
 A list containing the rejection probabilities, posterior means,
