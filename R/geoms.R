@@ -32,11 +32,11 @@ geom_prior.fujikawa <- function(design, ...) {
   purrr::pmap(data.frame(basket = (1:design$k)),
               function(basket) {
                 ggplot2::geom_function(
-                  ...,
                   data = data.frame(basket = basket),
                   fun = dbeta,
                   args = list(shape1 = design$shape1,
-                              shape2 = design$shape2)
+                              shape2 = design$shape2),
+                  ...
                 )
               })
 }
