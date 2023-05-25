@@ -44,6 +44,10 @@ test_that("get_results works for bhm", {
   expect_equal(dim(res2), c(15, 3))
   expect_true(all(res1 %in% c(0, 1)))
   expect_true(all(res2 %in% c(0, 1)))
+
+  data <- get_data(k = 3, n = 10, p = c(0.2, 0.5, 0.5), iter = 10)
+  expect_error(get_results(design = design, n = 10, lambda = 0.95,
+    tau_scale = 1, data = data))
 })
 
 test_that("get_results works for exnex", {
@@ -63,6 +67,10 @@ test_that("get_results works for exnex", {
   expect_equal(dim(res2), c(15, 3))
   expect_true(all(res1 %in% c(0, 1)))
   expect_true(all(res2 %in% c(0, 1)))
+
+  data <- get_data(k = 3, n = 10, p = c(0.2, 0.5, 0.5), iter = 10)
+  expect_error(get_results(design = design, n = 10, lambda = 0.95,
+    tau_scale = 1, w = 0.5, data = data))
 })
 
 test_that("get_results works for fujikawa", {

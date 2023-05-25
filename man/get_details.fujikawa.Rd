@@ -41,6 +41,9 @@ basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 should be calculated exactly.}
 
 \item{...}{Further arguments.}
+
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
 }
 \value{
 A list containing the rejection probabilities, posterior means,

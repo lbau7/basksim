@@ -4,16 +4,16 @@
 \alias{geom_posterior.fujikawa}
 \title{Plot a Fujikawa basket trial's posterior distribution}
 \usage{
-\method{geom_posterior}{fujikawa}(..., design, n, r)
+\method{geom_posterior}{fujikawa}(design, n, r, ...)
 }
 \arguments{
-\item{...}{Further arguments to be passed to `geom_function`.}
-
 \item{design}{An object created with one of the \code{setup} functions.}
 
 \item{n}{The sample size per basket.}
 
 \item{r}{Vector of responses.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
@@ -32,5 +32,5 @@ ggplot() +
     facet_wrap(vars(basket))
 # Colour different baskets
 ggplot() +
-    geom_posterior(aes(colour = basket), design, n, r)
+    geom_posterior(design, n, r, aes(colour = basket))
 }

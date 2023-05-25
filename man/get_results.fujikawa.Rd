@@ -4,7 +4,18 @@
 \alias{get_results.fujikawa}
 \title{Get Results for Simulation of a Basket Trial with Fujikawa's Design}
 \usage{
-\method{get_results}{fujikawa}(design, n, p1, lambda, epsilon, tau, iter = 1000, data = NULL, ...)
+\method{get_results}{fujikawa}(
+  design,
+  n,
+  p1,
+  lambda,
+  epsilon,
+  tau,
+  logbase = exp(1),
+  iter = 1000,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{fujikawa}.}
@@ -20,6 +31,9 @@ See \code{\link{setup_fujikawa}}).}
 
 \item{tau}{Tuning parameter that determines how similar the baskets
 have to be that borrowing occur. See \code{\link{setup_fujikawa}}).}
+
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
 
 \item{iter}{The number of iterations in the simulation.}
 

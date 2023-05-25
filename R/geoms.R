@@ -20,6 +20,7 @@ geom_prior <- function(design, ...) {
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' # One facet per basket
+#' library(ggplot2)
 #' ggplot() +
 #'     geom_prior(design) +
 #'     facet_wrap(vars(basket))
@@ -29,7 +30,7 @@ geom_prior <- function(design, ...) {
 geom_prior.fujikawa <- function(design, ...) {
   purrr::pmap(data.frame(basket = (1:design$k)),
               function(basket) {
-                geom_function(
+                ggplot::geom_function(
                   ...,
                   data = data.frame(basket = basket),
                   fun = dbeta,
@@ -64,6 +65,7 @@ geom_posterior <- function(design, n, r, ...) {
 #' n <- 20
 #' r <- c(4, 5, 2)
 #' # One facet per basket
+#' library(ggplot2)
 #' ggplot() +
 #'     geom_posterior(design, n, r) +
 #'     facet_wrap(vars(basket))
@@ -74,7 +76,7 @@ geom_posterior.fujikawa <- function(design, n, r, ...) {
   purrr::pmap(cbind(t(beta_post(design, n, r)),
                     data.frame(basket = (1:design$k))),
               function(shape1post, shape2post, basket) {
-                geom_function(
+                ggplot::geom_function(
                   data = data.frame(basket = factor(basket, levels = (1:design$k))),
                   fun = dbeta,
                   args = list(shape1 = shape1post,
@@ -107,6 +109,7 @@ geom_borrow <- function(design, n, r, ...) {
 #' epsilon <- 2
 #' tau <- 0.5
 #' # One facet per basket
+#' library(ggplot2)
 #' ggplot() +
 #'     geom_borrow(design, n, r, lambda, epsilon, tau) +
 #'     facet_wrap(vars(basket))
@@ -125,7 +128,7 @@ geom_borrow.fujikawa <-
     purrr::pmap(cbind(t(beta_borrow_fujikawa(design, n, r, weights)),
                       data.frame(basket = (1:design$k))),
                 function(shape1post, shape2post, basket) {
-                  geom_function(
+                  ggplot::geom_function(
                     data = data.frame(basket = factor(basket, levels = (1:design$k))),
                     fun = dbeta,
                     args = list(shape1 = shape1post,

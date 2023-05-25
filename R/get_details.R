@@ -38,7 +38,6 @@ get_details <- function(design, ...) {
 #'   iter = 100)
 get_details.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
-
   if (is.null(data)) {
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
@@ -132,7 +131,7 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
     stop("data is not of class scenario_list")
   }
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "berry",
@@ -142,19 +141,19 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
       mu_sd = design$mu_sd,
       tau_scale = tau_scale
     ),
-    n_mcmc_iterations = 15000
+    n_mcmc_iterations = 10000
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
-    cohort_names = paste("p", 1:design$k, sep ="_"),
+    analyses_list = analyses,
+    cohort_names = paste("p", 1:design$k, sep = "_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
   )$scenario_1$decisions_list$berry[, -1]
 
-  est <- bhmbasket::getEstimates(analysis_list, point_estimator = "mean",
+  est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
     alpha_level = (1 - lambda))$berry
 
   list(
@@ -188,6 +187,8 @@ get_details.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
 #'   tau_scale = 1, w = 0.5, iter = 100)
 get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
                               data = NULL, ...) {
+  if (length(p1) != design$k) stop("p1 must be of length k")
+
   if (is.null(data)) {
     data <- bhmbasket::simulateScenarios(
       n_subjects_list = list(rep(n, design$k)),
@@ -199,7 +200,7 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
     stop("data is not of class scenario_list")
   }
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "exnex",
@@ -210,20 +211,19 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
       mu_j = rep(design$basket_mean, design$k),
       tau_j = rep(design$basket_sd, design$k),
       w_j = w
-    ),
-    n_mcmc_iterations = 15000
+    )
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
+    analyses_list = analyses,
     cohort_names = paste("p", 1:design$k, sep ="_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
   )$scenario_1$decisions_list$exnex[, -1]
 
-  est <- bhmbasket::getEstimates(analysis_list, point_estimator = "mean",
+  est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
     alpha_level = (1 - lambda))$exnex
 
   list(
@@ -257,16 +257,17 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
 get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
-                                 iter = 1000, data = NULL, exact = FALSE, ...) {
+                                 logbase = exp(1), iter = 1000,
+                                 data = NULL, exact = FALSE, ...) {
   # Calculate exact operating characteristics using baskexact
   if(exact){
     design_exact <- baskexact::setupOneStageBasket(k = design$k,
                                                    theta0 = design$p0)
     res_fwer <- baskexact::toer(design_exact, theta1 = p1, n = n,
                                 lambda = lambda,
-                          epsilon = epsilon, tau = tau,
-                          logbase = exp(1),
-                          results = "group")
+                                epsilon = epsilon, tau = tau,
+                                logbase = logbase,
+                                results = "group")
     ewp <- baskexact::pow(design_exact, theta1 = p1, n = n, lambda = lambda,
                           epsilon = epsilon, tau = tau,
                           logbase = exp(1))
@@ -279,10 +280,11 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
       FWER = res_fwer$fwer,
       EWP = ewp
     )
-    # Calculate approximate operating characterstics from simulation
-  } else {
+  }
+  # Calculate approximate operating characteristics from simulation
+  else {
     weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-                               tau = tau)
+                               tau = tau, logbase = logbase)
 
     if (is.null(data)) {
       data <- get_data(k = design$k, n = n, p = p1, iter = iter)
@@ -293,10 +295,8 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
                                          weights = weights)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-      hdi_loop <- apply(shape_loop, 2,
-                        function(x) HDInterval::hdi(stats::qbeta,
-                                                    shape1 = x[1], shape2 = x[2],
-                                                    credMass = lambda))
+      hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
+                                                                   shape1 = x[1], shape2 = x[2], credMass = lambda))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
     }
     list(
@@ -332,9 +332,9 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   eps_pair = 2, eps_all = 2, iter = 100)
 get_details.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
-                               iter = 1000, data = NULL, ...) {
+                               logbase = 2, iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
-    tau = 0)
+    tau = 0, logbase = logbase)
 
   if (is.null(data)) {
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)

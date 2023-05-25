@@ -221,9 +221,10 @@ get_results.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
 get_results.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
-                                 iter = 1000, data = NULL, ...) {
+                                 logbase = exp(1), iter = 1000, data = NULL,
+                                 ...) {
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau)
+    tau = tau, logbase = logbase)
   if (is.null(data)) {
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
@@ -256,9 +257,9 @@ get_results.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   eps_pair = 2, eps_all = 2, iter = 100)
 get_results.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
-                               iter = 1000, data = NULL, ...) {
+                               logbase = 2, iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
-    tau = 0)
+    tau = 0, logbase = logbase)
   if (is.null(data)) {
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }

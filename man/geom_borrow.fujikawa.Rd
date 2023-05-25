@@ -4,16 +4,16 @@
 \alias{geom_borrow.fujikawa}
 \title{Plot a Fujikawa basket trial's posterior distribution after borrowing}
 \usage{
-\method{geom_borrow}{fujikawa}(..., design, n, r, lambda, epsilon, tau)
+\method{geom_borrow}{fujikawa}(design, n, r, lambda, epsilon, tau, ...)
 }
 \arguments{
-\item{...}{Further arguments to be passed to `geom_function`.}
-
 \item{design}{An object created with one of the \code{setup} functions.}
 
 \item{n}{The sample size per basket.}
 
 \item{r}{Vector of responses.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.

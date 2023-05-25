@@ -12,6 +12,7 @@ Based on Generalized JSD Weights}
   lambda,
   eps_pair,
   eps_all,
+  logbase = 2,
   iter = 1000,
   data = NULL,
   ...
@@ -31,6 +32,9 @@ based on pairwise similarity.}
 
 \item{eps_all}{Tuning parameter that determines the amount of borrowing
 based on overall heterogeneity.}
+
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
 
 \item{iter}{The number of iterations in the simulation.}
 

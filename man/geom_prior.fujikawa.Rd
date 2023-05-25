@@ -4,12 +4,12 @@
 \alias{geom_prior.fujikawa}
 \title{Plot a Fujikawa basket trial's prior distribution}
 \usage{
-\method{geom_prior}{fujikawa}(..., design)
+\method{geom_prior}{fujikawa}(design, ...)
 }
 \arguments{
-\item{...}{Further arguments to be passed to `geom_function`.}
-
 \item{design}{An object created with one of the \code{setup} functions.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.

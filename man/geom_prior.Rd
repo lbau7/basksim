@@ -4,12 +4,12 @@
 \alias{geom_prior}
 \title{Plot a Bayesian basket trial's prior distribution}
 \usage{
-geom_prior(..., design)
+geom_prior(design, ...)
 }
 \arguments{
-\item{...}{Further arguments to be passed to `geom_function`.}
-
 \item{design}{An object created with one of the \code{setup} functions.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.

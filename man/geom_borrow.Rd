@@ -4,16 +4,16 @@
 \alias{geom_borrow}
 \title{Plot a Bayesian basket trial's posterior distribution after borrowing}
 \usage{
-geom_borrow(..., design, n, r)
+geom_borrow(design, n, r, ...)
 }
 \arguments{
-\item{...}{Further arguments to be passed to `geom_function`.}
-
 \item{design}{An object created with one of the \code{setup} functions.}
 
 \item{n}{The sample size per basket.}
 
 \item{r}{Vector of responses.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
