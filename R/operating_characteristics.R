@@ -77,7 +77,7 @@ toer <- function(design, n, p1 = NULL, lambda, design_params = list(),
 #'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
 pow <- function(design, n, p1 = NULL, lambda, design_params = list(),
                  iter = 1000, data = NULL, ...) {
-  if (p1 == rep(design$p0, design$k)) stop("p1 can not be the global null hypothesis for calculating power")
+  if (all(p1 == rep(design$p0, design$k))) stop("p1 can not be the global null hypothesis for calculating power")
   res <- do.call(get_results, args = c(design = list(design), n = list(n),
                                        p1 = list(p1), lambda = lambda, design_params,
                                        iter = list(iter), data = data, ...))
