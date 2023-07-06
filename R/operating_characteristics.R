@@ -112,8 +112,8 @@ pow_toer <- function(design, n, p1 = NULL, lambda, design_params = list(),
                                        p1 = list(p1), lambda = lambda, design_params,
                                        iter = list(iter), data = data, ...))
   res_sel_pow <- res[, p1 != design$p0, drop = FALSE]
-  res_all_pow <- apply(res_sel, 1, function(x) any(x == 1))
+  res_all_pow <- apply(res_sel_pow, 1, function(x) any(x == 1))
   res_sel_toer <- res[, p1 == design$p0, drop = FALSE]
-  res_all_toer <- apply(res_sel, 1, function(x) any(x == 1))
+  res_all_toer <- apply(res_sel_toer, 1, function(x) any(x == 1))
   return(c(FWER = mean(res_all_toer), EWP = mean(res_all_pow)))
 }
