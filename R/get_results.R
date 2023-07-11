@@ -43,7 +43,7 @@ get_results.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
       n = rep(n, design$k), pmp0 = pmp0, ...)
     ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0)
@@ -75,7 +75,7 @@ get_results.ebcomb <- function(design, n, p1, lambda, iter = 1000, data = NULL,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_ebcombined(design = design, n = n, r = data[i, ], lambda = lambda)
   }
 }
@@ -229,7 +229,7 @@ get_results.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_fujikawa(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
   }
@@ -264,7 +264,7 @@ get_results.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_jsdgen(design = design, n = n, r = data[i, ], eps_all = eps_all,
       lambda = lambda, weights_pair = weights_pair)
   }
@@ -299,7 +299,7 @@ get_results.cpp <- function(design, n, p1, lambda, tune_a, tune_b, iter = 1000,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_cpp(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
   }
@@ -333,7 +333,7 @@ get_results.cppgen <- function(design, n, p1, lambda, tune_a, tune_b, epsilon,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_cppgen(design = design, n = n, r = data[i, ], lambda = lambda,
       weights_pair = weights_pair, epsilon = epsilon)
   }

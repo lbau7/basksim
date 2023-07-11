@@ -42,7 +42,7 @@ get_details.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2') %dopar% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2') %dofuture% {
     res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
       n = rep(n, design$k), pmp0 = pmp0)
     list(
@@ -80,7 +80,7 @@ get_details.ebcomb <- function(design, n, p1, lambda, iter = 1000,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
     shape_loop <- weight_ebcombined(design = design, n = n, r = data[i, ])
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
@@ -265,7 +265,7 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
       shape_loop <- beta_borrow_fujikawa(design = design, n = n, r = data[i, ],
         weights = weights)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
@@ -313,7 +313,7 @@ get_details.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
       shape_loop <- beta_borrow_jsdgen(design = design, n = n, r = data[i, ],
         weights_pair = weights_pair, eps_all = eps_all)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
@@ -359,7 +359,7 @@ get_details.cpp <- function(design, n, p1, lambda, tune_a, tune_b, iter = 1000,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
       shape_loop <- beta_borrow_cpp(design = design, n = n, r = data[i, ],
         weights = weights)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
@@ -405,7 +405,7 @@ get_details.cppgen <- function(design, n, p1, lambda, tune_a, tune_b, epsilon,
     data <- get_data(k = design$k, n = n, p = p1, iter = iter)
   }
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dopar% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
     shape_loop <- beta_borrow_cppgen(design = design, n = n, r = data[i, ],
       weights_pair = weights_pair, epsilon = epsilon)
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
