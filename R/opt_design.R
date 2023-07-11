@@ -13,6 +13,11 @@
 #' @export
 #'
 #' @examples
+#' design <- setup_fujikawa(k = 3, p0 = 0.2)
+#' scenarios <- get_scenarios(design, p1 = 0.5)
+#' opt_design(design, n = 20, alpha = 0.05, design_params =
+#'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'   prec_digits = 3)
 opt_design <- function(design, n, alpha, design_params = list(), scenarios,
                        prec_digits, iter = 1000, ...) {
   grid <- expand.grid(design_params)
@@ -21,6 +26,7 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
   } else {
     lgrid <- nrow(grid)
   }
+  p <- progressr::progressor(steps = lgrid)
 
   ecd_res <- matrix(nrow = lgrid, ncol = ncol(scenarios))
   colnames(ecd_res) <- colnames(scenarios)
@@ -38,15 +44,17 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
         p1 = list(scenarios[, j]), lambda = l$lambda, params_loop,
         iter = iter, data = NULL, ...))
     }
+    p()
   }
 
   if (ncol(grid) == 0) {
-    cbind(lambdas, ecd_res, "Mean_ECD" = rowMeans(ecd_res))
+    ecd_res <- cbind(lambdas, ecd_res, "Mean_ECD" = rowMeans(ecd_res))
   } else {
     ecd_res <- cbind(grid, "Lambda" = lambdas, ecd_res,
       "Mean_ECD" = rowMeans(ecd_res))
-    ecd_res[order(ecd_res[, ncol(ecd_res)], decreasing = TRUE), ]
+    ecd_res <- ecd_res[order(ecd_res[, ncol(ecd_res)], decreasing = TRUE), ]
   }
+  ecd_res
 }
 
 #' Create a Scenario Matrix
@@ -54,7 +62,7 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
 #' Creates a default scenario matrix.
 #'
 #' @template design
-#' @param theta1 Probabilitiy under the alternative hypothesis.
+#' @param p1 Probability under the alternative hypothesis.
 #'
 #' @details \code{get_scenarios} creates a default scenario matrix
 #' that can be used for \code{\link{opt_design}}. The function creates
@@ -65,12 +73,12 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
 #'
 #' @examples
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' get_scenarios(design = design, theta1 = 0.5)
-get_scenarios <- function(design, theta1) {
+#' get_scenarios(design = design, p1 = 0.5)
+get_scenarios <- function(design, p1) {
   scen_mat <- matrix(nrow = design$k, ncol = design$k + 1)
   for (i in 0:design$k) {
     scen_mat[, (i + 1)] <- c(rep(design$p0, design$k - i),
-      rep(theta1, i))
+      rep(p1, i))
   }
   colnames(scen_mat) <- paste(0:design$k, "Active")
   scen_mat

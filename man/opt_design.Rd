@@ -40,3 +40,10 @@ A matrix with the expected number of correct decisions.
 \description{
 Optimize a Basket Trial Design
 }
+\examples{
+design <- setup_fujikawa(k = 3, p0 = 0.2)
+scenarios <- get_scenarios(design, p1 = 0.5)
+opt_design(design, n = 20, alpha = 0.05, design_params =
+  list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+  prec_digits = 3)
+}
