@@ -8,6 +8,13 @@
 #' @template iter
 #' @template prec_digits
 #' @template dotdotdot
+#' @template data
+#'
+#' @details It is recommended to use \code{data} and then use the same simulated
+#' data set for all further calculations. If \code{data = NULL} then
+#' new data is generated in each step of the algorithm, so \code{lambda} doesn't
+#' necessarily protect the family wise error rate for different simulated data
+#' due to Monte Carlo simulation error.
 #'
 #' @return A list containing the greatest estimated value for \code{lambda} with
 #' \code{prec_digits} decimal places which controls the family wise error rate

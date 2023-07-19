@@ -4,7 +4,18 @@
 \alias{get_results.exnex}
 \title{Get Results for Simulation of a Basket Trial with the EXNEX Design}
 \usage{
-\method{get_results}{exnex}(design, n, p1, lambda, tau_scale, w, iter = 1000, data = NULL, ...)
+\method{get_results}{exnex}(
+  design,
+  n,
+  p1 = NULL,
+  lambda,
+  tau_scale,
+  w,
+  iter = 1000,
+  n_mcmc = 10000,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{exnex}.}
@@ -20,7 +31,10 @@ distribution for the variance of the thetas.}
 
 \item{w}{Fixed prior weight for the exchangeability part of the model.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
+
+\item{n_mcmc}{Number of MCMC samples.}
 
 \item{data}{An object of class \code{scenario_list} as returned by the
 function \code{bhmbasket::simulateScenarios}.}

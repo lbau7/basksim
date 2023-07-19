@@ -4,7 +4,17 @@
 \alias{get_details.bhm}
 \title{Get Details of a BHM Basket Trial Simulation}
 \usage{
-\method{get_details}{bhm}(design, n, p1, lambda, tau_scale, iter = 1000, data = NULL, ...)
+\method{get_details}{bhm}(
+  design,
+  n,
+  p1 = NULL,
+  lambda,
+  tau_scale,
+  iter = 1000,
+  n_mcmc = 10000,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{bhm}.}
@@ -18,7 +28,10 @@
 \item{tau_scale}{Standard deviation of the half normal prior distribution
 for the variance of the thetas.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
+
+\item{n_mcmc}{Number of MCMC samples.}
 
 \item{data}{An object of class \code{scenario_list} as returned by the
 function \code{bhmbasket::simulateScenarios}.}

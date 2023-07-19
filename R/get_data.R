@@ -1,15 +1,21 @@
-
 #' Simulate Data Based on a Binomial Distribution
 #'
-#' @param k
-#' @param n
-#' @param p
-#' @param iter
+#' @template k
+#' @template n
+#' @param p Probabilities used to simulate the data
+#' @template iter
+#' @param type Type of output. Use \code{bhmbasket} for the BHM and EXNED
+#'   design and \code{matrix} for everything else.
 #'
-#' @return
+#' @details For \code{type = "bhmbasket"} this is simply a wraper for
+#' \code{bhmbasket::simulateScenarios}.
+#'
+#' @return If \code{type = "matrix"} then a matrix is returned, if
+#' \code{type = "bhmbasket"} then an element with class \code{scenario_list}.
 #' @export
 #'
 #' @examples
+#' get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000)
 get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
   type <- match.arg(type)
   if (length(p) == 1) {

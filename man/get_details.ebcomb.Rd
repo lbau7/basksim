@@ -4,7 +4,7 @@
 \alias{get_details.ebcomb}
 \title{Get Details of a Basket Trial Simulation with the ebcomb Design}
 \usage{
-\method{get_details}{ebcomb}(design, n, p1, lambda, iter = 1000, data = NULL, ...)
+\method{get_details}{ebcomb}(design, n, p1 = NULL, lambda, iter = 1000, data = NULL, ...)
 }
 \arguments{
 \item{design}{An object of class \code{ebcomb}.}
@@ -15,7 +15,8 @@
 
 \item{lambda}{The posterior probability threshold.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
 basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}

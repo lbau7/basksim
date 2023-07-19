@@ -4,7 +4,7 @@
 \alias{get_results.bma}
 \title{Get Results for Simulation of a Basket Trial with the BMA Design}
 \usage{
-\method{get_results}{bma}(design, n, p1, lambda, pmp0, iter = 1000, data = NULL, ...)
+\method{get_results}{bma}(design, n, p1 = NULL, lambda, pmp0, iter = 1000, data = NULL, ...)
 }
 \arguments{
 \item{design}{An object of class \code{bma}.}
@@ -18,7 +18,8 @@
 \item{pmp0}{Power parameter that is used to compute prior probabilities. See
 \code{\link[bmabasket]{bma}} for details.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
 basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}

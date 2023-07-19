@@ -103,6 +103,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' @template lambda
 #' @template tau_bhm
 #' @template iter
+#' @template n_mcmc
 #' @template data_bhm
 #' @template dotdotdot
 #'
@@ -115,7 +116,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tau_scale = 1, iter = 100)
 get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
-                            iter = 1000, data = NULL, ...) {
+                            iter = 1000, n_mcmc = 10000, data = NULL, ...) {
   data <- check_data_bhmbasket(data = data, k = design$k, n = n, p = p1,
     iter = iter)
 
@@ -129,7 +130,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
       mu_sd = design$mu_sd,
       tau_scale = tau_scale
     ),
-    n_mcmc_iterations = 10000
+    n_mcmc_iterations = n_mcmc
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
@@ -162,6 +163,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #' @template tau_exnex
 #' @template w_exnex
 #' @template iter
+#' @template n_mcmc
 #' @template data_bhm
 #' @template dotdotdot
 #'
@@ -174,7 +176,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tau_scale = 1, w = 0.5, iter = 100)
 get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
-                              iter = 1000, data = NULL, ...) {
+                              iter = 1000, n_mcmc = 10000, data = NULL, ...) {
   data <- check_data_bhmbasket(data = data, k = design$k, n = n, p = p1,
     iter = iter)
 
@@ -189,7 +191,8 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
       mu_j = rep(design$basket_mean, design$k),
       tau_j = rep(design$basket_sd, design$k),
       w_j = w
-    )
+    ),
+    n_mcmc_iterations = n_mcmc
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,

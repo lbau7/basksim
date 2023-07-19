@@ -12,6 +12,7 @@ adjust_lambda(
   design_params = list(),
   iter = 1000,
   prec_digits = 3,
+  data = NULL,
   ...
 )
 }
@@ -29,10 +30,14 @@ calculated.}
 \item{design_params}{A list of params that is specific to the class of
 \code{design}.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{prec_digits}{Number of decimal places that are considered when
 adjusting lambda.}
+
+\item{data}{A data matrix with k column with the number of responses for each
+basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
 
 \item{...}{Further arguments.}
 }
@@ -44,6 +49,13 @@ for the estimated \code{lambda}.
 }
 \description{
 Adjust Lambda
+}
+\details{
+It is recommended to use \code{data} and then use the same simulated
+data set for all further calculations. If \code{data = NULL} then
+new data is generated in each step of the algorithm, so \code{lambda} doesn't
+necessarily protect the family wise error rate for different simulated data
+due to Monte Carlo simulation error.
 }
 \examples{
 # Example for a basket trial with Fujikawa's Design

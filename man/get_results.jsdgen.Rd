@@ -8,7 +8,7 @@ Based on Generalized JSD Weights}
 \method{get_results}{jsdgen}(
   design,
   n,
-  p1,
+  p1 = NULL,
   lambda,
   eps_pair,
   tau = 0,
@@ -40,7 +40,8 @@ based on overall heterogeneity.}
 \item{logbase}{Tuning parameter. The base of the logarithm that is used to
 calculate the Jensen-Shannon divergence.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
 basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
