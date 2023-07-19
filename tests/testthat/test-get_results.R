@@ -5,7 +5,7 @@ test_that("get_results works for bma", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, pmp0 = 1, iter = 100)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, pmp0 = 1,
-    data = data)
+    data = data, iter = 110)
 
   expect_equal(dim(res1), c(100, 3))
   expect_equal(dim(res2), c(110, 3))
@@ -19,7 +19,8 @@ test_that("get_results works for ebcomb", {
 
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, iter = 100)
-  res2 <- get_results(design = design, n = 10, lambda = 0.95, data = data)
+  res2 <- get_results(design = design, n = 10, lambda = 0.95, data = data,
+    iter = 110)
 
   expect_equal(dim(res1), c(100, 3))
   expect_equal(dim(res2), c(110, 3))
@@ -38,7 +39,7 @@ test_that("get_results works for bhm", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, tau_scale = 1, iter = 10)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, tau_scale = 1,
-    data = data)
+    data = data, iter = 15)
 
   expect_equal(dim(res1), c(10, 3))
   expect_equal(dim(res2), c(15, 3))
@@ -61,7 +62,7 @@ test_that("get_results works for exnex", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, tau_scale = 1, w = 0.5, iter = 10)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, tau_scale = 1,
-    w = 0.5, data = data)
+    w = 0.5, data = data, iter = 15)
 
   expect_equal(dim(res1), c(10, 3))
   expect_equal(dim(res2), c(15, 3))
@@ -80,7 +81,7 @@ test_that("get_results works for fujikawa", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, epsilon = 2,
-    tau = 0, data = data)
+    tau = 0, data = data, iter = 110)
 
   expect_equal(dim(res1), c(100, 3))
   expect_equal(dim(res2), c(110, 3))
@@ -95,7 +96,7 @@ test_that("get_results works for jsdgen", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, eps_pair = 2, eps_all = 2, iter = 100)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, eps_pair = 2,
-    eps_all = 2, data = data)
+    eps_all = 2, data = data, iter = 110)
 
   expect_equal(dim(res1), c(100, 3))
   expect_equal(dim(res2), c(110, 3))
@@ -110,7 +111,7 @@ test_that("get_results works for cpp", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, tune_a = 1,
-    tune_b = 1, data = data)
+    tune_b = 1, data = data, iter = 110)
 
   expect_equal(dim(res1), c(100, 3))
   expect_equal(dim(res2), c(110, 3))
@@ -125,7 +126,7 @@ test_that("get_results works for cppgen", {
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
     lambda = 0.95, tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
   res2 <- get_results(design = design, n = 10, lambda = 0.95, tune_a = 1,
-    tune_b = 1, epsilon = 2, data = data)
+    tune_b = 1, epsilon = 2, data = data, iter = 110)
 
   expect_equal(dim(res1), c(100, 3))
   expect_equal(dim(res2), c(110, 3))

@@ -9,7 +9,7 @@ get_scenarios(design, p1)
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
 
-\item{theta1}{Probabilitiy under the alternative hypothesis.}
+\item{p1}{Probability under the alternative hypothesis.}
 }
 \value{
 A matrix with \code{k} rows and \code{k + 1} columns.

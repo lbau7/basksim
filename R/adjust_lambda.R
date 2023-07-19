@@ -22,10 +22,11 @@
 #'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
 adjust_lambda <- function(design, n, p1 = NULL, alpha = 0.05,
                           design_params = list(), iter = 1000, prec_digits = 3,
-                          ...) {
+                          data = NULL, ...) {
   upper_lim <- 1 - 10^(-prec_digits)
   root_fun <- function(x) do.call(toer, args = c(design = list(design),
-    n = n, p1 = list(p1), lambda = x, design_params, iter = iter, data = NULL,
+    n = n, p1 = list(p1), lambda = x, design_params, iter = iter,
+    data = list(data),
     ...)) - alpha
 
   # Use uniroot to find lambda close to the smallest lambda that protects

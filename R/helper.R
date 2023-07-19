@@ -62,12 +62,6 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
   weight_mat
 }
 
-# Get Simulated Data Based on a Binomial Distribution
-get_data <- function(k, n, p, iter) {
-  matrix(stats::rbinom(n = iter * k, size = n, prob = p), ncol = k,
-    byrow = TRUE)
-}
-
 # Calculate Posterior Probabilites of a Beta Distribution
 post_beta <- function(shape, p0) {
   stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],

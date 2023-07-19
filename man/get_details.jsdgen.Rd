@@ -11,6 +11,7 @@ Based on Generalized JSD Weights}
   p1,
   lambda,
   eps_pair,
+  tau = 0,
   eps_all,
   logbase = 2,
   iter = 1000,
@@ -29,6 +30,9 @@ Based on Generalized JSD Weights}
 
 \item{eps_pair}{Tuning parameter that determines the amount of borrowing
 based on pairwise similarity.}
+
+\item{tau}{Tuning parameter that determines how similar the baskets
+have to be that information is shared.}
 
 \item{eps_all}{Tuning parameter that determines the amount of borrowing
 based on overall heterogeneity.}

@@ -96,8 +96,6 @@ test_that("get_details works for bhm", {
   data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
   expect_error(get_details(design, n = 20, p1 = c(0.2, 0.2, 0.5), lambda = 0.95,
     tau_scale = 1, iter = 100, data = data))
-  expect_error(get_details(design, n = 20, p1 = 0.2, lambda = 0.95,
-    tau_scale = 1, iter = 100))
 })
 
 test_that("get_details works for exnex", {
