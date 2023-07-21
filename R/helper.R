@@ -80,14 +80,14 @@ cfun2 <- function(x, y) {
 }
 
 check_scenarios <- function(scenarios, design) {
+  if (!(is.matrix(scenarios) | is.data.frame(scenarios))) {
+    stop("scenarios is not a matrix or a data.frame")
+  }
   if (sum(duplicated(t(scenarios))) > 0) {
     stop("not all scenarios are distinct")
   }
   if (sum(apply(scenarios, 2, function(x) all(x == design$p0))) == 0) {
     stop("no null scenario")
-  }
-  if (!is.matrix(scenarios)) {
-    stop("scenarios is not a matrix")
   }
   if (nrow(scenarios) != design$k) {
     stop("scenarios doesn't have k rows")
