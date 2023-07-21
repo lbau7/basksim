@@ -167,7 +167,7 @@ test_that("get_details works for fujikawa", {
   set.seed(20230319)
   design <- setup_fujikawa(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-    lambda = 0.99, epsilon = 2, tau = 0, iter = 5000)
+    lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -

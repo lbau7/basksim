@@ -34,6 +34,9 @@ adjusting lambda.}
 \item{iter}{The number of iterations in the simulation. Is ignored if
 \code{data} is specified.}
 
+\item{data}{A list of data matrices generated with \code{get_data}. The
+list elements have to correspond to the columsn of \code{scenarios}.}
+
 \item{...}{Further arguments.}
 }
 \value{

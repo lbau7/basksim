@@ -7,6 +7,8 @@
 #' @param scenarios A matrix of scenarios.
 #' @template prec_digits
 #' @template iter
+#' @param data A list of data matrices generated with \code{get_data}. The
+#'   list elements have to correspond to the columsn of \code{scenarios}.
 #' @template dotdotdot
 #'
 #' @return A matrix with the expected number of correct decisions.

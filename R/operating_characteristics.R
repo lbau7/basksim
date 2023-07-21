@@ -19,7 +19,6 @@
 #'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
 ecd <- function(design, n, p1, lambda, design_params = list(), iter = 1000,
                 data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
   res <- do.call(get_results, args = c(design = list(design), n = n,
     p1 = list(p1), lambda = lambda, design_params, iter = iter,
     data = list(data), ...))

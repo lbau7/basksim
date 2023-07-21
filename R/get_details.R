@@ -238,7 +238,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
-                                 logbase = exp(1), iter = 1000,
+                                 logbase = 2, iter = 1000,
                                  data = NULL, ...) {
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)

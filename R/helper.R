@@ -16,11 +16,6 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
       if (i == j) {
         next
       } else {
-        p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-        q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-        m <- function(x) 0.5 * (p(x) + q(x))
-        f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-        g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
         kl_f <- stats::integrate(f, 0, 1)$value
         kl_g <- stats::integrate(g, 0, 1)$value
         jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
