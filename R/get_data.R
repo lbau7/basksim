@@ -41,14 +41,18 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
   }
 }
 
-check_data_matrix <- function(data, k, n, p, iter) {
+check_data_matrix <- function(data, design, n, p, iter) {
   if (is.null(data)) {
-    get_data(k = k, n = n, p = p, iter = iter, type = "matrix")
+    if (is.null(p)) {
+      p <- design$p0
+      message("no p1 and no data specifid - data generated under p0")
+    }
+    get_data(k = design$k, n = n, p = p, iter = iter, type = "matrix")
   } else {
     if (!inherits(data, "matrix")) {
       stop("data is not a matrix")
     }
-    if (ncol(data) != k) {
+    if (ncol(data) != design$k) {
       stop("data doesn't have k columns")
     }
     if (attr(data, "n") != n) {
@@ -64,20 +68,24 @@ check_data_matrix <- function(data, k, n, p, iter) {
   }
 }
 
-check_data_bhmbasket <- function(data, k, n, p, iter) {
+check_data_bhmbasket <- function(data, design, n, p, iter) {
   if (is.null(data)) {
-    get_data(k = k, n = n, p = p, iter = iter, type = "bhmbasket")
+    if (is.null(p)) {
+      p <- design$p0
+      message("no p1 and no data specifid - data generated under p0")
+    }
+    get_data(k = design$k, n = n, p = p, iter = iter, type = "bhmbasket")
   } else {
     if (!inherits(data, "scenario_list")) {
       stop("data is not of class scenario_list")
     }
-    if (ncol(data$scenario_1$n_responders) != k) {
+    if (ncol(data$scenario_1$n_responders) != design$k) {
       stop("data doesn't have k columns")
     }
     if (!all(data$scenario_1$n_subjects == n)) {
       stop("data wasn't generated with the specified n")
     }
-    if (!all(data$scenario_1$response_rates == p) & is.null(p)) {
+    if (!all(data$scenario_1$response_rates == p) & !is.null(p)) {
       stop("data wasn't generated with the specified p1")
     }
     if (nrow(data$scenario_1$n_responders) != iter) {
@@ -87,4 +95,14 @@ check_data_bhmbasket <- function(data, k, n, p, iter) {
   }
 }
 
+check_data_list <- function(data, scenarios) {
+  if (!is.null(data)) {
+    if (!is.list(data)) {
+      stop("data is not a list")
+    }
+    if (length(data) != ncol(scenarios)) {
+      stop("data does not have an element for each scenario")
+    }
+  }
+}
 

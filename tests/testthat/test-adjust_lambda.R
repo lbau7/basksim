@@ -1,6 +1,7 @@
 test_that("adjust_lambda works", {
   design <- setup_cpp(k = 3, p0 = 0.2)
 
+  # Without simulated data
   set.seed(20230319)
   res1 <- adjust_lambda(design = design, n = 15, alpha = 0.05,
     design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
@@ -27,4 +28,26 @@ test_that("adjust_lambda works", {
 
   expect_lte(res3$toer, 0.05)
   expect_true(abs(res3$toer - toer3) < 0.02)
+
+  # With simulated data
+  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = 100)
+  res4 <- adjust_lambda(design = design, n = 15, p1 = 0.2, alpha = 0.05,
+    design_params = list(tune_a = 1, tune_b = 1), iter = 100, prec_digits = 3,
+    data = simdata)
+  res5 <- adjust_lambda(design = design, n = 15, p1 = 0.2, alpha = 0.05,
+    design_params = list(tune_a = 1, tune_b = 1), iter = 100, prec_digits = 3,
+    data = simdata)
+
+  # Check if results are equal when opt_design is called two times with
+  # the same simulate data
+  expect_equal(res4$lambda, res5$lambda)
+  expect_equal(res4$toer, res5$toer)
+
+  toer4 <- toer(design, n = 15, p1 = 0.2, lambda = res4$lambda,
+    design_params = list(tune_a = 1, tune_b = 1), iter = 100, data = simdata)
+  toer5 <- toer(design, n = 15, p1 = 0.2, lambda = res4$lambda - 0.01,
+    design_params = list(tune_a = 1, tune_b = 1), iter = 100, data = simdata)
+
+  expect_equal(res4$toer, toer4)
+  expect_gt(toer5, 0.05)
 })

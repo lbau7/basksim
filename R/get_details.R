@@ -38,7 +38,7 @@ get_details <- function(design, ...) {
 #'   iter = 100)
 get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
-  data <- check_data_matrix(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2') %dofuture% {
@@ -75,7 +75,7 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
 get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
                                data = NULL, ...) {
-  data <- check_data_matrix(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
@@ -117,7 +117,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'   tau_scale = 1, iter = 100)
 get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
-  data <- check_data_bhmbasket(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
@@ -177,7 +177,8 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'   tau_scale = 1, w = 0.5, iter = 100)
 get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
-  data <- check_data_bhmbasket(data = data, k = design$k, n = n, p = p1,
+
+  data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
@@ -241,7 +242,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  data = NULL, ...) {
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)
-  data <- check_data_matrix(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
@@ -288,7 +289,7 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
                                ...) {
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
     tau = tau, logbase = logbase)
-  data <- check_data_matrix(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
@@ -332,7 +333,7 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
-  data <- check_data_matrix(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
@@ -376,7 +377,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 get_details.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                                epsilon, iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
-  data <- check_data_matrix(data = data, k = design$k, n = n, p = p1,
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
