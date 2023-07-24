@@ -43,10 +43,6 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
 
 check_data_matrix <- function(data, design, n, p, iter) {
   if (is.null(data)) {
-    if (is.null(p)) {
-      p <- design$p0
-      message("no p1 and no data specifid - data generated under p0")
-    }
     get_data(k = design$k, n = n, p = p, iter = iter, type = "matrix")
   } else {
     if (!inherits(data, "matrix")) {
@@ -58,7 +54,7 @@ check_data_matrix <- function(data, design, n, p, iter) {
     if (attr(data, "n") != n) {
       stop("data wasn't generated with the specified n")
     }
-    if (!all(attr(data, "p") == p) & !is.null(p)) {
+    if (!all(attr(data, "p") == p)) {
       stop("data wasn't generated with the specified p1")
     }
     if (nrow(data) != iter) {
@@ -70,10 +66,6 @@ check_data_matrix <- function(data, design, n, p, iter) {
 
 check_data_bhmbasket <- function(data, design, n, p, iter) {
   if (is.null(data)) {
-    if (is.null(p)) {
-      p <- design$p0
-      message("no p1 and no data specifid - data generated under p0")
-    }
     get_data(k = design$k, n = n, p = p, iter = iter, type = "bhmbasket")
   } else {
     if (!inherits(data, "scenario_list")) {

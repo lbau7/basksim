@@ -19,8 +19,6 @@ test_that("check_data_matrix works", {
   data1 <- get_data(k = 3, n = 20, p = 0.2, iter = 100)
   data2 <- get_data(k = 4, n = 20, p = 0.2, iter = 100)
 
-  expect_message(check_data_matrix(data = NULL, design = design, n = 20,
-    p = NULL, iter = 100))
   expect_error(check_data_matrix(data = data.frame(data1), design = design,
     n = 20, p = NULL, iter = 100))
   expect_error(check_data_matrix(data = data2, design = design, n = 20,
@@ -39,8 +37,6 @@ test_that("check_data_bhmbasket works", {
   data2 <- get_data(k = 3, n = 20, p = 0.2, iter = 100)
   data3 <- get_data(k = 4, n = 20, p = 0.2, iter = 100, type = "bhmbasket")
 
-  expect_message(check_data_bhmbasket(data = NULL, design = design, n = 20,
-    p = NULL, iter = 100))
   expect_error(check_data_bhmbasket(data = data2, design = design,
     n = 20, p = NULL, iter = 100))
   expect_error(check_data_bhmbasket(data = data3, design = design, n = 20,

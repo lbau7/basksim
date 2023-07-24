@@ -3,9 +3,9 @@
 #' @template design
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means
-#' and mean squared errors of all baskets. For some method the mean limits of
-#' HDI intervals are also returned.
+#' @return A list containing the rejection probabilites, posterior means, mean
+#' squared errors of all baskets and the family-wise error rate. For some
+#' methods the mean limits of HDI intervals are also returned.
 #' @export
 #'
 #' @examples
@@ -29,7 +29,8 @@ get_details <- function(design, ...) {
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' and mean squared errors for all baskets.
+#' and mean squared errors for all baskets as well as the family-wise error
+#' rate.
 #' @export
 #'
 #' @examples
@@ -38,6 +39,8 @@ get_details <- function(design, ...) {
 #'   iter = 100)
 get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -51,8 +54,9 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
   }
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     Mean = colMeans(res[[2]]),
-    MSE = colMeans(t(t(res[[2]])-p1)^2)
+    MSE = colMeans(t(t(res[[2]]) - p1)^2)
   )
 }
 
@@ -67,7 +71,8 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -75,6 +80,8 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
 get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
                                data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -85,9 +92,11 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
     hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
       shape1 = x[1], shape2 = x[2], credMass = lambda))
     list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-    }
+  }
+
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
@@ -108,7 +117,8 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -117,6 +127,8 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'   tau_scale = 1, iter = 100)
 get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -147,6 +159,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 
   list(
     Rejection_Probabilities = unname(colMeans(res)),
+    FWER = mean(apply(res, 1, function(x) any(x[targ] == 1))),
     Mean = unname(est[, 1]),
     MSE = unname(est[, 7]),
     Lower_CL = unname(est[, 3]),
@@ -168,7 +181,8 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -177,7 +191,8 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'   tau_scale = 1, w = 0.5, iter = 100)
 get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
-
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -210,6 +225,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 
   list(
     Rejection_Probabilities = unname(colMeans(res)),
+    FWER = mean(apply(res, 1, function(x) any(x[targ] == 1))),
     Mean = unname(est[, 1]),
     MSE = unname(est[, 7]),
     Lower_CL = unname(est[, 3]),
@@ -240,6 +256,8 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  logbase = 2, iter = 1000,
                                  data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -253,14 +271,15 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
       hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
         shape1 = x[1], shape2 = x[2], credMass = lambda))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-    }
+  }
+
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]]),
-    FWER = mean(apply(res[[1]] == 1, 1, any))
+    Upper_CL = colMeans(res[[4]])
   )
 }
 
@@ -277,7 +296,8 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -287,6 +307,8 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
                                eps_all, logbase = 2, iter = 1000, data = NULL,
                                ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
     tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -300,9 +322,11 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
       hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
         shape1 = x[1], shape2 = x[2], credMass = lambda))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-    }
+  }
+
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
@@ -323,7 +347,8 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -332,6 +357,8 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -347,6 +374,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
     }
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
@@ -367,7 +395,8 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilites, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets.
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
 #' @export
 #'
 #' @examples
@@ -376,6 +405,8 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
 get_details.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                                epsilon, iter = 1000, data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -391,6 +422,7 @@ get_details.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
   }
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),

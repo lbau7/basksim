@@ -102,7 +102,7 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "berry",
@@ -118,7 +118,7 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
+    analyses_list = analyses,
     cohort_names = paste("p", 1:design$k, sep ="_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br),
@@ -154,7 +154,7 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "exnex",
@@ -172,7 +172,7 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
+    analyses_list = analyses,
     cohort_names = paste("p", 1:design$k, sep ="_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
