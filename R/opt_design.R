@@ -63,7 +63,8 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
   }
 
   if (ncol(grid) == 0) {
-    ecd_res <- cbind(lambdas, ecd_res, "Mean_ECD" = rowMeans(ecd_res))
+    ecd_res <- cbind("Lambda" = lambdas, ecd_res,
+      "Mean_ECD" = rowMeans(ecd_res))
   } else {
     ecd_res <- cbind(grid, "Lambda" = lambdas, ecd_res,
       "Mean_ECD" = rowMeans(ecd_res))
