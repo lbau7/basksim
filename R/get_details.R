@@ -44,7 +44,8 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2') %dofuture% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
+                          .options.future = list(seed = TRUE)) %dofuture% {
     res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
       n = rep(n, design$k), pmp0 = pmp0)
     list(
@@ -85,7 +86,8 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1',
+                          .options.future = list(seed = TRUE)) %dofuture% {
     shape_loop <- weight_ebcombined(design = design, n = n, r = data[i, ])
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))

@@ -41,7 +41,8 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
+                   .options.future = list(seed = TRUE)) %dofuture% {
     res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
       n = rep(n, design$k), pmp0 = pmp0, ...)
     ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0)
@@ -71,7 +72,8 @@ get_results.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
                                data = NULL, ...) {
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
+                   .options.future = list(seed = TRUE)) %dofuture% {
     ana_ebcombined(design = design, n = n, r = data[i, ], lambda = lambda)
   }
 }
