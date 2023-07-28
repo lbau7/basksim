@@ -29,7 +29,8 @@ then \code{iter} is ignored.}
 }
 \value{
 A list containing the rejection probabilites, posterior means,
-and mean squared errors for all baskets.
+and mean squared errors for all baskets as well as the family-wise error
+rate.
 }
 \description{
 Get Details of a BMA Basket Trial Simulation

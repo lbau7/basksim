@@ -4,41 +4,10 @@
 \alias{adjust_lambda}
 \title{Adjust Lambda}
 \usage{
-adjust_lambda(
-  design,
-  n,
-  p1 = NULL,
-  alpha = 0.05,
-  design_params = list(),
-  iter = 1000,
-  prec_digits = 3,
-  data = NULL,
-  ...
-)
+adjust_lambda(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
-
-\item{n}{The sample size per basket.}
-
-\item{p1}{Probabilities under the alternative hypothesis. If \code{NULL}
-then the type 1 error rate under the global null hypothesis is
-calculated.}
-
-\item{alpha}{The one-sided significance level.}
-
-\item{design_params}{A list of params that is specific to the class of
-\code{design}.}
-
-\item{iter}{The number of iterations in the simulation. Is ignored if
-\code{data} is specified.}
-
-\item{prec_digits}{Number of decimal places that are considered when
-adjusting lambda.}
-
-\item{data}{A data matrix with k column with the number of responses for each
-basket. Has to be generated with \code{get_data}. If \code{data} is used,
-then \code{iter} is ignored.}
 
 \item{...}{Further arguments.}
 }
@@ -52,15 +21,13 @@ for the estimated \code{lambda}.
 Adjust Lambda
 }
 \details{
-It is recommended to use \code{data} and then use the same simulated
-data set for all further calculations. If \code{data = NULL} then
-new data is generated in each step of the algorithm, so \code{lambda} doesn't
-necessarily protect the family wise error rate for different simulated data
-due to Monte Carlo simulation error.
+The default method for \code{adjust_lambda} uses a combination
+of \code{\link{uniroot}} and grid search and calls \code{\link{toer}}
+in every iteration. For methods implemented in the \code{bhmbasket} package
+there are separate methods that are computationally more efficient.
 }
 \examples{
-# Example for a basket trial with Fujikawa's Design
-design <- setup_fujikawa(k = 3, p0 = 0.2)
+design <- design_cpp(k = 3, p0 = 0.2)
 adjust_lambda(design = design, n = 20, alpha = 0.05,
-  design_params = list(epsilon = 2, tau = 0), iter = 1000)
+  design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
 }
