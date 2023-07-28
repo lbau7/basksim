@@ -15,7 +15,7 @@
 #' @export
 #'
 #' @examples
-#' design <- design_cpp(k = 3, p0 = 0.2)
+#' design <- setup_cpp(k = 3, p0 = 0.2)
 #' adjust_lambda(design = design, n = 20, alpha = 0.05,
 #'   design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
 adjust_lambda <- function(design, ...) {
@@ -115,6 +115,7 @@ adjust_lambda.default <- function(design, n, p1 = NULL, alpha = 0.05,
 #' @template alpha
 #' @template design_params
 #' @template iter
+#' @template n_mcmc
 #' @template prec_digits
 #' @template data
 #' @template dotdotdot
