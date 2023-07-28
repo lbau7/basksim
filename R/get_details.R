@@ -217,7 +217,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
     analyses_list = analyses,
-    cohort_names = paste("p", 1:design$k, sep ="_"),
+    cohort_names = paste("p", 1:design$k, sep = "_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
   )$scenario_1$decisions_list$exnex[, -1]
