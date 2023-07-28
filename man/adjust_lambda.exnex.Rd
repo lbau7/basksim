@@ -32,6 +32,8 @@
 \item{iter}{The number of iterations in the simulation. Is ignored if
 \code{data} is specified.}
 
+\item{n_mcmc}{Number of MCMC samples.}
+
 \item{prec_digits}{Number of decimal places that are considered when
 adjusting lambda.}
 
