@@ -1,4 +1,4 @@
-test_that("adjust_lambda works", {
+test_that("adjust_lambda default method works", {
   design <- setup_cpp(k = 3, p0 = 0.2)
 
   # Without simulated data
@@ -50,4 +50,32 @@ test_that("adjust_lambda works", {
 
   expect_equal(res4$toer, toer4)
   expect_gt(toer5, 0.05)
+})
+
+test_that("adjust_lambda works for exnex", {
+  design <- setup_exnex(k = 3, p0 = 0.2)
+  set.seed(125)
+  res1 <- adjust_lambda(design = design, n = 15,
+    design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 2500)
+
+  set.seed(125)
+  res2 <- toer(design = design, n = 15, lambda = res1$lambda,
+    design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 2500)
+
+  expect_lte(res1$toer, 0.05)
+  expect_equal(res1$toer, res2)
+})
+
+test_that("adjust_lambda works for exnex", {
+  design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
+  set.seed(125)
+  res1 <- adjust_lambda(design = design, n = 15,
+    design_params = list(tau_scale = 1), iter = 100, n_mcmc = 2500)
+
+  set.seed(125)
+  res2 <- toer(design = design, n = 15, lambda = res1$lambda,
+    design_params = list(tau_scale = 1), iter = 100, n_mcmc = 2500)
+
+  expect_lte(res1$toer, 0.05)
+  expect_equal(res1$toer, res2)
 })
