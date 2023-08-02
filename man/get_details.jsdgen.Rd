@@ -10,6 +10,7 @@ Based on Generalized JSD Weights}
   n,
   p1 = NULL,
   lambda,
+  level = 0.95,
   eps_pair,
   tau = 0,
   eps_all,
@@ -27,6 +28,8 @@ Based on Generalized JSD Weights}
 \item{p1}{Probabilities under the alternative hypothesis.}
 
 \item{lambda}{The posterior probability threshold.}
+
+\item{level}{Level of the credibility intervals.}
 
 \item{eps_pair}{Tuning parameter that determines the amount of borrowing
 based on pairwise similarity.}

@@ -10,6 +10,7 @@ Design}
   n,
   p1 = NULL,
   lambda,
+  level = 0.95,
   tune_a,
   tune_b,
   iter = 1000,
@@ -25,6 +26,8 @@ Design}
 \item{p1}{Probabilities under the alternative hypothesis.}
 
 \item{lambda}{The posterior probability threshold.}
+
+\item{level}{Level of the credibility intervals.}
 
 \item{tune_a}{First tuning parameter that determines the amount of borrowing
 based on pairwise similarity between baskets.}

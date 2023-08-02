@@ -9,6 +9,7 @@
   n,
   p1 = NULL,
   lambda,
+  level = 0.95,
   tau_scale,
   w,
   iter = 1000,
@@ -25,6 +26,8 @@
 \item{p1}{Probabilities under the alternative hypothesis.}
 
 \item{lambda}{The posterior probability threshold.}
+
+\item{level}{Level of the credibility intervals.}
 
 \item{tau_scale}{Standard deviation of the half normal prior exchangeability
 distribution for the variance of the thetas.}

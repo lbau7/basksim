@@ -9,6 +9,7 @@
   n,
   p1 = NULL,
   lambda,
+  level = 0.95,
   epsilon,
   tau,
   logbase = 2,
@@ -25,6 +26,8 @@
 \item{p1}{Probabilities under the alternative hypothesis.}
 
 \item{lambda}{The posterior probability threshold.}
+
+\item{level}{Level of the credibility intervals.}
 
 \item{epsilon}{Tuning parameter that determines the amount of borrowing.
 See \code{\link{setup_fujikawa}}).}

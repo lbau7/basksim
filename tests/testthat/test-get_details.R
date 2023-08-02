@@ -77,7 +77,7 @@ test_that("get_details works for bhm", {
   estim <- bhmbasket::getEstimates(
     analyses_list = ana,
     point_estimator = "mean",
-    alpha_level = 0.1
+    alpha_level = 0.05
   )
 
   # Results are equal with get_details and bhmbasket
@@ -141,7 +141,7 @@ test_that("get_details works for exnex", {
   estim <- bhmbasket::getEstimates(
     analyses_list = ana,
     point_estimator = "mean",
-    alpha_level = 0.1
+    alpha_level = 0.05
   )
 
   # Results are equal with get_details and bhmbasket

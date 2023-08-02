@@ -37,8 +37,8 @@ get_details <- function(design, ...) {
 #' design <- setup_bma(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, pmp0 = 1,
 #'   iter = 100)
-get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
-                            data = NULL, ...) {
+get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
+                            iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -67,6 +67,7 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template iter
 #' @template data
 #' @template dotdotdot
@@ -79,8 +80,8 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #' @examples
 #' design <- setup_ebcomb(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
-get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
-                               data = NULL, ...) {
+get_details.ebcomb <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                               iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -92,7 +93,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
     hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-      shape1 = x[1], shape2 = x[2], credMass = lambda))
+      shape1 = x[1], shape2 = x[2], credMass = level))
     list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   }
 
@@ -112,6 +113,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template tau_bhm
 #' @template iter
 #' @template n_mcmc
@@ -127,8 +129,9 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tau_scale = 1, iter = 100)
-get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
-                            iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                            tau_scale, iter = 1000, n_mcmc = 10000,
+                            data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
@@ -136,7 +139,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
-    evidence_levels = lambda,
+    evidence_levels = c(lambda, 1 - level),
     method_names = "berry",
     target_rates = rep(design$p_target, design$k),
     prior_parameters_list = bhmbasket::setPriorParametersBerry(
@@ -157,7 +160,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
   )$scenario_1$decisions_list$berry[, -1]
 
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
-    alpha_level = (1 - lambda))$berry
+    alpha_level = (1 - level))$berry
 
   list(
     Rejection_Probabilities = unname(colMeans(res)),
@@ -175,6 +178,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template tau_exnex
 #' @template w_exnex
 #' @template iter
@@ -191,8 +195,9 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #' design <- setup_exnex(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tau_scale = 1, w = 0.5, iter = 100)
-get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
-                              iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                              tau_scale, w, iter = 1000, n_mcmc = 10000,
+                              data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
@@ -200,7 +205,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
-    evidence_levels = lambda,
+    evidence_levels = c(lambda, 1 - level),
     method_names = "exnex",
     prior_parameters_list = bhmbasket::setPriorParametersExNex(
       mu_mean = design$mu_mean,
@@ -223,7 +228,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
   )$scenario_1$decisions_list$exnex[, -1]
 
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
-    alpha_level = (1 - lambda))$exnex
+    alpha_level = (1 - level))$exnex
 
   list(
     Rejection_Probabilities = unname(colMeans(res)),
@@ -241,6 +246,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template tuning_fujikawa
 #' @template iter
 #' @template data
@@ -255,8 +261,8 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
-get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
-                                 logbase = 2, iter = 1000,
+get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                                 epsilon, tau, logbase = 2, iter = 1000,
                                  data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
@@ -271,7 +277,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
       hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-        shape1 = x[1], shape2 = x[2], credMass = lambda))
+        shape1 = x[1], shape2 = x[2], credMass = level))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   }
 
@@ -292,6 +298,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template tuning_jsdgen
 #' @template iter
 #' @template data
@@ -306,9 +313,9 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 #' design <- setup_jsdgen(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   eps_pair = 2, eps_all = 2, iter = 100)
-get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
-                               eps_all, logbase = 2, iter = 1000, data = NULL,
-                               ...) {
+get_details.jsdgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                               eps_pair, tau = 0, eps_all, logbase = 2,
+                               iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
@@ -322,7 +329,7 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
       hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-        shape1 = x[1], shape2 = x[2], credMass = lambda))
+        shape1 = x[1], shape2 = x[2], credMass = level))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   }
 
@@ -343,6 +350,7 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template tuning_cpp
 #' @template iter
 #' @template data
@@ -357,8 +365,8 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 #' design <- setup_cpp(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, iter = 100)
-get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
-                            iter = 1000, data = NULL, ...) {
+get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                            tune_a, tune_b, iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -371,7 +379,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
       hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-        shape1 = x[1], shape2 = x[2], credMass = lambda))
+        shape1 = x[1], shape2 = x[2], credMass = level))
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
     }
   list(
@@ -391,6 +399,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #' @template n
 #' @template p1
 #' @template lambda
+#' @template level
 #' @template tuning_cppgen
 #' @template iter
 #' @template data
@@ -405,8 +414,9 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #' design <- setup_cppgen(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
-get_details.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
-                               epsilon, iter = 1000, data = NULL, ...) {
+get_details.cppgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                               tune_a, tune_b, epsilon, iter = 1000,
+                               data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -419,7 +429,7 @@ get_details.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
     hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-      shape1 = x[1], shape2 = x[2], credMass = lambda))
+      shape1 = x[1], shape2 = x[2], credMass = level))
     list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   }
   list(
