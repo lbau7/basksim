@@ -27,10 +27,12 @@ ecd(
 \item{design_params}{A list of params that is specific to the class of
 \code{design}.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
-basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
+basket. Has to be generated with \code{get_data}. If \code{data} is used,
+then \code{iter} is ignored.}
 
 \item{...}{Further arguments.}
 }

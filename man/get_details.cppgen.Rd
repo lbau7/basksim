@@ -8,8 +8,9 @@ Power Prior Design}
 \method{get_details}{cppgen}(
   design,
   n,
-  p1,
+  p1 = NULL,
   lambda,
+  level = 0.95,
   tune_a,
   tune_b,
   epsilon,
@@ -27,6 +28,8 @@ Power Prior Design}
 
 \item{lambda}{The posterior probability threshold.}
 
+\item{level}{Level of the credibility intervals.}
+
 \item{tune_a}{First tuning parameter that determines the amount of borrowing
 based on pairwise similarity between baskets.}
 
@@ -36,16 +39,19 @@ based on pairwise similarity between baskets.}
 \item{epsilon}{Tuning parameter that determines the amount of borrowing based
 on overall heterogeneity.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
-basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
+basket. Has to be generated with \code{get_data}. If \code{data} is used,
+then \code{iter} is ignored.}
 
 \item{...}{Further arguments.}
 }
 \value{
 A list containing the rejection probabilites, posterior means,
-mean squared errors and mean limits of HDI intervals for all baskets.
+mean squared errors and mean limits of HDI intervals for all baskets as well
+as the family-wise error rate.
 }
 \description{
 Get Details of a Basket Trial Simulation with the Generalized Calibrated

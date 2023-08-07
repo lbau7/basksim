@@ -4,7 +4,16 @@
 \alias{get_details.ebcomb}
 \title{Get Details of a Basket Trial Simulation with the ebcomb Design}
 \usage{
-\method{get_details}{ebcomb}(design, n, p1, lambda, iter = 1000, data = NULL, ...)
+\method{get_details}{ebcomb}(
+  design,
+  n,
+  p1 = NULL,
+  lambda,
+  level = 0.95,
+  iter = 1000,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{ebcomb}.}
@@ -15,16 +24,21 @@
 
 \item{lambda}{The posterior probability threshold.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{level}{Level of the credibility intervals.}
+
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
-basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
+basket. Has to be generated with \code{get_data}. If \code{data} is used,
+then \code{iter} is ignored.}
 
 \item{...}{Further arguments.}
 }
 \value{
 A list containing the rejection probabilites, posterior means,
-mean squared errors and mean limits of HDI intervals for all baskets.
+mean squared errors and mean limits of HDI intervals for all baskets as well
+as the family-wise error rate.
 }
 \description{
 Get Details of a Basket Trial Simulation with the ebcomb Design

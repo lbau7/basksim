@@ -12,9 +12,9 @@ get_details(design, ...)
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilites, posterior means
-and mean squared errors of all baskets. For some method the mean limits of
-HDI intervals are also returned.
+A list containing the rejection probabilites, posterior means, mean
+squared errors of all baskets and the family-wise error rate. For some
+methods the mean limits of HDI intervals are also returned.
 }
 \description{
 Get Details of a Basket Trial Simulation

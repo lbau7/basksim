@@ -4,12 +4,12 @@
 \alias{get_scenarios}
 \title{Create a Scenario Matrix}
 \usage{
-get_scenarios(design, theta1)
+get_scenarios(design, p1)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
 
-\item{theta1}{Probabilitiy under the alternative hypothesis.}
+\item{p1}{Probability under the alternative hypothesis.}
 }
 \value{
 A matrix with \code{k} rows and \code{k + 1} columns.
@@ -24,5 +24,5 @@ that can be used for \code{\link{opt_design}}. The function creates
 }
 \examples{
 design <- setup_fujikawa(k = 3, p0 = 0.2)
-get_scenarios(design = design, theta1 = 0.5)
+get_scenarios(design = design, p1 = 0.5)
 }

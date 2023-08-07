@@ -15,14 +15,14 @@ Imports:
     baskexact,
     bhmbasket,
     bmabasket,
-    doRNG,
+    doFuture,
     extraDistr,
     foreach,
-    HDInterval
+    HDInterval,
+	progressr
 Suggests:
 	baskexact,
     covr,
-	doFuture,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 URL: https://github.com/lbau7/basksim

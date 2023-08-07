@@ -77,7 +77,7 @@ test_that("get_details works for bhm", {
   estim <- bhmbasket::getEstimates(
     analyses_list = ana,
     point_estimator = "mean",
-    alpha_level = 0.1
+    alpha_level = 0.05
   )
 
   # Results are equal with get_details and bhmbasket
@@ -90,14 +90,13 @@ test_that("get_details works for bhm", {
   # Works without supplied data
   res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
     lambda = 0.9, tau_scale = 0.75, iter = 100)
-  expect_equal(length(res3), 5)
+  expect_equal(length(res3), 6)
+  expect_equal(res3$Rejection_Probabilities[1], res3$FWER)
 
   # Error works
   data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
   expect_error(get_details(design, n = 20, p1 = c(0.2, 0.2, 0.5), lambda = 0.95,
     tau_scale = 1, iter = 100, data = data))
-  expect_error(get_details(design, n = 20, p1 = 0.2, lambda = 0.95,
-    tau_scale = 1, iter = 100))
 })
 
 test_that("get_details works for exnex", {
@@ -142,7 +141,7 @@ test_that("get_details works for exnex", {
   estim <- bhmbasket::getEstimates(
     analyses_list = ana,
     point_estimator = "mean",
-    alpha_level = 0.1
+    alpha_level = 0.05
   )
 
   # Results are equal with get_details and bhmbasket
@@ -155,7 +154,8 @@ test_that("get_details works for exnex", {
   # Works without supplied data
   res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
     lambda = 0.9, tau_scale = 0.75, w = 0.5, iter = 100)
-  expect_equal(length(res3), 5)
+  expect_equal(length(res3), 6)
+  expect_equal(res3$Rejection_Probabilities[1], res3$FWER)
 
   # Errors work
   data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
@@ -169,7 +169,7 @@ test_that("get_details works for fujikawa", {
   set.seed(20230319)
   design <- setup_fujikawa(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-    lambda = 0.99, epsilon = 2, tau = 0, iter = 5000)
+    lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -

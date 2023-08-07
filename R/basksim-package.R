@@ -2,8 +2,7 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom doRNG %dorng%
-#' @importFrom foreach %dopar%
+#' @importFrom doFuture %dofuture%
 ## usethis namespace: end
 NULL
 

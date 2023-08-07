@@ -4,7 +4,19 @@
 \alias{get_details.exnex}
 \title{Get Details of a Basket Trial Simulation with the EXNEX Design}
 \usage{
-\method{get_details}{exnex}(design, n, p1, lambda, tau_scale, w, iter = 1000, data = NULL, ...)
+\method{get_details}{exnex}(
+  design,
+  n,
+  p1 = NULL,
+  lambda,
+  level = 0.95,
+  tau_scale,
+  w,
+  iter = 1000,
+  n_mcmc = 10000,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{exnex}.}
@@ -15,12 +27,17 @@
 
 \item{lambda}{The posterior probability threshold.}
 
+\item{level}{Level of the credibility intervals.}
+
 \item{tau_scale}{Standard deviation of the half normal prior exchangeability
 distribution for the variance of the thetas.}
 
 \item{w}{Fixed prior weight for the exchangeability part of the model.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
+
+\item{n_mcmc}{Number of MCMC samples.}
 
 \item{data}{An object of class \code{scenario_list} as returned by the
 function \code{bhmbasket::simulateScenarios}.}
@@ -29,7 +46,8 @@ function \code{bhmbasket::simulateScenarios}.}
 }
 \value{
 A list containing the rejection probabilites, posterior means,
-mean squared errors and mean limits of HDI intervals for all baskets.
+mean squared errors and mean limits of HDI intervals for all baskets as well
+as the family-wise error rate.
 }
 \description{
 Get Details of a Basket Trial Simulation with the EXNEX Design
