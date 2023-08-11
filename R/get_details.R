@@ -269,15 +269,22 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
   if(exact){
     design_exact <- baskexact::setupOneStageBasket(k = design$k,
                                                    p0 = design$p0)
-    res_fwer <- baskexact::toer(design_exact, p1 = p1, n = n,
+    res_fwer <- baskexact::toer(design_exact,
+                                p1 = p1, n = n,
                                 lambda = lambda,
-                                epsilon = epsilon, tau = tau,
-                                logbase = logbase,
+                                weight_fun = baskexact::weights_fujikawa,
+                                weight_params = list(epsilon = epsilon,
+                                                     tau = tau,
+                                                     logbase = logbase),
                                 results = "group")
-    ewp <- baskexact::pow(design_exact, p1 = p1, n = n,
+    ewp <- baskexact::pow(design_exact,
+                          p1 = p1, n = n,
                           lambda = lambda,
-                          epsilon = epsilon, tau = tau,
-                          logbase = exp(1))
+                          weight_fun = baskexact::weights_fujikawa,
+                          weight_params = list(epsilon = epsilon,
+                                               tau = tau,
+                                               logbase = logbase),
+                          results = "ewp")
     list(
       Rejection_Probabilities = res_fwer$rejection_probabilities,
       FWER = res_fwer$fwer,
