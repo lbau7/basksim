@@ -268,13 +268,14 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
   # Calculate exact operating characteristics using baskexact
   if(exact){
     design_exact <- baskexact::setupOneStageBasket(k = design$k,
-                                                   theta0 = design$p0)
-    res_fwer <- baskexact::toer(design_exact, theta1 = p1, n = n,
+                                                   p0 = design$p0)
+    res_fwer <- baskexact::toer(design_exact, p1 = p1, n = n,
                                 lambda = lambda,
                                 epsilon = epsilon, tau = tau,
                                 logbase = logbase,
                                 results = "group")
-    ewp <- baskexact::pow(design_exact, theta1 = p1, n = n, lambda = lambda,
+    ewp <- baskexact::pow(design_exact, p1 = p1, n = n,
+                          lambda = lambda,
                           epsilon = epsilon, tau = tau,
                           logbase = exp(1))
     list(
