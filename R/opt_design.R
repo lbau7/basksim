@@ -99,3 +99,8 @@ get_scenarios <- function(design, p1) {
   colnames(scen_mat) <- paste(0:design$k, "Active")
   scen_mat
 }
+
+opt_design_gen <- function(design, utility, algorithm, design_params,
+                           utility_params, algorithm_params){
+
+}
