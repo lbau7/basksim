@@ -100,7 +100,64 @@ get_scenarios <- function(design, p1) {
   scen_mat
 }
 
-opt_design_gen <- function(design, utility, algorithm, design_params,
-                           utility_params, algorithm_params){
-
+#' Optimize a Basket Trial Design
+#'
+#' Optimize the parameters of a basket trial design using a utility-based
+#' approach with a simulation algorithm of your choice.
+#'
+#' @template design
+#' @template utility
+#' @template algorithm
+#' @template detail_params
+#' @template utility_params
+#' @template algorithm_params
+#' @template trace
+#'
+#' @return a list consisting of the optimization result vector and the trace of
+#'  the optimization algorithm
+#' @export
+#'
+#' @examples
+#' design <- setup_fujikawa(k = 3, p0 = 0.2, shape1 = 1, shape2 = 1)
+#' opt_design_gen(design = design,
+#'                utility = u_powfwer_discont,
+#'                algorithm = optimization_optim_sa,
+#'                detail_params = list(n = 20, p1 = c(0.5, 0.2, 0.2),
+#'                                     logbase = exp(1), exact = TRUE),
+#'                utility_params = list(alpha = 0.05),
+#'                algorithm_params = list(start = c(lambda = 0.99,
+#'                                                     epsilon = 2,
+#'                                                     tau = 0.5),
+#'                                        maximization = TRUE,
+#'                                        lower = c(lambda = 0.001,
+#'                                                     epsilon = 1,
+#'                                                     tau = 0.001),
+#'                                        upper = c(lambda = 0.999,
+#'                                                     epsilon = 10,
+#'                                                     tau = 0.999),
+#'                                        control = list(t0 = 1000,
+#'                                                       t_min = 0.1,
+#'                                                       r = 0.6,
+#'                                                       k = 1,
+#'                                                       maxgood = 1)))
+opt_design_gen <- function(design, utility, algorithm, detail_params,
+                           utility_params, algorithm_params, trace = TRUE){
+  x_names <- character()
+  if(!is.null(algorithm_params$lower)){
+    x_names <- names(algorithm_params$lower)
+  } else{
+    stop("Cannot retrieve parameter vector names from algorithm_params. Please
+         supply a 'lower' argument in algorithm_params.")
+  }
+  u_fun <- function(x){
+    x_named <- x
+    names(x_named) <- x_names
+    do.call(utility, c(design = list(design),
+                                          x = list(x_named),
+                                          detail_params = list(detail_params),
+                                          utility_params))}
+  do.call(algorithm,
+          c(fun = u_fun,
+            trace = trace,
+            algorithm_params))
 }
