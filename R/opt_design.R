@@ -113,8 +113,8 @@ get_scenarios <- function(design, p1) {
 #' @template algorithm_params
 #' @template trace
 #'
-#' @return a list consisting of the optimization result vector and the trace of
-#'  the optimization algorithm
+#' @inherit optimization_optim_sa return
+#'
 #' @export
 #'
 #' @examples
@@ -156,8 +156,8 @@ opt_design_gen <- function(design, utility, algorithm, detail_params,
                                           x = list(x_named),
                                           detail_params = list(detail_params),
                                           utility_params))}
-  do.call(algorithm,
-          c(fun = u_fun,
-            trace = trace,
-            algorithm_params))
+  res <- do.call(algorithm,
+                  c(fun = u_fun,
+                    trace = trace,
+                    algorithm_params))
 }
