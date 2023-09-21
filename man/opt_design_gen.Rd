@@ -39,8 +39,8 @@ supplied to the optimization algorithm.}
 returned?}
 }
 \value{
-a list consisting of the optimization result vector and the trace of
- the optimization algorithm
+a list consisting of the optimization result vector, the optimal
+ utility value, and the trace of the optimization algorithm
 }
 \description{
 Optimize the parameters of a basket trial design using a utility-based
@@ -69,4 +69,23 @@ opt_design_gen(design = design,
                                                       r = 0.6,
                                                       k = 1,
                                                       maxgood = 1)))
+opt_design_gen(design = design,
+               utility = u_powfwer_discont_bound,
+               algorithm = stats_optim_sann,
+               detail_params = list(n = 20, p1 = c(0.5, 0.2, 0.2),
+                                    logbase = exp(1), exact = TRUE),
+               utility_params = list(alpha = 0.05,
+                                     lower = c(lambda = 0.001,
+                                               epsilon = 1,
+                                               tau = 0.001),
+                                      upper = c(lambda = 0.999,
+                                                epsilon = 10,
+                                                tau = 0.999)),
+               algorithm_params = list(start = c(lambda = 0.99,
+                                                    epsilon = 2,
+                                                    tau = 0.5),
+                                       maximization = TRUE,
+                                       control = list(maxit = 30000,
+                                                      temp = 2000,
+                                                      REPORT = 2)))
 }

@@ -140,14 +140,35 @@ get_scenarios <- function(design, p1) {
 #'                                                       r = 0.6,
 #'                                                       k = 1,
 #'                                                       maxgood = 1)))
+#' opt_design_gen(design = design,
+#'                utility = u_powfwer_discont_bound,
+#'                algorithm = stats_optim_sann,
+#'                detail_params = list(n = 20, p1 = c(0.5, 0.2, 0.2),
+#'                                     logbase = exp(1), exact = TRUE),
+#'                utility_params = list(alpha = 0.05,
+#'                                      lower = c(lambda = 0.001,
+#'                                                epsilon = 1,
+#'                                                tau = 0.001),
+#'                                       upper = c(lambda = 0.999,
+#'                                                 epsilon = 10,
+#'                                                 tau = 0.999)),
+#'                algorithm_params = list(start = c(lambda = 0.99,
+#'                                                     epsilon = 2,
+#'                                                     tau = 0.5),
+#'                                        maximization = TRUE,
+#'                                        control = list(maxit = 30000,
+#'                                                       temp = 2000,
+#'                                                       REPORT = 2)))
 opt_design_gen <- function(design, utility, algorithm, detail_params,
                            utility_params, algorithm_params, trace = TRUE){
   x_names <- character()
   if(!is.null(algorithm_params$lower)){
     x_names <- names(algorithm_params$lower)
-  } else{
+  } else if(!is.null(algorithm_params$start)){
+    x_names <- names(algorithm_params$start)
+  } else {
     stop("Cannot retrieve parameter vector names from algorithm_params. Please
-         supply a 'lower' argument in algorithm_params.")
+         supply a 'lower' or a 'start'  argument in algorithm_params.")
   }
   u_fun <- function(x){
     x_named <- x

@@ -54,3 +54,27 @@ optimization_optim_sa <- function(fun, trace = FALSE,
               u_opt = osa$function_value,
               trace = res))
 }
+#' Simulated annealing from the `optim` function of the `stats` library
+#'
+#' This function is wrapper of `stats::optim(method = "SANN")`.
+#'
+#' @template fun
+#' @param trace doesn't do anything
+#' @template start
+#' @param maximization logical, should the function be maximized
+#' @param control a list of further arguments to be passed to `optim()`
+#'
+#' @return a list consisting of the optimization result vector, the optimal
+#'  utility value, and the trace of the optimization algorithm
+#' @export
+#'
+#' @examples
+stats_optim_sann <- function(fun, trace = FALSE,
+                             start, maximization = FALSE,
+                             control){
+  if(maximization){
+    control = c(control, fnscale = -1)
+  }
+  osa <- optim(par = start, fn = fun, method = "SANN",
+               control = control)
+}
