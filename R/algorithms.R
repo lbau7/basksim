@@ -59,7 +59,7 @@ optimization_optim_sa <- function(fun, trace = FALSE,
 #' This function is wrapper of `stats::optim(method = "SANN")`.
 #'
 #' @template fun
-#' @param trace doesn't do anything
+#' @param trace print progress of algorithm to console
 #' @template start
 #' @param maximization logical, should the function be maximized
 #' @param control a list of further arguments to be passed to `optim()`
@@ -73,8 +73,9 @@ stats_optim_sann <- function(fun, trace = FALSE,
                              start, maximization = FALSE,
                              control){
   if(maximization){
-    control = c(control, fnscale = -1)
+    control = c(control, fnscale = -1, trace = trace)
   }
   osa <- optim(par = start, fn = fun, method = "SANN",
                control = control)
+  return(list(x_opt = osa$par, u_opt = osa$value))
 }
