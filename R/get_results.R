@@ -273,6 +273,11 @@ get_results.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)

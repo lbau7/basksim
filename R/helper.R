@@ -31,31 +31,77 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
 
 # Weight matrix with CPP weights
 get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
-  n_sum <- n + 1
-  weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-  r1 <- r2 <- 0:n
 
-  g <- function(s, a, b) {
-    1 / (1 + exp(a + b * log(s)))
-  }
+  # The format of the weights depends on whether the sample sizes of the
+  # individual baskets are all the same
+  if(length(unique(n)) == 1 || length(n) == 1){
 
-  for (i in 1:n_sum) {
-    for (j in i:n_sum) {
-      if (i == j) {
-        next
-      } else {
-        vec1 <- rep(0:1, c(n - r1[i], r1[i]))
-        vec2 <- rep(0:1, c(n - r2[j], r2[j]))
-        ks <- suppressWarnings(stats::ks.test(vec1, vec2)$statistic)
-        s <- n^(1/4) * ks
-        weight_mat[i, j] <- g(s = s, a = tune_a, b = tune_b)
-      }
+    n <- ifelse(length(n) == 1, n, n[1])
+
+     n_sum <- n + 1
+     weight_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+     r1 <- r2 <- 0:n
+
+     g <- function(s, a, b) {
+       1 / (1 + exp(a + b * log(s)))
+     }
+
+     for (i in 1:n_sum) {
+       for (j in i:n_sum) {
+         if (i == j) {
+           next
+         } else {
+           vec1 <- rep(0:1, c(n - r1[i], r1[i]))
+           vec2 <- rep(0:1, c(n - r2[j], r2[j]))
+           ks <- suppressWarnings(stats::ks.test(vec1, vec2)$statistic)
+           s <- n^(1/4) * ks
+           weight_mat[i, j] <- g(s = s, a = tune_a, b = tune_b)
+         }
+       }
+     }
+     weight_mat <- weight_mat + t(weight_mat)
+     diag(weight_mat) <- 1
+     weight_mat
+
+  }else{
+
+    # find unique combinations
+    unique_combs <-unique(arrangements::combinations(k = 2, v = n))
+
+    g <- function(s, a, b) {
+      1 / (1 + exp(a + b * log(s)))
     }
+
+    weights_list <- list()
+
+    for(l in 1:dim(unique_combs)[1]){
+      dim_act <- unique_combs[l,]
+      n1 <- dim_act[1]
+      n2 <- dim_act[2]
+
+      weight_mat <- matrix(0, nrow = n1+1, ncol = n2+1)
+      r1 <- 0:n1
+      r2 <- 0:n2
+
+      for(i in 1:length(r1)){
+        for(j in 1:length(r2)){
+          vec1 <- rep(0:1, c(n1 - r1[i], r1[i]))
+          vec2 <- rep(0:1, c(n2 - r2[j], r2[j]))
+          ks <- suppressWarnings(stats::ks.test(vec1, vec2)$statistic)
+          s <- max(n1,n2)^(1/4) * ks
+          weight_mat[i, j] <- g(s = s, a = tune_a, b = tune_b)
+        }
+      }
+      weights_list[[l]] <- weight_mat
+    }
+
+    weights_list
+
   }
-  weight_mat <- weight_mat + t(weight_mat)
-  diag(weight_mat) <- 1
-  weight_mat
+
 }
+
+
 
 # Calculate Posterior Probabilites of a Beta Distribution
 post_beta <- function(shape, p0) {

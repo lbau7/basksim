@@ -365,23 +365,29 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' design <- setup_cpp(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, iter = 100)
+
 get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tune_a, tune_b, iter = 1000, data = NULL, ...) {
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
+                            iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-      shape_loop <- beta_borrow_cpp(design = design, n = n, r = data[i, ],
-        weights = weights)
-      res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
-      mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-      hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-        shape1 = x[1], shape2 = x[2], credMass = level))
-      list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-    }
+    shape_loop <- beta_borrow_cpp(design = design, n = n, r = data[i, ],
+                                  weights = weights)
+    res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
+    mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
+    hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
+                                                                 shape1 = x[1], shape2 = x[2], credMass = level))
+    list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
+  }
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
     FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
@@ -391,6 +397,8 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Upper_CL = colMeans(res[[4]])
   )
 }
+
+
 
 #' Get Details of a Basket Trial Simulation with the Generalized Calibrated
 #' Power Prior Design

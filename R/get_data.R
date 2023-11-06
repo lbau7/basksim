@@ -16,6 +16,8 @@
 #'
 #' @examples
 #' get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000)
+#
+
 get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
   type <- match.arg(type)
   if (length(p) == 1) {
@@ -26,20 +28,46 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
     stop("p1 must either have length 1 or k")
   }
 
-  if (type == "matrix") {
-    data <- matrix(stats::rbinom(n = iter * k, size = n, prob = pvec), ncol = k,
-      byrow = TRUE)
-    attr(data, "n") <- n
-    attr(data, "p") <- p
-    data
-  } else {
-    bhmbasket::simulateScenarios(
-      n_subjects_list = rep(n, k),
-      response_rates_list = list(pvec),
-      n_trials = iter
-    )
+  if(length(unique(n)) == 1 || length(n) == 1){
+
+    n_matrix <- ifelse(length(n == 1), n, n[1])
+
+    if (type == "matrix") {
+      data <- matrix(stats::rbinom(n = iter * k, size = n_matrix, prob = pvec), ncol = k,
+                     byrow = TRUE)
+      attr(data, "n") <- n
+      attr(data, "p") <- p
+      data
+    } else {
+      bhmbasket::simulateScenarios(
+        n_subjects_list = rep(n_matrix, k),
+        response_rates_list = list(pvec),
+        n_trials = iter
+      )
+    }
+  }else{
+
+    data <- matrix(data = NA, nrow = iter, ncol = k)
+
+    if(type == "matrix"){
+      for(j in 1:k){
+        data[,j] <- rbinom(n = iter, size = n[j], prob = pvec[j])
+      }
+      attr(data, "n") <- n
+      attr(data, "p") <- p
+      data
+    }else {
+      bhmbasket::simulateScenarios(
+        n_subjects_list = n,
+        response_rates_list = list(pvec),
+        n_trials = iter
+      )
+    }
+
   }
+
 }
+
 
 check_data_matrix <- function(data, design, n, p, iter) {
   if (is.null(data)) {
@@ -51,7 +79,7 @@ check_data_matrix <- function(data, design, n, p, iter) {
     if (ncol(data) != design$k) {
       stop("data doesn't have k columns")
     }
-    if (attr(data, "n") != n) {
+    if (!all(attr(data, "n") == n)) {
       stop("data wasn't generated with the specified n")
     }
     if (!all(attr(data, "p") == p)) {
