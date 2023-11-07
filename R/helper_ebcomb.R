@@ -19,8 +19,8 @@ weight_ebcombined <- function(design, n, r) {
       lower = rep(0, design$k - 1), upper = rep(1, design$k - 1),
       method = "L-BFGS-B")$par
 
-    shape1_post[i] <- 1 + r[i] + sum(l * r[-i])
-    shape2_post[i] <- 1 + (n - r[i]) + sum(l * (n - r[-i]))
+    shape1_post[i] <- design$shape1 + r[i] + sum(l * r[-i])
+    shape2_post[i] <- design$shape2 + (n - r[i]) + sum(l * (n - r[-i]))
   }
 
   matrix(c(shape1_post, shape2_post), nrow = 2, byrow = TRUE)
