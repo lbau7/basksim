@@ -1,33 +1,117 @@
 # Weight matrix with JSD weights
-get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
-  shape1_post <- design$shape1 + c(0:n)
-  shape2_post <- design$shape2 + c(n:0)
-  n_sum <- n + 1
 
-  p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-  q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-  m <- function(x) 0.5 * (p(x) + q(x))
-  f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-  g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
-  h <- function(x) 0.5 * f(x) + 0.5 * g(x)
-  jsd_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-  for (i in 1:n_sum) {
-    for (j in i:n_sum) {
-      if (i == j) {
-        next
-      } else {
-        kl_f <- stats::integrate(f, 0, 1)$value
-        kl_g <- stats::integrate(g, 0, 1)$value
-        jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
+get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
+
+  # the format of the weights depends on whether the sample sizes of the
+  # individual baskets are all the same
+  if(length(unique(n)) == 1 || length(n) == 1){
+
+    shape1_post <- design$shape1 + c(0:n)
+    shape2_post <- design$shape2 + c(n:0)
+    n_sum <- n + 1
+
+    p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
+    q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
+    m <- function(x) 0.5 * (p(x) + q(x))
+    f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
+    g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
+
+    jsd_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+    for (i in 1:n_sum) {
+      for (j in i:n_sum) {
+        if (i == j) {
+          next
+        } else {
+          kl_f <- stats::integrate(f, 0, 1)$value
+          kl_g <- stats::integrate(g, 0, 1)$value
+          jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
+        }
       }
     }
-  }
-  jsd_mat <- jsd_mat + t(jsd_mat)
-  weight_mat <- (1 - jsd_mat)^epsilon
-  weight_mat[weight_mat <= tau] <- 0
+    jsd_mat <- jsd_mat + t(jsd_mat)
+    weight_mat <- (1 - jsd_mat)^epsilon
+    weight_mat[weight_mat <= tau] <- 0
 
-  weight_mat
+    weight_mat
+
+  }else{
+
+    # find unique combinations
+    unique_combs <- arrangements::combinations(k = 2, v = unique(n))
+
+    weights_list <- list()
+
+    for(l in 1:dim(unique_combs)[1]){
+      dim_act <- unique_combs[l,]
+      n1 <- dim_act[1]
+      n2 <- dim_act[2]
+
+      weight_mat <- matrix(0, nrow = n1+1, ncol = n2+1)
+
+      shape1_post1 <- design$shape1 + c(0:n1)
+      shape1_post2 <- design$shape1 + c(0:n2)
+
+      shape2_post1 <- design$shape2 + c(n1:0)
+      shape2_post2 <- design$shape2 + c(n2:0)
+
+      p <- function(x) stats::dbeta(x, shape1_post1[i], shape2_post1[i])
+      q <- function(x) stats::dbeta(x, shape1_post2[j], shape2_post2[j])
+      m <- function(x) 0.5 * (p(x) + q(x))
+      f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
+      g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
+
+      for (i in 1:(n1+1) ) {
+        for (j in 1:(n2+1)) {
+
+          kl_f <- stats::integrate(f, 0, 1)$value
+          kl_g <- stats::integrate(g, 0, 1)$value
+          weight_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
+
+        }
+      }
+
+      weights_list[[l]] <- weight_mat
+
+    }
+
+    weights_list
+
+  }
+
+
+
+
 }
+
+# get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
+#   shape1_post <- design$shape1 + c(0:n)
+#   shape2_post <- design$shape2 + c(n:0)
+#   n_sum <- n + 1
+#
+#   p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
+#   q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
+#   m <- function(x) 0.5 * (p(x) + q(x))
+#   f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
+#   g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
+#   h <- function(x) 0.5 * f(x) + 0.5 * g(x)
+#   jsd_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+#   for (i in 1:n_sum) {
+#     for (j in i:n_sum) {
+#       if (i == j) {
+#         next
+#       } else {
+#         kl_f <- stats::integrate(f, 0, 1)$value
+#         kl_g <- stats::integrate(g, 0, 1)$value
+#         jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
+#       }
+#     }
+#   }
+#   jsd_mat <- jsd_mat + t(jsd_mat)
+#   weight_mat <- (1 - jsd_mat)^epsilon
+#   weight_mat[weight_mat <= tau] <- 0
+#
+#   weight_mat
+# }
 
 # Weight matrix with CPP weights
 get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
@@ -66,7 +150,7 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
   }else{
 
     # find unique combinations
-    unique_combs <-unique(arrangements::combinations(k = 2, v = n))
+    unique_combs <- arrangements::combinations(k = 2, v = unique(n))
 
     g <- function(s, a, b) {
       1 / (1 + exp(a + b * log(s)))
