@@ -3,7 +3,7 @@
 #' @template design
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means, mean
+#' @return A list containing the rejection probabilities, posterior means, mean
 #' squared errors of all baskets and the family-wise error rate. For some
 #' methods the mean limits of HDI intervals are also returned.
 #' @export
@@ -28,7 +28,7 @@ get_details <- function(design, ...) {
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' and mean squared errors for all baskets as well as the family-wise error
 #' rate.
 #' @export
@@ -72,7 +72,7 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -120,7 +120,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data_bhm
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -186,7 +186,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data_bhm
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -252,7 +252,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -261,24 +261,30 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
+
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, iter = 1000,
                                  data = NULL, ...) {
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau, logbase = logbase)
+                             tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
+                            iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-      shape_loop <- beta_borrow_fujikawa(design = design, n = n, r = data[i, ],
-        weights = weights)
-      res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
-      mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-      hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-        shape1 = x[1], shape2 = x[2], credMass = level))
-      list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
+    shape_loop <- beta_borrow_fujikawa(design = design, n = n, r = data[i, ],
+                                       weights = weights)
+    res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
+    mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
+    hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
+                                                                 shape1 = x[1], shape2 = x[2], credMass = level))
+    list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   }
 
   list(
@@ -290,6 +296,9 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Upper_CL = colMeans(res[[4]])
   )
 }
+
+
+
 
 #' Get Details of a Basket Trial Simulation with the Power Prior Design
 #' Based on Generalized JSD Weights
@@ -304,7 +313,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -356,7 +365,7 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -413,7 +422,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilites, posterior means,
+#' @return A list containing the rejection probabilities, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
