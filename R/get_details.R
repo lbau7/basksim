@@ -37,22 +37,43 @@ get_details <- function(design, ...) {
 #' design <- setup_bma(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, pmp0 = 1,
 #'   iter = 100)
+
 get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
                             iter = 1000, data = NULL, ...) {
+
+  # n must be passed in te correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
+                            iter = iter)
 
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
-                          .options.future = list(seed = TRUE)) %dofuture% {
-    res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
-      n = rep(n, design$k), pmp0 = pmp0)
-    list(
-      ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
-      as.vector(res_temp$bmaMeans)
-    )
+  if(length(n) == 1){
+    res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
+                            .options.future = list(seed = TRUE)) %dofuture% {
+                              res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
+                                                         n = rep(n, design$k), pmp0 = pmp0)
+                              list(
+                                ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
+                                as.vector(res_temp$bmaMeans)
+                              )
+                            }
+  }else{
+    res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
+                            .options.future = list(seed = TRUE)) %dofuture% {
+                              res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
+                                                         n = n, pmp0 = pmp0)
+                              list(
+                                ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
+                                as.vector(res_temp$bmaMeans)
+                              )
+                            }
   }
+
+
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
     FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
@@ -60,6 +81,8 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
     MSE = colMeans(t(t(res[[2]]) - p1)^2)
   )
 }
+
+
 
 #' Get Details of a Basket Trial Simulation with the ebcomb Design
 #'
@@ -132,6 +155,12 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tau_scale, iter = 1000, n_mcmc = 10000,
                             data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
@@ -152,6 +181,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
+
   res <- bhmbasket::getGoDecisions(
     analyses_list = analyses,
     cohort_names = paste("p", 1:design$k, sep = "_"),
@@ -198,6 +228,12 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
                               tau_scale, w, iter = 1000, n_mcmc = 10000,
                               data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,

@@ -39,13 +39,27 @@ get_results <- function(design, ...) {
 #'   pmp0 = 1, iter = 100)
 get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
                    .options.future = list(seed = TRUE)) %dofuture% {
-    res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
-      n = rep(n, design$k), pmp0 = pmp0, ...)
+
+    if(length(n) == 1){
+      res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
+                                 n = rep(n, design$k), pmp0 = pmp0, ...)
+    }else{
+      res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
+                                 n = n, pmp0 = pmp0, ...)
+
+    }
     ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0)
+
   }
 }
 
@@ -101,6 +115,12 @@ get_results.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'   tau_scale = 1, iter = 100)
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -113,7 +133,7 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
       mu_mean = design$mu_mean,
       mu_sd = design$mu_sd,
       tau_scale = tau_scale
-    ) ,
+    ),
     n_mcmc_iterations = n_mcmc
   ))
 
@@ -153,6 +173,12 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'   tau_scale = 1, w = 0.5, iter = 100)
 get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -206,6 +232,12 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  logbase = 2, iter = 1000, data = NULL,
                                  ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -273,6 +305,7 @@ get_results.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
+
   # n must be passed in the correct form
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")

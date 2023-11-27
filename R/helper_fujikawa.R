@@ -23,16 +23,7 @@ beta_borrow_fujikawa <- function(design, n, r, weights) {
                     byrow = TRUE)
 
     # find all possible combinations
-    unique_combs <- arrangements::combinations(k = 2, v = n)
-
-    # ascending order within the rows
-    for(s in 1:dim(unique_combs)[1]){
-      unique_combs[s,] <- sort(unique_combs[s,])
-    }
-
-    # Delete duplicate rows
-    unique_combs <- unique(unique_combs)
-
+    unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
 
     k <- design$k
 

@@ -37,16 +37,7 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
   }else{
 
     # find all possible combinations
-    unique_combs <- arrangements::combinations(k = 2, v = n)
-
-    # ascending order within the rows
-    for(s in 1:dim(unique_combs)[1]){
-      unique_combs[s,] <- sort(unique_combs[s,])
-    }
-
-    # Delete duplicate rows
-    unique_combs <- unique(unique_combs)
-
+    unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
 
     weights_list <- list()
 
@@ -134,16 +125,7 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
   }else{
 
     # find all possible combinations
-    unique_combs <- arrangements::combinations(k = 2, v = n)
-
-    # ascending order within the rows
-    for(s in 1:dim(unique_combs)[1]){
-      unique_combs[s,] <- sort(unique_combs[s,])
-    }
-
-    # Delete duplicate rows
-    unique_combs <- unique(unique_combs)
-
+    unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
 
     g <- function(s, a, b) {
       1 / (1 + exp(a + b * log(s)))

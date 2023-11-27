@@ -102,8 +102,14 @@ check_data_bhmbasket <- function(data, design, n, p, iter) {
     if (ncol(data$scenario_1$n_responders) != design$k) {
       stop("data doesn't have k columns")
     }
-    if (!all(data$scenario_1$n_subjects == n)) {
-      stop("data wasn't generated with the specified n")
+    if (length(n) == 1){
+      if (!all(data$scenario_1$n_subjects == n)) {
+        stop("data wasn't generated with the specified n")
+      }
+    }else{
+      if (!all(apply(data$scenario_1$n_subjects, 1, function(x) all(x == n)))){
+        stop("data wasn't generated with the specified n")
+      }
     }
     if (!all(data$scenario_1$response_rates == p) & !is.null(p)) {
       stop("data wasn't generated with the specified p1")
@@ -114,6 +120,7 @@ check_data_bhmbasket <- function(data, design, n, p, iter) {
     data
   }
 }
+
 
 check_data_list <- function(data, scenarios) {
   if (!is.null(data)) {
