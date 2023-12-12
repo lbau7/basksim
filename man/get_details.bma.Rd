@@ -28,7 +28,7 @@ then \code{iter} is ignored.}
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilites, posterior means,
+A list containing the rejection probabilities, posterior means,
 and mean squared errors for all baskets as well as the family-wise error
 rate.
 }

@@ -162,6 +162,7 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
 
 
 
+
 # Calculate Posterior Probabilites of a Beta Distribution
 post_beta <- function(shape, p0) {
   stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],

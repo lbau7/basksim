@@ -176,6 +176,9 @@ setup_jsdgen <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template p0
 #' @template shape_beta
 #'
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2023). Basket trial design
+#' based on power priors. URL: https://arxiv.org/pdf/2309.06988.pdf
+#'
 #' @return An S3 object of class \code{cpp}
 #' @export
 #'
@@ -187,6 +190,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
     class = "cpp"
   ))
 }
+
 
 #' Setup Generalized Calibrated Power Prior Design Object
 #'
@@ -203,5 +207,65 @@ setup_cppgen <- function(k, p0, shape1 = 1, shape2 = 1) {
   validate_betabin(structure(
     list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
     class = "cppgen"
+  ))
+}
+
+
+
+#' Setup Limited Calibrated Power Prior Design Object
+#'
+#' @template k
+#' @template p0
+#' @template shape_beta
+#'
+#' @details
+#' The class \code{cpplim} implements a combined version of the adaptive power
+#' prior (\code{app}) and the calibrated power prior (\code{cpp}), where the
+#' parameter limiting the amount of information to be borrowed in the adaptive
+#' power prior design is included in the calibrated power prior design.
+#'
+#'
+#' @return An S3 object of class \code{cpplim}
+#' @export
+#'
+#' @references Ollier, A., Morita, S., Ursino, M., & Zohar, S. (2020). An
+#' adaptive power prior for sequential clinical trials - Application to bridging
+#' studies. Statistical methods in medical research, 29(8), 2282–2294.
+#'
+#' Baumann, L., Sauer, L., & Kieser, M. (2023). Basket trial design
+#' based on power priors. URL: https://arxiv.org/pdf/2309.06988.pdf
+#'
+#' @examples
+#' design_cpplim <- setup_cpplim(k = 3, p0 = 0.2)
+setup_cpplim <- function(k, p0, shape1 = 1, shape2 = 1) {
+  validate_betabin(structure(
+    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
+    class = "cpplim"
+  ))
+}
+
+
+#' Setup Adaptive Power Prior Design Object
+#'
+#' @template k
+#' @template p0
+#' @template shape_beta
+#'
+#' @details The class \code{app} implements the adaptive power prior design for
+#' sequential clinical trials proposed by Ollier et al. (2020).
+#'
+#' @return An S3 object of class \code{app}
+#' @export
+#'
+#' @references Ollier, A., Morita, S., Ursino, M., & Zohar, S. (2020). An
+#' adaptive power prior for sequential clinical trials - Application to bridging
+#' studies. Statistical methods in medical research, 29(8), 2282–2294.
+#'
+#' @examples
+#' design_app <- setup_app(k = 3, p0 = 0.2)
+setup_app <- function(k, p0, shape1 = 1, shape2 = 1) {
+  validate_betabin(structure(
+    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
+    class = "app"
   ))
 }

@@ -13,10 +13,6 @@ beta_borrow_fujikawa <- function(design, n, r, weights) {
       weights_vec
     diag(weight_mat) <- 1
 
-    shape1post <- apply(weight_mat, 1, function(x) sum(shape[1, ] * x))
-    shape2post <- apply(weight_mat, 1, function(x) sum(shape[2, ] * x))
-    rbind(shape1post, shape2post)
-
   } else{
 
     shape <- matrix(c(design$shape1 + r, design$shape2 + n - r), nrow = 2,
@@ -48,21 +44,17 @@ beta_borrow_fujikawa <- function(design, n, r, weights) {
           if(nrow(matching_weights) != n_cur +1){
             matching_weights <- t(matching_weights)
           }
-
         }
 
         weight_mat[i,j] <- matching_weights[r[i]+1, r[j]+1]
 
       }
     }
-
-    # Compute posterior shapes
-    shape1post <- apply(weight_mat, 1, function(x) sum(shape[1, ] * x))
-    shape2post <- apply(weight_mat, 1, function(x) sum(shape[2, ] * x))
-    rbind(shape1post, shape2post)
-
   }
 
+  shape1post <- apply(weight_mat, 1, function(x) sum(shape[1, ] * x))
+  shape2post <- apply(weight_mat, 1, function(x) sum(shape[2, ] * x))
+  rbind(shape1post, shape2post)
 
 }
 
