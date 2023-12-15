@@ -28,42 +28,23 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
     stop("p1 must either have length 1 or k")
   }
 
-  if(length(unique(n)) == 1 || length(n) == 1){
+  if(length(n) == 1)  n <- c(rep(n,k))
 
-    n_matrix <- ifelse(length(n == 1), n, n[1])
+  data <- matrix(data = NA, nrow = iter, ncol = k)
 
-    if (type == "matrix") {
-      data <- matrix(stats::rbinom(n = iter * k, size = n_matrix, prob = pvec), ncol = k,
-                     byrow = TRUE)
-      attr(data, "n") <- n
-      attr(data, "p") <- p
-      data
-    } else {
-      bhmbasket::simulateScenarios(
-        n_subjects_list = rep(n_matrix, k),
-        response_rates_list = list(pvec),
-        n_trials = iter
-      )
+  if(type == "matrix"){
+    for(j in 1:iter){
+      data[j,] <- stats::rbinom(n = k, size = n, prob = pvec)
     }
-  }else{
-
-    data <- matrix(data = NA, nrow = iter, ncol = k)
-
-    if(type == "matrix"){
-      for(j in 1:k){
-        data[,j] <- rbinom(n = iter, size = n[j], prob = pvec[j])
-      }
-      attr(data, "n") <- n
-      attr(data, "p") <- p
-      data
-    }else {
-      bhmbasket::simulateScenarios(
-        n_subjects_list = n,
-        response_rates_list = list(pvec),
-        n_trials = iter
-      )
-    }
-
+    attr(data, "n") <- n
+    attr(data, "p") <- p
+    data
+  }else {
+    bhmbasket::simulateScenarios(
+      n_subjects_list = n,
+      response_rates_list = list(pvec),
+      n_trials = iter
+    )
   }
 
 }
