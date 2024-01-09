@@ -8,7 +8,7 @@ validate_betabin <- function(x) {
   if (x$p0 <= 0 | x$p0 >= 1) {
     stop("p0 must be between 0 and 1")
   }
-  if (x$shape1 <= 0 | x$shape1 <= 0) {
+  if (x$shape1 <= 0 | x$shape2 <= 0) {
     stop("shape1 and shape2 must be greater than 0")
   }
   x

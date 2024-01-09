@@ -4,7 +4,19 @@
 \alias{get_details.fujikawa}
 \title{Get Details of a Basket Trial Simulation with Fujikawa's Design}
 \usage{
-\method{get_details}{fujikawa}(design, n, p1, lambda, epsilon, tau, iter = 1000, data = NULL, ...)
+\method{get_details}{fujikawa}(
+  design,
+  n,
+  p1 = NULL,
+  lambda,
+  level = 0.95,
+  epsilon,
+  tau,
+  logbase = 2,
+  iter = 1000,
+  data = NULL,
+  ...
+)
 }
 \arguments{
 \item{design}{An object of class \code{fujikawa}.}
@@ -15,16 +27,23 @@
 
 \item{lambda}{The posterior probability threshold.}
 
+\item{level}{Level of the credibility intervals.}
+
 \item{epsilon}{Tuning parameter that determines the amount of borrowing.
 See \code{\link{setup_fujikawa}}).}
 
 \item{tau}{Tuning parameter that determines how similar the baskets
-have to be that borrowing occur. See \code{\link{setup_fujikawa}}).}
+have to be that information is shared. See \code{\link{setup_fujikawa}}).}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
+
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
-basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
+basket. Has to be generated with \code{get_data}. If \code{data} is used,
+then \code{iter} is ignored.}
 
 \item{...}{Further arguments.}
 }

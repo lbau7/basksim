@@ -1,7 +1,7 @@
 # Beta Borrowing for Generalized CPP Design
 beta_borrow_cppgen <- function(design, n, r, weights_pair, epsilon) {
   shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
-  weight_all <- diff_all(r, epsilon = epsilon)
+  weight_all <- diff_all(n = n, r = r, epsilon = epsilon)
 
   # Compute pairwise weights and multiply by global weight
   all_combs <- arrangements::combinations(r, 2) + 1
@@ -22,8 +22,9 @@ beta_borrow_cppgen <- function(design, n, r, weights_pair, epsilon) {
 }
 
 # Global Weights for CPP Gen Design
-diff_all <- function(r, epsilon) {
-  rs <- sort(r)
+diff_all <- function(n, r, epsilon) {
+  rr <- r / n
+  rs <- sort(rr)
   d <- diff(rs)
   (1 - sum(d) * 10^(-sum((d - 1 / length(d))^2)))^epsilon
 }

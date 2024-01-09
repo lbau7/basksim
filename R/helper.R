@@ -1,5 +1,5 @@
 # Weight matrix with JSD weights
-get_weights_jsd <- function(design, n, epsilon, tau, ...) {
+get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
   shape1_post <- design$shape1 + c(0:n)
   shape2_post <- design$shape2 + c(n:0)
   n_sum <- n + 1
@@ -7,8 +7,8 @@ get_weights_jsd <- function(design, n, epsilon, tau, ...) {
   p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
   q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
   m <- function(x) 0.5 * (p(x) + q(x))
-  f <- function(x) p(x) * log(p(x) / m(x))
-  g <- function(x) q(x) * log(q(x) / m(x))
+  f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
+  g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
   h <- function(x) 0.5 * f(x) + 0.5 * g(x)
   jsd_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
   for (i in 1:n_sum) {
@@ -16,11 +16,6 @@ get_weights_jsd <- function(design, n, epsilon, tau, ...) {
       if (i == j) {
         next
       } else {
-        p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-        q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-        m <- function(x) 0.5 * (p(x) + q(x))
-        f <- function(x) p(x) * log(p(x) / m(x))
-        g <- function(x) q(x) * log(q(x) / m(x))
         kl_f <- stats::integrate(f, 0, 1)$value
         kl_g <- stats::integrate(g, 0, 1)$value
         jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
@@ -62,12 +57,6 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
   weight_mat
 }
 
-# Get Simulated Data Based on a Binomial Distribution
-get_data <- function(k, n, p, iter) {
-  matrix(stats::rbinom(n = iter * k, size = n, prob = p), ncol = k,
-    byrow = TRUE)
-}
-
 # Calculate Posterior Probabilites of a Beta Distribution
 post_beta <- function(shape, p0) {
   stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],
@@ -88,4 +77,22 @@ cfun2 <- function(x, y) {
     rbind(x[[1]], y[[1]]),
     rbind(x[[2]], y[[2]])
   )
+}
+
+check_scenarios <- function(scenarios, design) {
+  if (!(is.matrix(scenarios) | is.data.frame(scenarios))) {
+    stop("scenarios is not a matrix or a data.frame")
+  }
+  if (sum(duplicated(t(scenarios))) > 0) {
+    stop("not all scenarios are distinct")
+  }
+  if (sum(apply(scenarios, 2, function(x) all(x == design$p0))) == 0) {
+    stop("no null scenario")
+  }
+  if (nrow(scenarios) != design$k) {
+    stop("scenarios doesn't have k rows")
+  }
+  if (!all(scenarios > 0) | !all(scenarios < 1)) {
+    stop("probabilities have to be in (0, 1)")
+  }
 }

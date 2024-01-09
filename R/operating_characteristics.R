@@ -20,8 +20,8 @@
 ecd <- function(design, n, p1, lambda, design_params = list(), iter = 1000,
                 data = NULL, ...) {
   res <- do.call(get_results, args = c(design = list(design), n = n,
-    p1 = list(p1), lambda = lambda, design_params, iter = iter, data = data,
-    ...))
+    p1 = list(p1), lambda = lambda, design_params, iter = iter,
+    data = list(data), ...))
   targ <- design$p0 != p1
   mean(rowSums(t(apply(res, 1, function(x) x == targ))))
 }
@@ -49,8 +49,8 @@ toer <- function(design, n, p1 = NULL, lambda, design_params = list(),
                  iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   res <- do.call(get_results, args = c(design = list(design), n = list(n),
-                 p1 = list(p1), lambda = list(lambda), design_params,
-                 iter = list(iter), data = data, ...))
+                 p1 = list(p1), lambda = lambda, design_params,
+                 iter = iter, data = list(data), ...))
   res_sel <- res[, p1 == design$p0, drop = FALSE]
   res_all <- apply(res_sel, 1, function(x) any(x == 1))
   mean(res_all)

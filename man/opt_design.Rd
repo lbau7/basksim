@@ -12,6 +12,7 @@ opt_design(
   scenarios,
   prec_digits,
   iter = 1000,
+  data = NULL,
   ...
 )
 }
@@ -30,7 +31,11 @@ opt_design(
 \item{prec_digits}{Number of decimal places that are considered when
 adjusting lambda.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
+
+\item{data}{A list of data matrices generated with \code{get_data}. The
+list elements have to correspond to the columsn of \code{scenarios}.}
 
 \item{...}{Further arguments.}
 }
@@ -39,4 +44,21 @@ A matrix with the expected number of correct decisions.
 }
 \description{
 Optimize a Basket Trial Design
+}
+\examples{
+design <- setup_fujikawa(k = 3, p0 = 0.2)
+scenarios <- get_scenarios(design, p1 = 0.5)
+
+# Without simulated data
+opt_design(design, n = 20, alpha = 0.05, design_params =
+  list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+  prec_digits = 3)
+
+# With simulated data
+scenario_list <- as.list(data.frame(scenarios))
+data_list <- lapply(scenario_list,
+  function(x) get_data(k = 3, n = 20, p = x, iter = 1000))
+opt_design(design, n = 20, alpha = 0.05, design_params =
+  list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+  prec_digits = 3, data = data_list)
 }

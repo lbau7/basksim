@@ -37,13 +37,12 @@ get_results <- function(design, ...) {
 #' design <- setup_bma(k = 3, p0 = 0.2)
 #' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   pmp0 = 1, iter = 100)
-get_results.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
+get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
+                   .options.future = list(seed = TRUE)) %dofuture% {
     res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
       n = rep(n, design$k), pmp0 = pmp0, ...)
     ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0)
@@ -69,13 +68,12 @@ get_results.bma <- function(design, n, p1, lambda, pmp0, iter = 1000,
 #' design <- setup_ebcomb(k = 3, p0 = 0.2)
 #' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   iter = 100)
-get_results.ebcomb <- function(design, n, p1, lambda, iter = 1000, data = NULL,
-                               ...) {
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+get_results.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
+                               data = NULL, ...) {
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
+                   .options.future = list(seed = TRUE)) %dofuture% {
     ana_ebcombined(design = design, n = n, r = data[i, ], lambda = lambda)
   }
 }
@@ -88,6 +86,7 @@ get_results.ebcomb <- function(design, n, p1, lambda, iter = 1000, data = NULL,
 #' @template lambda
 #' @template tau_bhm
 #' @template iter
+#' @template n_mcmc
 #' @template data_bhm
 #' @template dotdotdot
 #'
@@ -100,20 +99,12 @@ get_results.ebcomb <- function(design, n, p1, lambda, iter = 1000, data = NULL,
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 #' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tau_scale = 1, iter = 100)
-get_results.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
-                            data = NULL, ...) {
-  if (is.null(data)) {
-    data <- bhmbasket::simulateScenarios(
-      n_subjects_list = list(rep(n, design$k)),
-      response_rates_list = list(p1),
-      n_trials = iter
-    )
-  }
-  if (!is.null(data) & !inherits(data, "scenario_list")) {
-    stop("data is not of class scenario_list")
-  }
+get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
+                            iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+  data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
+    iter = iter)
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "berry",
@@ -123,19 +114,18 @@ get_results.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
       mu_sd = design$mu_sd,
       tau_scale = tau_scale
     ) ,
-    n_mcmc_iterations = 15000
+    n_mcmc_iterations = n_mcmc
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
-    cohort_names = paste("p", 1:design$k, sep ="_"),
+    analyses_list = analyses,
+    cohort_names = paste("p", 1:design$k, sep = "_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br),
     ...
   )
-
   res$scenario_1$decisions_list$berry[, -1]
 }
 
@@ -148,6 +138,7 @@ get_results.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
 #' @template tau_exnex
 #' @template w_exnex
 #' @template iter
+#' @template n_mcmc
 #' @template data_bhm
 #' @template dotdotdot
 #'
@@ -160,20 +151,12 @@ get_results.bhm <- function(design, n, p1, lambda, tau_scale, iter = 1000,
 #' design <- setup_exnex(k = 3, p0 = 0.2)
 #' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tau_scale = 1, w = 0.5, iter = 100)
-get_results.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
-                              data = NULL, ...) {
-  if (is.null(data)) {
-    data <- bhmbasket::simulateScenarios(
-      n_subjects_list = list(rep(n, design$k)),
-      response_rates_list = list(p1),
-      n_trials = iter
-    )
-  }
-  if (!is.null(data) & !inherits(data, "scenario_list")) {
-    stop("data is not of class scenario_list")
-  }
+get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
+                              iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+  data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
+    iter = iter)
 
-  analysis_list <- suppressMessages(bhmbasket::performAnalyses(
+  analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
     evidence_levels = lambda,
     method_names = "exnex",
@@ -185,14 +168,14 @@ get_results.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
       tau_j = rep(design$basket_sd, design$k),
       w_j = w
     ),
-    n_mcmc_iterations = iter
+    n_mcmc_iterations = n_mcmc
   ))
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
   res <- bhmbasket::getGoDecisions(
-    analyses_list = analysis_list,
-    cohort_names = paste("p", 1:design$k, sep ="_"),
+    analyses_list = analyses,
+    cohort_names = paste("p", 1:design$k, sep = "_"),
     evidence_levels = rep(lambda, design$k),
     boundary_rules = str2lang(br)
   )
@@ -220,15 +203,14 @@ get_results.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
-get_results.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
-                                 iter = 1000, data = NULL, ...) {
+get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
+                                 logbase = 2, iter = 1000, data = NULL,
+                                 ...) {
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau)
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+    tau = tau, logbase = logbase)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_fujikawa(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
   }
@@ -255,15 +237,14 @@ get_results.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
 #' design <- setup_jsdgen(k = 3, p0 = 0.2)
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   eps_pair = 2, eps_all = 2, iter = 100)
-get_results.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
-                               iter = 1000, data = NULL, ...) {
+get_results.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
+                               eps_all, logbase = 2, iter = 1000, data = NULL,
+                               ...) {
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
-    tau = 0)
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+    tau = tau, logbase = logbase)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_jsdgen(design = design, n = n, r = data[i, ], eps_all = eps_all,
       lambda = lambda, weights_pair = weights_pair)
   }
@@ -290,15 +271,12 @@ get_results.jsdgen <- function(design, n, p1, lambda, eps_pair, eps_all,
 #' design <- setup_cpp(k = 3, p0 = 0.2)
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, iter = 100)
-get_results.cpp <- function(design, n, p1, lambda, tune_a, tune_b, iter = 1000,
-                            data = NULL, ...) {
+get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
+                            iter = 1000, data = NULL, ...) {
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
-
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_cpp(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
   }
@@ -325,14 +303,12 @@ get_results.cpp <- function(design, n, p1, lambda, tune_a, tune_b, iter = 1000,
 #' design <- setup_cppgen(k = 3, p0 = 0.2)
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
-get_results.cppgen <- function(design, n, p1, lambda, tune_a, tune_b, epsilon,
-                               iter = 1000, data = NULL, ...) {
+get_results.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
+                               epsilon, iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
-  if (is.null(data)) {
-    data <- get_data(k = design$k, n = n, p = p1, iter = iter)
-  }
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dopar% {
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_cppgen(design = design, n = n, r = data[i, ], lambda = lambda,
       weights_pair = weights_pair, epsilon = epsilon)
   }

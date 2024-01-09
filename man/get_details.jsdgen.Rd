@@ -8,10 +8,13 @@ Based on Generalized JSD Weights}
 \method{get_details}{jsdgen}(
   design,
   n,
-  p1,
+  p1 = NULL,
   lambda,
+  level = 0.95,
   eps_pair,
+  tau = 0,
   eps_all,
+  logbase = 2,
   iter = 1000,
   data = NULL,
   ...
@@ -26,22 +29,33 @@ Based on Generalized JSD Weights}
 
 \item{lambda}{The posterior probability threshold.}
 
+\item{level}{Level of the credibility intervals.}
+
 \item{eps_pair}{Tuning parameter that determines the amount of borrowing
 based on pairwise similarity.}
+
+\item{tau}{Tuning parameter that determines how similar the baskets
+have to be that information is shared.}
 
 \item{eps_all}{Tuning parameter that determines the amount of borrowing
 based on overall heterogeneity.}
 
-\item{iter}{The number of iterations in the simulation.}
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
+
+\item{iter}{The number of iterations in the simulation. Is ignored if
+\code{data} is specified.}
 
 \item{data}{A data matrix with k column with the number of responses for each
-basket. If \code{data} is used, then \code{iter} and \code{p1} are ignored.}
+basket. Has to be generated with \code{get_data}. If \code{data} is used,
+then \code{iter} is ignored.}
 
 \item{...}{Further arguments.}
 }
 \value{
 A list containing the rejection probabilites, posterior means,
-mean squared errors and mean limits of HDI intervals for all baskets.
+mean squared errors and mean limits of HDI intervals for all baskets as well
+as the family-wise error rate.
 }
 \description{
 Get Details of a Basket Trial Simulation with the Power Prior Design

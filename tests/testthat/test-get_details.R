@@ -14,7 +14,7 @@ test_that("get_details works for bma", {
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
 
   # Posterior means are close to p
-  expect_true(all(res3$Mean - 0.5 < 0.02))
+  expect_true(all(abs(res3$Mean - 0.5) < 0.02))
 })
 
 test_that("get_details works for ebcomb", {
@@ -170,7 +170,6 @@ test_that("get_details works for fujikawa", {
   design <- setup_fujikawa(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
     lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
-  # Checking reproducibility of experiment-wise power
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
