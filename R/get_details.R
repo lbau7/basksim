@@ -248,15 +248,19 @@ get_details.exnex <- function(design, n, p1, lambda, tau_scale, w, iter = 1000,
 #'
 #' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
-#' as the family-wise error rate.
+#' as the family-wise error rate and the experiment-wise power.
 #' @export
 #'
 #' @examples
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
-get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
-                                 iter = 1000, data = NULL, ...) {
+get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                                 epsilon, tau, logbase = 2, iter = 1000,
+                                 data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
+  not_targ <- design$p0 != p1
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau)
 
@@ -275,6 +279,8 @@ get_details.fujikawa <- function(design, n, p1, lambda, epsilon, tau,
     }
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
+    EWP = mean(apply(res[[1]], 1, function(x) any(x[not_targ] == 1))),
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
