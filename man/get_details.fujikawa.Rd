@@ -50,7 +50,7 @@ then \code{iter} is ignored.}
 \value{
 A list containing the rejection probabilites, posterior means,
 mean squared errors and mean limits of HDI intervals for all baskets as well
-as the family-wise error rate.
+as the family-wise error rate and the experiment-wise power.
 }
 \description{
 Get Details of a Basket Trial Simulation with Fujikawa's Design
