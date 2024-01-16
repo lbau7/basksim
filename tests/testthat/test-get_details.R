@@ -90,7 +90,7 @@ test_that("get_details works for bhm", {
   # Works without supplied data
   res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
     lambda = 0.9, tau_scale = 0.75, iter = 100)
-  expect_equal(length(res3), 6)
+  expect_equal(length(res3), 7)
   expect_equal(res3$Rejection_Probabilities[1], res3$FWER)
 
   # Error works
@@ -154,7 +154,7 @@ test_that("get_details works for exnex", {
   # Works without supplied data
   res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
     lambda = 0.9, tau_scale = 0.75, w = 0.5, iter = 100)
-  expect_equal(length(res3), 6)
+  expect_equal(length(res3), 7)
   expect_equal(res3$Rejection_Probabilities[1], res3$FWER)
 
   # Errors work
