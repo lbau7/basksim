@@ -177,6 +177,12 @@ test_that("get_details works for fujikawa", {
   expect_true(all(abs(res$Mean - c(0.2717930 , 0.2717930 , 0.4145559)) < 0.01))
   expect_true(all(abs(res$MSE -
       c(0.01043607, 0.01043607, 0.01674920)) < 0.01))
+  # baskexact::pow(design, lambda = 0.99, p1 = c(0.2, 0.2, 0.5),
+  #                n = 15, weight_fun = weights_fujikawa,
+  #                weight_params = list(epsilon = 2, tau = 0, logbase = exp(1))
+  # and analogously for baskexact::toer()
+  expect_equal(res$EWP, 0.5965844, tolerance = 0.01)
+  expect_equal(res$FWER, 0.1480935, tolerance = 0.01)
 })
 
 test_that("get_details works for jsdglobal", {
