@@ -104,7 +104,8 @@ get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -150,7 +151,8 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -215,7 +217,8 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = unname(est[, 1]),
     MSE = unname(est[, 7]),
     Lower_CL = unname(est[, 3]),
-    Upper_CL = unname(est[, 5])
+    Upper_CL = unname(est[, 5]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -283,7 +286,8 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = unname(est[, 1]),
     MSE = unname(est[, 7]),
     Lower_CL = unname(est[, 3]),
-    Upper_CL = unname(est[, 5])
+    Upper_CL = unname(est[, 5]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -336,7 +340,8 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -388,7 +393,8 @@ get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -437,7 +443,8 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
@@ -487,7 +494,8 @@ get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Mean = colMeans(res[[2]]),
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
+    Upper_CL = colMeans(res[[4]]),
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
 
