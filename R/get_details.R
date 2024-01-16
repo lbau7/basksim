@@ -218,7 +218,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
     MSE = unname(est[, 7]),
     Lower_CL = unname(est[, 3]),
     Upper_CL = unname(est[, 5]),
-    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
+    ECD = mean(rowSums(t(apply(res, 1, function(x) x != targ))))
   )
 }
 
@@ -287,7 +287,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
     MSE = unname(est[, 7]),
     Lower_CL = unname(est[, 3]),
     Upper_CL = unname(est[, 5]),
-    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
+    ECD = mean(rowSums(t(apply(res, 1, function(x) x != targ))))
   )
 }
 
