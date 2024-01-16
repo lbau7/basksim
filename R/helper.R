@@ -30,7 +30,7 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
 }
 
 # Weight matrix with MML weights
-get_weights_mml <- function(n, ...) {
+get_weights_mml <- function(design, n, ...) {
   n_sum <- n + 1
   mat <- matrix(0, nrow = n_sum, ncol = n_sum)
   r <- 0:n
@@ -39,8 +39,8 @@ get_weights_mml <- function(n, ...) {
       f <- function(delta) -extraDistr::dbbinom(
         x = r[i],
         size = n,
-        alpha = design@shape1 + delta * r[j],
-        beta = design@shape2 + delta * (n - r[j])
+        alpha = design$shape1 + delta * r[j],
+        beta = design$shape2 + delta * (n - r[j])
       )
 
       l <- stats::optim(0.5, fn = f, lower = 0, upper = 1,

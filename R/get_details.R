@@ -85,7 +85,7 @@ get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
-  weights <- get_weights_mml(n = n, ...)
+  weights <- get_weights_mml(design, n = n, ...)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
