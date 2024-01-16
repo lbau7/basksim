@@ -1,10 +1,10 @@
-# Beta Borrowing for Generalized JSD Design
-beta_borrow_jsdgen <- function(design, n, r, weights_pair, eps_all) {
+# Beta Borrowing for Global JSD Design
+beta_borrow_jsdglobal <- function(design, n, r, weights_pair, eps_all) {
   shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
   shape <- matrix(c(design$shape1 + r, design$shape1 + n - r), nrow = 2,
     byrow = TRUE)
   # Compute global weight
-  weight_all <- jsd_gen(shape = shape, epsilon = eps_all)
+  weight_all <- jsd_global(shape = shape, epsilon = eps_all)
 
   # Compute pairwise weights and multiply by global weight
   all_combs <- arrangements::combinations(r, 2) + 1
@@ -24,8 +24,8 @@ beta_borrow_jsdgen <- function(design, n, r, weights_pair, eps_all) {
   rbind(shape1post, shape2post)
 }
 
-# Compute generalized Jensen-Shannon divergence
-jsd_gen <- function(shape, epsilon) {
+# Compute global Jensen-Shannon divergence
+jsd_global <- function(shape, epsilon) {
   k <- ncol(shape)
   bf <- function(x, i) stats::dbeta(x, shape[1, i], shape[2, i])
   bff <- Vectorize(function(x) sum(mapply(bf, i = 1:k,
@@ -39,9 +39,9 @@ jsd_gen <- function(shape, epsilon) {
   (1 - mean(kl))^epsilon
 }
 
-# Analyzing Results for Generalized JSD Design
-ana_jsdgen <- function(design, n, r, eps_all, lambda, weights_pair) {
-  shape_post <- beta_borrow_jsdgen(design = design, n = n, r = r,
+# Analyzing Results for Global JSD Design
+ana_jsdglobal <- function(design, n, r, eps_all, lambda, weights_pair) {
+  shape_post <- beta_borrow_jsdglobal(design = design, n = n, r = r,
     weights_pair = weights_pair, eps_all = eps_all)
   post_prob <- post_beta(shape = shape_post, p0 = design$p0)
   ifelse(post_prob >= lambda, 1, 0)

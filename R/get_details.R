@@ -61,9 +61,9 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
   )
 }
 
-#' Get Details of a Basket Trial Simulation with the ebcomb Design
+#' Get Details of a Basket Trial Simulation with the MML Design
 #'
-#' @template design_ebcomb
+#' @template design_cpp
 #' @template n
 #' @template p1
 #' @template lambda
@@ -78,10 +78,57 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
 #' @export
 #'
 #' @examples
-#' design <- setup_ebcomb(k = 3, p0 = 0.2)
+#' design <- setup_mml(k = 3, p0 = 0.2)
+#' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'   tune_a = 1, tune_b = 1, iter = 100)
+get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                            iter = 1000, data = NULL, ...) {
+  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  targ <- design$p0 == p1
+  weights <- get_weights_mml(n = n, ...)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
+    shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
+      weights = weights)
+    res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
+    mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
+    hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
+      shape1 = x[1], shape2 = x[2], credMass = level))
+    list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
+  }
+  list(
+    Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
+    Mean = colMeans(res[[2]]),
+    MSE = colMeans(t(t(res[[2]]) - p1)^2),
+    Lower_CL = colMeans(res[[3]]),
+    Upper_CL = colMeans(res[[4]])
+  )
+}
+
+#' Get Details of a Basket Trial Simulation with the Global MML Design
+#'
+#' @template design_mmlglobal
+#' @template n
+#' @template p1
+#' @template lambda
+#' @template level
+#' @template iter
+#' @template data
+#' @template dotdotdot
+#'
+#' @return A list containing the rejection probabilites, posterior means,
+#' mean squared errors and mean limits of HDI intervals for all baskets as well
+#' as the family-wise error rate.
+#' @export
+#'
+#' @examples
+#' design <- setup_mmlglobal(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
-get_details.ebcomb <- function(design, n, p1 = NULL, lambda, level = 0.95,
-                               iter = 1000, data = NULL, ...) {
+get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                                  iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -89,7 +136,7 @@ get_details.ebcomb <- function(design, n, p1 = NULL, lambda, level = 0.95,
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1',
                           .options.future = list(seed = TRUE)) %dofuture% {
-    shape_loop <- weight_ebcombined(design = design, n = n, r = data[i, ])
+    shape_loop <- weight_mmlglobal(design = design, n = n, r = data[i, ])
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
     hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
@@ -292,14 +339,14 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 }
 
 #' Get Details of a Basket Trial Simulation with the Power Prior Design
-#' Based on Generalized JSD Weights
+#' Based on Global JSD Weights
 #'
-#' @template design_jsdgen
+#' @template design_jsdglobal
 #' @template n
 #' @template p1
 #' @template lambda
 #' @template level
-#' @template tuning_jsdgen
+#' @template tuning_jsdglobal
 #' @template iter
 #' @template data
 #' @template dotdotdot
@@ -310,12 +357,12 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @export
 #'
 #' @examples
-#' design <- setup_jsdgen(k = 3, p0 = 0.2)
+#' design <- setup_jsdglobal(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   eps_pair = 2, eps_all = 2, iter = 100)
-get_details.jsdgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
-                               eps_pair, tau = 0, eps_all, logbase = 2,
-                               iter = 1000, data = NULL, ...) {
+get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                                  eps_pair, tau = 0, eps_all, logbase = 2,
+                                  iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
@@ -324,7 +371,7 @@ get_details.jsdgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-      shape_loop <- beta_borrow_jsdgen(design = design, n = n, r = data[i, ],
+      shape_loop <- beta_borrow_jsdglobal(design = design, n = n, r = data[i, ],
         weights_pair = weights_pair, eps_all = eps_all)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
@@ -374,7 +421,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-      shape_loop <- beta_borrow_cpp(design = design, n = n, r = data[i, ],
+      shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
         weights = weights)
       res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
       mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
@@ -392,15 +439,15 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
   )
 }
 
-#' Get Details of a Basket Trial Simulation with the Generalized Calibrated
+#' Get Details of a Basket Trial Simulation with the Global Calibrated
 #' Power Prior Design
 #'
-#' @template design_cppgen
+#' @template design_cppglobal
 #' @template n
 #' @template p1
 #' @template lambda
 #' @template level
-#' @template tuning_cppgen
+#' @template tuning_cppglobal
 #' @template iter
 #' @template data
 #' @template dotdotdot
@@ -411,12 +458,12 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @export
 #'
 #' @examples
-#' design <- setup_cppgen(k = 3, p0 = 0.2)
+#' design <- setup_cppglobal(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
-get_details.cppgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
-                               tune_a, tune_b, epsilon, iter = 1000,
-                               data = NULL, ...) {
+get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
+                                  tune_a, tune_b, epsilon, iter = 1000,
+                                  data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -424,7 +471,7 @@ get_details.cppgen <- function(design, n, p1 = NULL, lambda, level = 0.95,
     iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-    shape_loop <- beta_borrow_cppgen(design = design, n = n, r = data[i, ],
+    shape_loop <- beta_borrow_cppglobal(design = design, n = n, r = data[i, ],
       weights_pair = weights_pair, epsilon = epsilon)
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))

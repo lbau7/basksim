@@ -1,10 +1,10 @@
-ana_ebcombined <- function(design, n, r, lambda) {
-  shape_post <- weight_ebcombined(design = design, n = n, r = r)
+ana_mmlglobal <- function(design, n, r, lambda) {
+  shape_post <- weight_mmlglobal(design = design, n = n, r = r)
   post_prob <- post_beta(shape = shape_post, p0 = design$p0)
   ifelse(post_prob >= lambda, 1, 0)
 }
 
-weight_ebcombined <- function(design, n, r) {
+weight_mmlglobal <- function(design, n, r) {
   shape1_post <- shape2_post <- numeric(design$k)
 
   for (i in 1:design$k) {

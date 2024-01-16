@@ -15,7 +15,7 @@ test_that("opt_design works", {
   expect_equal(mean(as.numeric(res1[1, 5:8])), unname(res1[1, 9]))
   expect_true(abs(res1[1, 6] - ecdres1) < 0.1)
 
-  design2 <- setup_ebcomb(k = 3, p0 = 0.2)
+  design2 <- setup_mmlglobal(k = 3, p0 = 0.2)
   res2 <- opt_design(design = design2, n = 10, alpha = 0.05,
     scenarios = scenarios, prec_digits = 3)
 

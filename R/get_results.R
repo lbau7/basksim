@@ -49,9 +49,9 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
   }
 }
 
-#' Get Results for Simulation of a Basket Trial with the ebcomb Design
+#' Get Results for Simulation of a Basket Trial with the MML Design
 #'
-#' @template design_ebcomb
+#' @template design_mml
 #' @template n
 #' @template p1
 #' @template lambda
@@ -65,16 +65,46 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #' @export
 #'
 #' @examples
-#' design <- setup_ebcomb(k = 3, p0 = 0.2)
+#' design <- setup_mml(k = 3, p0 = 0.2)
 #' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   iter = 100)
-get_results.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
-                               data = NULL, ...) {
+get_results.mml <- function(design, n, p1 = NULL, lambda, iter = 1000,
+                            data = NULL, ...) {
+  weights <- get_weights_mml(n, ...)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
+    ana_pp(design = design, n = n, r = data[i, ], lambda = lambda,
+      weights = weights)
+  }
+}
+
+#' Get Results for Simulation of a Basket Trial with the Global MML Design
+#'
+#' @template design_mmlglobal
+#' @template n
+#' @template p1
+#' @template lambda
+#' @template iter
+#' @template data
+#' @template dotdotdot
+#'
+#' @return A matrix of results with \code{iter} rows. A 0 means, that the
+#' null hypothesis that the response probability exceeds \code{p0} was not
+#' rejected, a 1 means, that the null hypothesis was rejected.
+#' @export
+#'
+#' @examples
+#' design <- setup_mmlglobal(k = 3, p0 = 0.2)
+#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'   iter = 100)
+get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
+                                  data = NULL, ...) {
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
                    .options.future = list(seed = TRUE)) %dofuture% {
-    ana_ebcombined(design = design, n = n, r = data[i, ], lambda = lambda)
+    ana_mmlglobal(design = design, n = n, r = data[i, ], lambda = lambda)
   }
 }
 
@@ -217,13 +247,13 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 }
 
 #' Get Results for Simulation of a Basket Trial with the Power Prior Design
-#' Based on Generalized JSD Weights
+#' Based on Global JSD Weights
 #'
-#' @template design_jsdgen
+#' @template design_jsdglobal
 #' @template n
 #' @template p1
 #' @template lambda
-#' @template tuning_jsdgen
+#' @template tuning_jsdglobal
 #' @template iter
 #' @template data
 #' @template dotdotdot
@@ -234,18 +264,18 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 #' @export
 #'
 #' @examples
-#' design <- setup_jsdgen(k = 3, p0 = 0.2)
+#' design <- setup_jsdglobal(k = 3, p0 = 0.2)
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   eps_pair = 2, eps_all = 2, iter = 100)
-get_results.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
-                               eps_all, logbase = 2, iter = 1000, data = NULL,
-                               ...) {
+get_results.jsdglobal <- function(design, n, p1 = NULL, lambda, eps_pair,
+                                  tau = 0, eps_all, logbase = 2, iter = 1000,
+                                  data = NULL, ...) {
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
     tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
-    ana_jsdgen(design = design, n = n, r = data[i, ], eps_all = eps_all,
+    ana_jsdglobal(design = design, n = n, r = data[i, ], eps_all = eps_all,
       lambda = lambda, weights_pair = weights_pair)
   }
 }
@@ -277,19 +307,19 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
-    ana_cpp(design = design, n = n, r = data[i, ], lambda = lambda,
+    ana_pp(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
   }
 }
 
-#' Get Results for Simulation of a Basket Trial with a Generalized Calibrated
+#' Get Results for Simulation of a Basket Trial with a Global Calibrated
 #' Power Prior Design
 #'
-#' @template design_cppgen
+#' @template design_cppglobal
 #' @template n
 #' @template p1
 #' @template lambda
-#' @template tuning_cppgen
+#' @template tuning_cppglobal
 #' @template iter
 #' @template data
 #' @template dotdotdot
@@ -300,16 +330,16 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #' @export
 #'
 #' @examples
-#' design <- setup_cppgen(k = 3, p0 = 0.2)
+#' design <- setup_cppglobal(k = 3, p0 = 0.2)
 #' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
-get_results.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
-                               epsilon, iter = 1000, data = NULL, ...) {
+get_results.cppglobal <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
+                                  epsilon, iter = 1000, data = NULL, ...) {
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
-    ana_cppgen(design = design, n = n, r = data[i, ], lambda = lambda,
+    ana_cppglobal(design = design, n = n, r = data[i, ], lambda = lambda,
       weights_pair = weights_pair, epsilon = epsilon)
   }
 }

@@ -1,8 +1,8 @@
-test_that("weight_ebcombined works", {
-  design <- setup_ebcomb(k = 4, p0 = 0.2)
+test_that("weight_mmlglobal works", {
+  design <- setup_mmlglobal(k = 4, p0 = 0.2)
   n <- 20
   r <- c(10, 12, 14, 16)
-  res <- weight_ebcombined(design = design, n = n, r = r)
+  res <- weight_mmlglobal(design = design, n = n, r = r)
 
   # Compare with the StudyPrior package (not avaible on cran)
   # val1 <- StudyPrior::binom.PP.EB(x = r[-1], n = rep(n, 3), X = r[1], N = n,

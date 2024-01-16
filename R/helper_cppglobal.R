@@ -1,5 +1,5 @@
-# Beta Borrowing for Generalized CPP Design
-beta_borrow_cppgen <- function(design, n, r, weights_pair, epsilon) {
+# Beta Borrowing for Global CPP Design
+beta_borrow_cppglobal <- function(design, n, r, weights_pair, epsilon) {
   shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
   weight_all <- diff_all(n = n, r = r, epsilon = epsilon)
 
@@ -21,7 +21,7 @@ beta_borrow_cppgen <- function(design, n, r, weights_pair, epsilon) {
   rbind(shape1post, shape2post)
 }
 
-# Global Weights for CPP Gen Design
+# Global Weights for Global CPP Design
 diff_all <- function(n, r, epsilon) {
   rr <- r / n
   rs <- sort(rr)
@@ -30,8 +30,8 @@ diff_all <- function(n, r, epsilon) {
 }
 
 # Analyzing Results for CPP Design
-ana_cppgen <- function(design, n, r, lambda, weights_pair, epsilon) {
-  shape_post <- beta_borrow_cppgen(design = design, n = n, r = r,
+ana_cppglobal <- function(design, n, r, lambda, weights_pair, epsilon) {
+  shape_post <- beta_borrow_cppglobal(design = design, n = n, r = r,
     weights_pair = weights_pair, epsilon = epsilon)
   post_prob <- post_beta(shape = shape_post, p0 = design$p0)
   ifelse(post_prob >= lambda, 1, 0)

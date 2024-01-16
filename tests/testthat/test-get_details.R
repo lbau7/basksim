@@ -17,8 +17,8 @@ test_that("get_details works for bma", {
   expect_true(all(abs(res3$Mean - 0.5) < 0.02))
 })
 
-test_that("get_details works for ebcomb", {
-  design <- setup_ebcomb(k = 3, p0 = 0.2)
+test_that("get_details works for mmlglobal", {
+  design <- setup_mmlglobal(k = 3, p0 = 0.2)
   set.seed(20230222)
   res1 <- get_details(design = design, n = 20, p1 = c(0.2, 0.4, 0.4),
     lambda = 0.95, pmp0 = 1, iter = 100)
@@ -179,9 +179,9 @@ test_that("get_details works for fujikawa", {
       c(0.01043607, 0.01043607, 0.01674920)) < 0.01))
 })
 
-test_that("get_details works for jsdgen", {
+test_that("get_details works for jsdglobal", {
   set.seed(20230515)
-  design <- setup_jsdgen(k = 3, p0 = 0.2)
+  design <- setup_jsdglobal(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 12, p1 = c(0.2, 0.5, 0.6),
     lambda = 0.95, eps_pair = 1.5, eps_all = 0, iter = 1000)
 
@@ -207,9 +207,9 @@ test_that("get_details works for cpp", {
       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
 })
 
-test_that("get_details works for cppgen", {
+test_that("get_details works for cppglobal", {
   set.seed(20230512)
-  design <- setup_cppgen(k = 3, p0 = 0.15)
+  design <- setup_cppglobal(k = 3, p0 = 0.15)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.4, 0.5),
     lambda = 0.98, tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000)
 

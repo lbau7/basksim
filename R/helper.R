@@ -29,6 +29,30 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
   weight_mat
 }
 
+# Weight matrix with MML weights
+get_weights_mml <- function(n, ...) {
+  n_sum <- n + 1
+  mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+  r <- 0:n
+  for (i in 1:n_sum) {
+    for (j in 1:n_sum) {
+      f <- function(delta) -extraDistr::dbbinom(
+        x = r[i],
+        size = n,
+        alpha = design@shape1 + delta * r[j],
+        beta = design@shape2 + delta * (n - r[j])
+      )
+
+      l <- stats::optim(0.5, fn = f, lower = 0, upper = 1,
+        method = "Brent")$par
+      mat[i, j] <- ifelse(l <= 6.474096e-09, 0, l)
+    }
+  }
+  mat <- (mat + t(mat)) / 2
+  diag(mat) <- 1
+  mat
+}
+
 # Weight matrix with CPP weights
 get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
   n_sum <- n + 1

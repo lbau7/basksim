@@ -1,5 +1,5 @@
-# Beta Borrowing for CPP Design
-beta_borrow_cpp <- function(design, n, r, weights) {
+# Beta Borrowing for Power Prior Designs
+beta_borrow_pp <- function(design, n, r, weights) {
   shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
   all_combs <- arrangements::combinations(r, 2) + 1
   weights_vec <- weights[all_combs]
@@ -16,9 +16,9 @@ beta_borrow_cpp <- function(design, n, r, weights) {
   rbind(shape1post, shape2post)
 }
 
-# Analyzing Results for CPP Design
-ana_cpp <- function(design, n, r, lambda, weights) {
-  shape_post <- beta_borrow_cpp(design = design, n = n, r = r,
+# Analyzing Results for Power Prior Designs
+ana_pp <- function(design, n, r, lambda, weights) {
+  shape_post <- beta_borrow_pp(design = design, n = n, r = r,
     weights = weights)
   post_prob <- post_beta(shape = shape_post, p0 = design$p0)
   ifelse(post_prob >= lambda, 1, 0)

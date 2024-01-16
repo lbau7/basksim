@@ -13,8 +13,8 @@ test_that("get_results works for bma", {
   expect_true(all(res2 %in% c(0, 1)))
 })
 
-test_that("get_results works for ebcomb", {
-  design <- setup_ebcomb(k = 3, p0 = 0.2)
+test_that("get_results works for mmlglobal", {
+  design <- setup_mmlglobal(k = 3, p0 = 0.2)
   data <- get_data(k = 3, n = 10, p = c(0.2, 0.5, 0.5), iter = 110)
 
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
@@ -89,8 +89,8 @@ test_that("get_results works for fujikawa", {
   expect_true(all(res2 %in% c(0, 1)))
 })
 
-test_that("get_results works for jsdgen", {
-  design <- setup_jsdgen(k = 3, p0 = 0.2)
+test_that("get_results works for jsdglobal", {
+  design <- setup_jsdglobal(k = 3, p0 = 0.2)
   data <- get_data(k = 3, n = 10, p = c(0.2, 0.5, 0.5), iter = 110)
 
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
@@ -119,8 +119,8 @@ test_that("get_results works for cpp", {
   expect_true(all(res2 %in% c(0, 1)))
 })
 
-test_that("get_results works for cppgen", {
-  design <- setup_cppgen(k = 3, p0 = 0.2)
+test_that("get_results works for cppglobal", {
+  design <- setup_cppglobal(k = 3, p0 = 0.2)
   data <- get_data(k = 3, n = 10, p = c(0.2, 0.5, 0.5), iter = 110)
 
   res1 <- get_results(design = design, n = 10, p1 = c(0.2, 0.5, 0.5),
