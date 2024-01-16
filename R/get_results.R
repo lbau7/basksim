@@ -70,7 +70,7 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #'   iter = 100)
 get_results.mml <- function(design, n, p1 = NULL, lambda, iter = 1000,
                             data = NULL, ...) {
-  weights <- get_weights_mml(data, n, ...)
+  weights <- get_weights_mml(design, n, ...)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
