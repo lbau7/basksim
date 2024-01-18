@@ -6,6 +6,8 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
   # individual baskets are all the same
   if(length(unique(n)) == 1 || length(n) == 1){
 
+    n <- ifelse(length(n) == 1, n, n[1])
+
     shape1_post <- design$shape1 + c(0:n)
     shape2_post <- design$shape2 + c(n:0)
     n_sum <- n + 1
