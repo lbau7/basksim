@@ -15,9 +15,8 @@ knitr::opts_chunk$set(
 # basksim
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/lbau7/basksim/branch/master/graph/badge.svg?token=AVO4V52BTH)](https://codecov.io/gh/lbau7/basksim)
 [![R-CMD-check](https://github.com/sabrinaschmitt/basksim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sabrinaschmitt/basksim/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/sabrinaschmitt/basksim/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/sabrinaschmitt/basksim/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 ## Overview
