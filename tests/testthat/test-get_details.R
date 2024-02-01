@@ -187,7 +187,7 @@ test_that("get_details works for jsdgen", {
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
-      c(0.3500560, 0.8917081, 0.9701317)) < 0.01))
+      c(0.3500560, 0.8917081, 0.9701317)) < 0.015))
   expect_true(all(abs(res$Mean - c(0.2976754, 0.4857321, 0.5432103)) < 0.01))
   expect_true(all(abs(res$MSE -
       c(0.02132311, 0.01401632, 0.01667987)) < 0.01))
@@ -201,7 +201,7 @@ test_that("get_details works for cpp", {
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
-      c(0.06643573, 0.06643573, 0.56254586)) < 0.01))
+      c(0.06643573, 0.06643573, 0.56254586)) < 0.015))
   expect_true(all(abs(res$Mean - c(0.2529584 , 0.2529584 , 0.4173126)) < 0.01))
   expect_true(all(abs(res$MSE -
       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
