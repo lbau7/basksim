@@ -2,7 +2,6 @@ test_that("opt_design works", {
   design1 <- setup_fujikawa(k = 3, p0 = 0.2)
   scenarios <- get_scenarios(design = design1, p1 = 0.5)
 
-  #set.seed(20230517)
   set.seed(01022024)
   # Wihout simulated data
   res1 <- opt_design(design = design1, n = 10, alpha = 0.05,
