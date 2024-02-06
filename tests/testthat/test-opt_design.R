@@ -3,7 +3,7 @@ test_that("opt_design works", {
   scenarios <- get_scenarios(design = design1, p1 = 0.5)
 
   set.seed(01022024)
-  # Wihout simulated data
+  # Without simulated data
   res1 <- opt_design(design = design1, n = 10, alpha = 0.05,
     design_params = list(epsilon = c(1, 2), tau = 0, logbase = exp(1)),
     scenarios = scenarios, prec_digits = 3)
