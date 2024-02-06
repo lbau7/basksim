@@ -50,7 +50,8 @@ jobs:
       - name: Install jags (Windows)
         if: runner.os == 'Windows'
         run: |
-          curl.exe --ca-native -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
+          curl --etag-compare etag.txt --etag-save etag.txt --remote-name https://curl.se/ca/cacert.pem
+          curl.exe --ca-native -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe --cacert cacert.pem
           wjags.exe /S
           del wjags.exe
         shell: cmd
