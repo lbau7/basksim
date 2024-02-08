@@ -37,6 +37,7 @@ test_that("check_data_bhmbasket works", {
   data1 <- get_data(k = 3, n = 20, p = 0.2, iter = 100, type = "bhmbasket")
   data2 <- get_data(k = 3, n = 20, p = 0.2, iter = 100)
   data3 <- get_data(k = 4, n = 20, p = 0.2, iter = 100, type = "bhmbasket")
+  data4 <- get_data(k = 3, n = c(15,20,25), p = 0.2, iter = 100, type = "bhmbasket")
 
   expect_error(check_data_bhmbasket(data = data2, design = design,
     n = 20, p = NULL, iter = 100))
@@ -46,6 +47,8 @@ test_that("check_data_bhmbasket works", {
     p = 0.2, iter = 100))
   expect_error(check_data_bhmbasket(data = data1, design = design, n = 20,
     p = 0.5, iter = 100))
+  expect_error(check_data_bhmbasket(data = data4, design = design, n = 20,
+    p = 0.2, iter = 100))
   expect_message(check_data_bhmbasket(data = data1, design = design, n = 20,
     p = NULL, iter = 101))
 })
