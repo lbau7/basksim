@@ -15,7 +15,9 @@ test_that("get_results works for bma", {
   expect_true(all(res1 %in% c(0, 1)))
   expect_true(all(res2 %in% c(0, 1)))
 
-  expect_false(length(attributes(data1)$n) == 3)
+  # expect_false(length(attributes(data1)$n) == 3)
+  expect_error(get_results.bma(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 
 })
 
