@@ -400,7 +400,7 @@ get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
     stop("n must either have length 1 or k")
   }
 
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
@@ -446,7 +446,7 @@ get_results.app <- function(design, n, p1 = NULL, lambda,
     stop("n must either have length 1 or k")
   }
 
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
                             iter = iter)
