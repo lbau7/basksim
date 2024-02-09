@@ -10,6 +10,7 @@ test_that("get_details works for bma", {
   res3 <- get_details(design = design, n = 20, p1 = c(0.5, 0.5, 0.5),
     lambda = 0.95, pmp0 = 1, iter = 100)
 
+  # Works without supplied p1
   res4 <- get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
     pmp0 = 1, iter = 100)
 
@@ -37,6 +38,10 @@ test_that("get_details works for ebcomb", {
 
   res3 <- get_details(design = design, n = 20, p1 = c(0.5, 0.5, 0.5),
     lambda = 0.95, pmp0 = 1, iter = 100)
+
+  # Works without supplied p1
+  res4 <- get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
+    pmp0 = 1, iter = 100)
 
   # Rejection probabilities are higher when p is higher
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
@@ -112,6 +117,10 @@ test_that("get_details works for bhm", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
   expect_error(get_details.bhm(design = design, n = c(10,20,30,40), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+
+  # Works without supplied p1
+  res4 <- get_details(design = design, n = 10, p1 = NULL, lambda = 0.9,
+    tau_scale = 0.75, iter = 100)
 })
 
 test_that("get_details works for exnex", {
@@ -184,6 +193,10 @@ test_that("get_details works for exnex", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
   expect_error(get_details.exnex(design = design, n = c(10,20,30,40), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+
+  # Works without supplied p1
+  res4 <- get_details(design = design, n = 10, p1 = NULL, lambda = 0.9,
+    tau_scale = 0.75, w = 0.5, iter = 100)
 })
 
 test_that("get_details works for fujikawa", {
@@ -191,6 +204,10 @@ test_that("get_details works for fujikawa", {
   design <- setup_fujikawa(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
     lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
+
+  # Works without supplied p1
+  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+    epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
@@ -212,6 +229,10 @@ test_that("get_details works for jsdgen", {
   res <- get_details(design = design, n = 12, p1 = c(0.2, 0.5, 0.6),
     lambda = 0.95, eps_pair = 1.5, eps_all = 0, iter = 1000)
 
+  # Works without supplied p1
+  res1 <- get_details(design = design, n = 12, p1 = NULL, lambda = 0.95,
+    eps_pair = 1.5, eps_all = 0, iter = 1000)
+
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
       c(0.3500560, 0.8917081, 0.9701317)) < 0.015))
@@ -225,6 +246,10 @@ test_that("get_details works for cpp", {
   design <- setup_cpp(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+
+  # Works without supplied p1
+  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+    tune_a = 2, tune_b = 2, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
@@ -246,6 +271,10 @@ test_that("get_details works for cppgen", {
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.4, 0.5),
     lambda = 0.98, tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000)
 
+  # Works without supplied p1
+  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.98,
+    tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000)
+
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
       c(0.3270933, 0.8168261, 0.9432173)) < 0.01))
@@ -258,7 +287,11 @@ test_that("get_details works for cpplim", {
   set.seed(20230319)
   design <- setup_cpplim(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-                     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+      lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+
+  # Works without supplied p1
+  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+      tune_a = 2, tune_b = 2, iter = 5000)
 
   # # Compare with results from baskexact
   # expect_true(all(abs(res$Rejection_Probabilities -
@@ -278,7 +311,11 @@ test_that("get_details works for app", {
   set.seed(20230319)
   design <- setup_app(k = 3, p0 = 0.2)
   res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-                     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+   lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+
+  # Works without supplied p1
+  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+    tune_a = 2, tune_b = 2, iter = 5000)
 
   # # Compare with results from baskexact
   # expect_true(all(abs(res$Rejection_Probabilities -
