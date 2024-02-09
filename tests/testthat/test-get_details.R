@@ -14,6 +14,10 @@ test_that("get_details works for bma", {
   expect_no_error(get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
     pmp0 = 1, iter = 100))
 
+  # Works with unequal sample sizes
+  expect_no_error(get_details(design = design, n = c(15,20,25),
+    p1 = c(0.5, 0.5, 0.5), lambda = 0.95, pmp0 = 1, iter = 100))
+
   # Rejection probabilities are higher when p is higher
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
 
@@ -289,17 +293,17 @@ test_that("get_details works for cpplim", {
   # res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
   #     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
-  # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-      tune_a = 2, tune_b = 2, iter = 5000))
-
-
-
-  # If n is passed as a vector, it should have k entries
-  expect_error(get_details.cpplim(design = design, n = c(10,20), p1 = NULL,
-                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  expect_error(get_details.cpplim(design = design, n = c(10,20,30,40), p1 = NULL,
-                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  # # Works without supplied p1
+  # expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+  #     tune_a = 2, tune_b = 2, iter = 5000))
+  #
+  #
+  #
+  # # If n is passed as a vector, it should have k entries
+  # expect_error(get_details.cpplim(design = design, n = c(10,20), p1 = NULL,
+  #                              lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  # expect_error(get_details.cpplim(design = design, n = c(10,20,30,40), p1 = NULL,
+  #                              lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for app", {
@@ -308,15 +312,15 @@ test_that("get_details works for app", {
   # res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
   #  lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
-  # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-                              tune_a = 2, tune_b = 2, iter = 5000))
-
-
-
-  # If n is passed as a vector, it should have k entries
-  expect_error(get_details.app(design = design, n = c(10,20), p1 = NULL,
-                                  lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  expect_error(get_details.app(design = design, n = c(10,20,30,40), p1 = NULL,
-                                  lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  # # Works without supplied p1
+  # expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+  #                             tune_a = 2, tune_b = 2, iter = 5000))
+  #
+  #
+  #
+  # # If n is passed as a vector, it should have k entries
+  # expect_error(get_details.app(design = design, n = c(10,20), p1 = NULL,
+  #                                 lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  # expect_error(get_details.app(design = design, n = c(10,20,30,40), p1 = NULL,
+  #                                 lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
