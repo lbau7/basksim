@@ -10,6 +10,9 @@ test_that("get_details works for bma", {
   res3 <- get_details(design = design, n = 20, p1 = c(0.5, 0.5, 0.5),
     lambda = 0.95, pmp0 = 1, iter = 100)
 
+  res4 <- get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
+    pmp0 = 1, iter = 100)
+
   # Rejection probabilities are higher when p is higher
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
 
