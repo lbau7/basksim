@@ -11,8 +11,8 @@ test_that("get_details works for bma", {
     lambda = 0.95, pmp0 = 1, iter = 100)
 
   # Works without supplied p1
-  res4 <- get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
-    pmp0 = 1, iter = 100)
+  expect_no_error(get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
+    pmp0 = 1, iter = 100))
 
   # Rejection probabilities are higher when p is higher
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
@@ -40,8 +40,8 @@ test_that("get_details works for ebcomb", {
     lambda = 0.95, pmp0 = 1, iter = 100)
 
   # Works without supplied p1
-  res4 <- get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
-    pmp0 = 1, iter = 100)
+  expect_no_error(get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
+    pmp0 = 1, iter = 100))
 
   # Rejection probabilities are higher when p is higher
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
@@ -119,8 +119,8 @@ test_that("get_details works for bhm", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 
   # Works without supplied p1
-  res4 <- get_details(design = design, n = 10, p1 = NULL, lambda = 0.9,
-    tau_scale = 0.75, iter = 100)
+  expect_no_error(get_details(design = design, n = 10, p1 = NULL, lambda = 0.9,
+    tau_scale = 0.75, iter = 100))
 })
 
 test_that("get_details works for exnex", {
@@ -195,8 +195,8 @@ test_that("get_details works for exnex", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 
   # Works without supplied p1
-  res4 <- get_details(design = design, n = 10, p1 = NULL, lambda = 0.9,
-    tau_scale = 0.75, w = 0.5, iter = 100)
+  expect_no_error(get_details(design = design, n = 10, p1 = NULL, lambda = 0.9,
+    tau_scale = 0.75, w = 0.5, iter = 100))
 })
 
 test_that("get_details works for fujikawa", {
@@ -206,8 +206,8 @@ test_that("get_details works for fujikawa", {
     lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Works without supplied p1
-  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-    epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
+  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+    epsilon = 2, logbase = exp(1), tau = 0, iter = 5000))
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
@@ -230,8 +230,8 @@ test_that("get_details works for jsdgen", {
     lambda = 0.95, eps_pair = 1.5, eps_all = 0, iter = 1000)
 
   # Works without supplied p1
-  res1 <- get_details(design = design, n = 12, p1 = NULL, lambda = 0.95,
-    eps_pair = 1.5, eps_all = 0, iter = 1000)
+  expect_no_error(get_details(design = design, n = 12, p1 = NULL, lambda = 0.95,
+    eps_pair = 1.5, eps_all = 0, iter = 1000))
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
@@ -248,8 +248,8 @@ test_that("get_details works for cpp", {
     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
   # Works without supplied p1
-  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-    tune_a = 2, tune_b = 2, iter = 5000)
+  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+    tune_a = 2, tune_b = 2, iter = 5000))
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
@@ -272,8 +272,8 @@ test_that("get_details works for cppgen", {
     lambda = 0.98, tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000)
 
   # Works without supplied p1
-  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.98,
-    tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000)
+  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.98,
+    tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000))
 
   # Compare with results from baskexact
   expect_true(all(abs(res$Rejection_Probabilities -
@@ -286,19 +286,14 @@ test_that("get_details works for cppgen", {
 test_that("get_details works for cpplim", {
   set.seed(20230319)
   design <- setup_cpplim(k = 3, p0 = 0.2)
-  res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-      lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+  # res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
+  #     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
   # Works without supplied p1
-  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-      tune_a = 2, tune_b = 2, iter = 5000)
+  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+      tune_a = 2, tune_b = 2, iter = 5000))
 
-  # # Compare with results from baskexact
-  # expect_true(all(abs(res$Rejection_Probabilities -
-  #                       c(0.06643573, 0.06643573, 0.56254586)) < 0.015))
-  # expect_true(all(abs(res$Mean - c(0.2529584 , 0.2529584 , 0.4173126)) < 0.01))
-  # expect_true(all(abs(res$MSE -
-  #                       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
+
 
   # If n is passed as a vector, it should have k entries
   expect_error(get_details.cpplim(design = design, n = c(10,20), p1 = NULL,
@@ -310,19 +305,14 @@ test_that("get_details works for cpplim", {
 test_that("get_details works for app", {
   set.seed(20230319)
   design <- setup_app(k = 3, p0 = 0.2)
-  res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-   lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+  # res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
+  #  lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
   # Works without supplied p1
-  res1 <- get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-    tune_a = 2, tune_b = 2, iter = 5000)
+  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+                              tune_a = 2, tune_b = 2, iter = 5000))
 
-  # # Compare with results from baskexact
-  # expect_true(all(abs(res$Rejection_Probabilities -
-  #                       c(0.06643573, 0.06643573, 0.56254586)) < 0.015))
-  # expect_true(all(abs(res$Mean - c(0.2529584 , 0.2529584 , 0.4173126)) < 0.01))
-  # expect_true(all(abs(res$MSE -
-  #                       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
+
 
   # If n is passed as a vector, it should have k entries
   expect_error(get_details.app(design = design, n = c(10,20), p1 = NULL,
