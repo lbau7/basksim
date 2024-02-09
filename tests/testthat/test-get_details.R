@@ -15,6 +15,12 @@ test_that("get_details works for bma", {
 
   # Posterior means are close to p
   expect_true(all(abs(res3$Mean - 0.5) < 0.02))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.bma(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.bma(design = design, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for ebcomb", {
@@ -97,6 +103,12 @@ test_that("get_details works for bhm", {
   data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
   expect_error(get_details(design, n = 20, p1 = c(0.2, 0.2, 0.5), lambda = 0.95,
     tau_scale = 1, iter = 100, data = data))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.bhm(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.bhm(design = design, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for exnex", {
@@ -163,6 +175,12 @@ test_that("get_details works for exnex", {
     tau_scale = 1, w = 0.5, iter = 100, data = data))
   expect_error(get_details(design, n = 20, p1 = 0.2, lambda = 0.95,
     tau_scale = 1, w = 0.5, iter = 100, data = scenarios))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.exnex(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.exnex(design = design, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for fujikawa", {
@@ -177,6 +195,12 @@ test_that("get_details works for fujikawa", {
   expect_true(all(abs(res$Mean - c(0.2717930 , 0.2717930 , 0.4145559)) < 0.01))
   expect_true(all(abs(res$MSE -
       c(0.01043607, 0.01043607, 0.01674920)) < 0.01))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.fujikawa(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.fujikawa(design = design, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for jsdgen", {
@@ -205,6 +229,12 @@ test_that("get_details works for cpp", {
   expect_true(all(abs(res$Mean - c(0.2529584 , 0.2529584 , 0.4173126)) < 0.01))
   expect_true(all(abs(res$MSE -
       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.cpp(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.cpp(design = design, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for cppgen", {
@@ -219,4 +249,44 @@ test_that("get_details works for cppgen", {
   expect_true(all(abs(res$Mean - c(0.2764610, 0.3967091, 0.4596072)) < 0.01))
   expect_true(all(abs(res$MSE -
       c(0.013143002, 0.009512997, 0.013149404)) < 0.01))
+})
+
+test_that("get_details works for cpplim", {
+  set.seed(20230319)
+  design <- setup_cpplim(k = 3, p0 = 0.2)
+  res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
+                     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+
+  # # Compare with results from baskexact
+  # expect_true(all(abs(res$Rejection_Probabilities -
+  #                       c(0.06643573, 0.06643573, 0.56254586)) < 0.015))
+  # expect_true(all(abs(res$Mean - c(0.2529584 , 0.2529584 , 0.4173126)) < 0.01))
+  # expect_true(all(abs(res$MSE -
+  #                       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.cpplim(design = design, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.cpplim(design = design, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+})
+
+test_that("get_details works for app", {
+  set.seed(20230319)
+  design <- setup_app(k = 3, p0 = 0.2)
+  res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
+                     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+
+  # # Compare with results from baskexact
+  # expect_true(all(abs(res$Rejection_Probabilities -
+  #                       c(0.06643573, 0.06643573, 0.56254586)) < 0.015))
+  # expect_true(all(abs(res$Mean - c(0.2529584 , 0.2529584 , 0.4173126)) < 0.01))
+  # expect_true(all(abs(res$MSE -
+  #                       c(0.008506501, 0.008506501, 0.018349713)) < 0.01))
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.app(design = design, n = c(10,20), p1 = NULL,
+                                  lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.app(design = design, n = c(10,20,30,40), p1 = NULL,
+                                  lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
