@@ -36,7 +36,8 @@ beta_borrow_cpp <- function(design, n, r, weights) {
           n_comp <- n[j]
 
           # The same matrix is used for both combinations
-          index <- which((unique_combs[,1] == n_cur & unique_combs[,2] == n_comp) | (unique_combs[,2] == n_cur & unique_combs[,1] == n_comp))
+          index <- which((unique_combs[,1] == n_cur & unique_combs[,2] == n_comp) |
+                           (unique_combs[,2] == n_cur & unique_combs[,1] == n_comp))
           matching_weights <- weights[[index]]
 
           # Ensure that the rows indicate the current basket
