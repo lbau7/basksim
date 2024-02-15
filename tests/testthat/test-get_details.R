@@ -307,23 +307,38 @@ test_that("get_details works for cpplim", {
 })
 
 test_that("get_details works for app", {
-  set.seed(20230319)
-  design <- setup_app(k = 3, p0 = 0.2)
+
+  # compare with CPP (w = 1, alpha_0 = 1, gamma = 0)
+  design_app <- setup_app(k = 3, p0 = 0.2)
+  design_cpp <- setup_cpp(k = 3, p0 = 0.2)
+
+  n <- 20
+  data <- matrix(data = 15, ncol = 3, nrow = 100)
+  p1 <- c(0.2,0.5,0.5)
+  lambda <- 0.987
+
+  res_app <- get_details.app(design = design_app, n = n, p1 = p1, lambda = lambda,
+                             iter = 100, data = data)
+  res_cpp <- get_details.cpp(design = design_cpp, n = n, p1 = p1, lambda = lambda,
+                             tune_a = 1, tune_b = 1, iter = 100, data = data)
+
+  expect_equal(res_app$Rejection_Probabilities, res_cpp$Rejection_Probabilities)
+  expect_equal(res_app$FWER, res_cpp$FWER)
+  expect_equal(res_app$Mean, res_cpp$Mean)
+  expect_equal(res_app$MSE, res_cpp$MSE)
+  expect_equal(res_app$Lower_CL, res_cpp$Lower_CL)
+  expect_equal(res_app$Upper_CL, res_cpp$Upper_CL)
 
 
-  # hier wird automatisch der gesamte Code einmal durchlaufen wodurch er fälschlicherweise gecovert ist
-  # res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-  #  lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+  # Works without supplied p1
+  expect_no_error(get_details(design = design_app, n = 15, p1 = NULL, lambda = 0.99,
+                              tune_a = 2, tune_b = 2, iter = 5000))
 
-  # # Works without supplied p1
-  # expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-  #                             tune_a = 2, tune_b = 2, iter = 5000))
-  #
-  #
-  #
-  # # If n is passed as a vector, it should have k entries
-  # expect_error(get_details.app(design = design, n = c(10,20), p1 = NULL,
-  #                                 lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  # expect_error(get_details.app(design = design, n = c(10,20,30,40), p1 = NULL,
-  #                                 lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.app(design = design_app, n = c(10,20), p1 = NULL,
+                                  lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.app(design = design_app, n = c(10,20,30,40), p1 = NULL,
+                                  lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
