@@ -1,11 +1,8 @@
-# Beta Borrowing for Fujikawa's Design
+# weight matrix for jsd-weights
 
-beta_borrow_fujikawa <- function(design, n, r, weights) {
-
+get_weight_mat_jsd <- function(design, n, r, weights){
   if(length(unique(n)) == 1 || length(n) == 1){
 
-    shape <- matrix(c(design$shape1 + r, design$shape2 + n - r), nrow = 2,
-                    byrow = TRUE)
     all_combs <- arrangements::combinations(r, 2) + 1
     weights_vec <- weights[all_combs]
     weight_mat <- matrix(nrow = design$k, ncol = design$k)
@@ -14,9 +11,6 @@ beta_borrow_fujikawa <- function(design, n, r, weights) {
     diag(weight_mat) <- 1
 
   } else{
-
-    shape <- matrix(c(design$shape1 + r, design$shape2 + n - r), nrow = 2,
-                    byrow = TRUE)
 
     # find all possible combinations
     unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
@@ -51,6 +45,17 @@ beta_borrow_fujikawa <- function(design, n, r, weights) {
       }
     }
   }
+  weight_mat
+}
+
+
+# Beta Borrowing for Fujikawa's Design
+
+beta_borrow_fujikawa <- function(design, n, r, weights) {
+
+  shape <- matrix(c(design$shape1 + r, design$shape2 + n - r), nrow = 2,
+                  byrow = TRUE)
+  weight_mat <- get_weight_mat_jsd(design, n, r, weights)
 
   shape1post <- apply(weight_mat, 1, function(x) sum(shape[1, ] * x))
   shape2post <- apply(weight_mat, 1, function(x) sum(shape[2, ] * x))

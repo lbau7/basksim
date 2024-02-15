@@ -1,7 +1,6 @@
 # weight-matrix for cpp weights
 
-
-get_weight_mat_cpp <- function(design,n,r,weights){
+get_weight_mat_cpp <- function(design, n, r, weights){
 
 
   if(length(unique(n)) == 1 || length(n) == 1){
