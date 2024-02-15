@@ -288,22 +288,39 @@ test_that("get_details works for cppgen", {
 })
 
 test_that("get_details works for cpplim", {
-  set.seed(20230319)
-  design <- setup_cpplim(k = 3, p0 = 0.2)
-  # res <- get_details(design = design, n = 15, p1 = c(0.2, 0.2, 0.5),
-  #     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
+  # compare with CPP (w = 1, alpha_0 = 1, gamma = 0)
+  design_cpplim <- setup_cpplim(k = 3, p0 = 0.2)
+  design_cpp <- setup_cpp(k = 3, p0 = 0.2)
 
-  # # Works without supplied p1
-  # expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
-  #     tune_a = 2, tune_b = 2, iter = 5000))
-  #
-  #
-  #
-  # # If n is passed as a vector, it should have k entries
-  # expect_error(get_details.cpplim(design = design, n = c(10,20), p1 = NULL,
-  #                              lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  # expect_error(get_details.cpplim(design = design, n = c(10,20,30,40), p1 = NULL,
-  #                              lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  n <- 20
+  data <- matrix(data = 15, ncol = 3, nrow = 100)
+  p1 <- c(0.2,0.5,0.5)
+  lambda <- 0.987
+
+  res_cpplim <- get_details.cpplim(design = design_cpplim, n = n, p1 = p1,
+                                   lambda = lambda, tune_a = 1, tune_b = 1,
+                                   iter = 100, data = data)
+  res_cpp <- get_details.cpp(design = design_cpp, n = n, p1 = p1, lambda = lambda,
+                             tune_a = 1, tune_b = 1, iter = 100, data = data)
+
+  expect_equal(res_cpplim$Rejection_Probabilities, res_cpp$Rejection_Probabilities)
+  expect_equal(res_cpplim$FWER, res_cpp$FWER)
+  expect_equal(res_cpplim$Mean, res_cpp$Mean)
+  expect_equal(res_cpplim$MSE, res_cpp$MSE)
+  expect_equal(res_cpplim$Lower_CL, res_cpp$Lower_CL)
+  expect_equal(res_cpplim$Upper_CL, res_cpp$Upper_CL)
+
+
+  # Works without supplied p1
+  expect_no_error(get_details(design = design_cpplim, n = 15, p1 = NULL, lambda = 0.99,
+                              tune_a = 2, tune_b = 2, iter = 5000))
+
+
+  # If n is passed as a vector, it should have k entries
+  expect_error(get_details.cpplim(design = design_cpplim, n = c(10,20), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.cpplim(design = design_cpplim, n = c(10,20,30,40), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for app", {

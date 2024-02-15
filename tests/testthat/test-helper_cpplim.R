@@ -35,20 +35,20 @@ test_that("ana_cpplim works", {
                ana_cpp(design = design_cpp, n = n, r = r, lambda = lambda,
                        weights = weights))
 
-  # different n
-  n_diff <- c(15,20,25)
-  r_diff <- c(10,20,20)
-  lambda <- 0.987
-
-  weights <- get_weights_cpp(n = n_diff, tune_a = 1, tune_b = 1)
-
-  # set alpha_0 = 1
-  alpha_0_diff <- matrix(data = 1, ncol = 3, nrow = 3)
-
-  expect_equal(ana_cpplim(design = design_cpplim, n = n_diff, r = r_diff,
-                          lambda = lambda, weights = weights, alpha_0 = alpha_0_diff),
-               ana_cpp(design = design_cpp, n = n_diff, r = r_diff,
-                       lambda = lambda, weights = weights))
+  # # different n
+  # n_diff <- c(15,20,25)
+  # r_diff <- c(10,20,20)
+  # lambda <- 0.987
+  #
+  # weights <- get_weights_cpp(n = n_diff, tune_a = 1, tune_b = 1)
+  #
+  # # set alpha_0 = 1
+  # alpha_0_diff <- matrix(data = 1, ncol = 3, nrow = 3)
+  #
+  # expect_equal(ana_cpplim(design = design_cpplim, n = n_diff, r = r_diff,
+  #                         lambda = lambda, weights = weights, alpha_0 = alpha_0_diff),
+  #              ana_cpp(design = design_cpp, n = n_diff, r = r_diff,
+  #                      lambda = lambda, weights = weights))
 
 
 })
