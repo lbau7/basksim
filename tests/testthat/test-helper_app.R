@@ -35,8 +35,6 @@ test_that("get_gamma works", {
 
 
 test_that("beta_borrow_app works", {
-  set.seed(20230319)
-
   # compare with CPP (w = 1, alpha_0 = 1, gamma = 0)
   design_app <- setup_app(k = 3, p0 = 0.2)
   design_cpp <- setup_cpp(k = 3, p0 = 0.2)
@@ -49,6 +47,26 @@ test_that("beta_borrow_app works", {
 
   expect_equal(beta_borrow_app(design = design_app, n = n, r = r, alpha_0 = alpha_0),
                beta_borrow_cpp(design = design_cpp, n = n, r = r, weights = weights))
+
+
+})
+
+test_that("ana_app works", {
+  # compare with CPP (w = 1, alpha_0 = 1, gamma = 0)
+  design_app <- setup_app(k = 3, p0 = 0.2)
+  design_cpp <- setup_cpp(k = 3, p0 = 0.2)
+
+  n <- 15
+  r <- rep(10,3)
+  lambda <- 0.987
+
+  weights <- get_weights_cpp(n = n, tune_a = 1, tune_b = 1)
+  alpha_0 <- get_alpha_0_app(design = design_app, n = n)
+
+  expect_equal(ana_app(design = design_app, n = n, r = r, lambda = lambda,
+                       alpha_0 = alpha_0),
+               ana_cpp(design = design_cpp, n = n, r = r, lambda = lambda,
+                       weights = weights))
 
 
 })
