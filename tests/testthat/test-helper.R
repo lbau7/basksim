@@ -22,3 +22,16 @@ test_that("check_get_weights_cpp", {
 
 
 
+test_that("check_get_weights_jsd", {
+
+  design <- setup_fujikawa(k = 3, p0 = 0.2)
+
+  expect_equal(get_weights_jsd(design = design, n = 5, epsilon = 2, tau = 0,
+                               logbase = 2),
+               get_weights_jsd(design = design, n = c(5,5,6,7), epsilon = 2,
+                               tau = 0, logbase = 2)[[1]])
+
+})
+
+
+
