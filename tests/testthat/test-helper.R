@@ -11,3 +11,13 @@ test_that("check_scenarios works", {
   expect_error(check_scenarios(scenarios = cbind(scenarios, c(0.2, 0.2, 1)),
     design = design))
 })
+
+
+test_that("check_get_weights_cpp", {
+
+  # check unique combs
+  expect_equal(unique(t(apply(arrangements::combinations(k = 2, v = c(1,2,3)),1,sort))),
+               matrix(data = c(1,2,1,3,2,3), ncol=2, byrow = TRUE))
+
+
+})
