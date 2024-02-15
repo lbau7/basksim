@@ -15,6 +15,9 @@ test_that("check_scenarios works", {
 
 test_that("check_get_weights_cpp", {
 
+  # Comparison of the two calculation methods. The case of equal sample sizes
+  # has already been checked with baskexact
+
   expect_equal(get_weights_cpp(n = 5, tune_a = 1, tune_b = 1),
                get_weights_cpp(n = c(5,5,6,7), tune_a = 1, tune_b = 1)[[1]])
 
@@ -25,6 +28,9 @@ test_that("check_get_weights_cpp", {
 test_that("check_get_weights_jsd", {
 
   design <- setup_fujikawa(k = 3, p0 = 0.2)
+
+  # Comparison of the two calculation methods. The case of equal sample sizes
+  # has already been checked with baskexact
 
   expect_equal(get_weights_jsd(design = design, n = 5, epsilon = 2, tau = 0,
                                logbase = 2),
