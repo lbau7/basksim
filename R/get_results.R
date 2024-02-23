@@ -45,8 +45,6 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
     stop("n must either have length 1 or k")
   }
 
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
-
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
@@ -86,7 +84,7 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #'   iter = 100)
 get_results.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
                                data = NULL, ...) {
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
+
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
@@ -123,8 +121,6 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -183,8 +179,6 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -245,8 +239,6 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
     stop("n must either have length 1 or k")
   }
 
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
-
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -281,8 +273,6 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 get_results.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
                                eps_all, logbase = 2, iter = 1000, data = NULL,
                                ...) {
-
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
     tau = tau, logbase = logbase)
@@ -323,8 +313,6 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
     stop("n must either have length 1 or k")
   }
 
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
-
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -357,8 +345,6 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
 get_results.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                                epsilon, iter = 1000, data = NULL, ...) {
-
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -399,8 +385,6 @@ get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
@@ -445,8 +429,6 @@ get_results.app <- function(design, n, p1 = NULL, lambda,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
-  # if (is.null(p1)) p1 <- rep(design$p0, design$k)
 
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
                             iter = iter)
