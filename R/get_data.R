@@ -30,6 +30,10 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
 
   if(length(n) == 1)  n <- c(rep(n,k))
 
+  if(length(n) < k || length(n) > k){
+    stop("n must be either an integer or a vector of length k")
+  }
+
   data <- matrix(data = NA, nrow = iter, ncol = k)
 
   if(type == "matrix"){
