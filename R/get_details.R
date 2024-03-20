@@ -39,7 +39,7 @@ get_details <- function(design, ...) {
 #'   iter = 100)
 get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
                             iter = 1000, data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -84,7 +84,7 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             iter = 1000, data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -133,7 +133,7 @@ get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
 get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                   iter = 1000, data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -185,7 +185,7 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tau_scale, iter = 1000, n_mcmc = 10000,
                             data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -253,7 +253,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
                               tau_scale, w, iter = 1000, n_mcmc = 10000,
                               data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -321,7 +321,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, iter = 1000,
                                  data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -378,7 +378,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                   eps_pair, tau = 0, eps_all, logbase = 2,
                                   iter = 1000, data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -432,7 +432,7 @@ get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tune_a, tune_b, iter = 1000, data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
@@ -485,7 +485,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                   tune_a, tune_b, epsilon, iter = 1000,
                                   data = NULL, ...) {
-  p1 <- check_p1(p1 = p1)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)

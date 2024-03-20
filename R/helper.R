@@ -38,12 +38,12 @@ check_scenarios <- function(scenarios, design) {
   }
 }
 
-check_p1 <- function(design, n, p1, lambda, iter) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+check_p1 <- function(design, p1, data) {
+  if (is.null(p1) & is.null(data)) p1 <- rep(design$p0, design$k)
   if (any(p1 < design$p0)) {
     stop("all p1 must be greater than or equal to p0")
   }
-  if ((length(p1) != design$k) & (length(p1) != 1)) {
+  if ((length(p1) != design$k) & (length(p1) != 1) & (!is.null(p1))) {
     stop("p1 must either have length k or 1")
   }
   p1

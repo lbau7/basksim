@@ -14,9 +14,9 @@ test_that("check_scenarios works", {
 
 test_that("check_p1 works", {
   design <- setup_mml(k = 3, p0 = 0.2)
-  expect_equal(check_p1(design = design, p1 = NULL), c(0.2, 0.2, 0.2))
-  expect_error(check_p1(design = design, p1 = c(0.1, 0.3, 0.4)))
-  expect_error(check_p1(design = design, p1 = c(0.2, 0.4)))
+  expect_equal(check_p1(design = design, p1 = NULL, data = NULL), c(0.2, 0.2, 0.2))
+  expect_error(check_p1(design = design, p1 = c(0.1, 0.3, 0.4), data = NULL))
+  expect_error(check_p1(design = design, p1 = c(0.2, 0.4), data = NULL))
 })
 
 test_that("check_params works", {
