@@ -1,1 +1,3 @@
-#' @param p1 Probabilities under the alternative hypothesis.
+#' @param p1 Probabilities used for the simulation. If \code{NULL}
+#'   then all probabilities are set to p0.
+
