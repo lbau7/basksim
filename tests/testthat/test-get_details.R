@@ -226,3 +226,16 @@ test_that("get_details works for cppglobal", {
   expect_true(all(abs(res$MSE -
       c(0.013143002, 0.009512997, 0.013149404)) < 0.01))
 })
+
+test_that("get_details works for mml", {
+  set.seed(20240320)
+  design <- setup_mml(k = 3, p0 = 0.2)
+  res <- get_details(design = design, n = 15, p1 = c(0.2, 0.4, 0.6),
+    lambda = 0.95, iter = 5000)
+
+  # Compare with results from baskexact
+  expect_true(all(abs(res$Rejection_Probabilities -
+      c(0.2317285, 0.7058685, 0.9801984)) < 0.01))
+  expect_true(all(abs(res$Mean - c(0.2606807, 0.4056437, 0.5567046)) < 0.01))
+  expect_true(abs(res$ECD - 2.454338) < 0.01)
+})
