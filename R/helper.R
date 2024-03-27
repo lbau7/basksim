@@ -1,3 +1,20 @@
+# Check function for designs based on the beta-binomial distribution
+validate_betabin <- function(x) {
+  if ((x$k %% 1) != 0) {
+    stop("k must be an integer")
+  }
+  if (x$k <= 1) {
+    stop("k must be greater than or equal to 2")
+  }
+  if (x$p0 <= 0 | x$p0 >= 1) {
+    stop("p0 must be between 0 and 1")
+  }
+  if (x$shape1 <= 0 | x$shape2 <= 0) {
+    stop("shape1 and shape2 must be greater than 0")
+  }
+  x
+}
+
 # Calculate Posterior Probabilites of a Beta Distribution
 post_beta <- function(shape, p0) {
   stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],
