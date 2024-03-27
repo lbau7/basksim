@@ -1,3 +1,28 @@
+test_that("setup_bma works", {
+  design <- setup_bma(k = 3, p0 = 0.2)
+  expect_s3_class(design, "bma")
+})
+
+test_that("setup_mml works", {
+  design <- setup_mml(k = 3, p0 = 0.2)
+  expect_s3_class(design, "mml")
+})
+
+test_that("setup_mmlglobal works", {
+  design <- setup_mmlglobal(k = 3, p0 = 0.2)
+  expect_s3_class(design, "mmlglobal")
+})
+
+test_that("setup_bhm works", {
+  design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
+  expect_s3_class(design, "bhm")
+})
+
+test_that("setup_exnex works", {
+  design <- setup_exnex(k = 3, p0 = 0.2)
+  expect_s3_class(design, "exnex")
+})
+
 test_that("setup_fujikawa works", {
   design <- setup_fujikawa(k = 3, p0 = 0.2)
   expect_s3_class(design, "fujikawa")
