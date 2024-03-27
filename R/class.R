@@ -10,7 +10,8 @@
 #' @export
 #'
 #' @details The class \code{bma} implements the Bayesian Model Averaging
-#' design by Pisoda et al. (2021).
+#' design by Pisoda et al. (2021). Functions for this class are mostly
+#' wrappers for functions of the \code{bmabasket} package.
 #'
 #' @references Psioda, M. A., Xu, J., Jiang, Q. I., Ke, C., Yang, Z., &
 #' Ibrahim, J. G. (2021). Bayesian adaptive basket trial design using model
@@ -18,7 +19,7 @@
 #'
 #' @examples
 #' design_bma <- setup_bma(k = 3, p0 = 0.2)
-setup_bma <- function(k, p0, shape1 = 0.5, shape2 = 0.5) {
+setup_bma <- function(k, p0, shape1 = 1, shape2 = 1) {
   mu0 <- shape1 / (shape1 + shape2)
   phi0 <- shape1 + shape2
   structure(
@@ -37,7 +38,13 @@ setup_bma <- function(k, p0, shape1 = 0.5, shape2 = 0.5) {
 #'
 #' @details The class \code{mml} implements a modified version of the
 #' empirical Bayes method by Gravestock & Held (2017) which was proposed for
-#' borrowing strength from an external study.
+#' borrowing strength from an external study. In their approach, the sharing
+#' weight is found as the maximum of the marginal likelihood of the
+#' weight, given the external data set. This leads, however, to
+#' non-symmetric weights when applied to sharing in basket trials, i.e.
+#' Basket i would not share the information from Basket j as the other way
+#' round. Therefore, a symmetrised version is used, where the mean of the
+#' two weights reuslting from sharing in both directions is used.
 #'
 #' @references Gravestock, I., & Held, L. (2017). Adaptive power priors with
 #' empirical Bayes for clinical trials. Pharmaceutical statistics, 16(5),
@@ -70,6 +77,9 @@ setup_mml <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @references Gravestock, I., & Held, L. (2019). Power priors based on
 #' multiple historical studies for binary outcomes. Biometrical Journal, 61(5),
 #' 1201-1218.
+#'
+#' Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+#' power priors. arXiv:2309.06988.
 #'
 #' @return An S3 object of class \code{mmlglobal}
 #' @export
@@ -163,6 +173,11 @@ setup_exnex <- function(k, p0, basket_mean = NULL, basket_sd = 100,
 #' @template p0
 #' @template shape_beta
 #'
+#' @details The class \code{fujikawa} implements a design by Fujikawa et al.
+#' (2020) in which information is shared based on the pairwise similarity
+#' between baskets which is quantified using the Jensen-Shannon divergence
+#' between the individual posterior distributions between baskets.
+#'
 #' @references Fujikawa, K., Teramukai, S., Yokota, I., & Daimon, T. (2020).
 #' A Bayesian basket trial design that borrows information across strata based
 #' on the similarity between the posterior distributions of the response
@@ -186,6 +201,14 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template p0
 #' @template shape_beta
 #'
+#' @design The class \code{jsdglobal} implements a version of the power prior
+#' design, in which information is shared based on pairwise similarity
+#' and overall heterogeneity between baskets. Both pairwise similarity and
+#' overall heterogeneity are assessed using the Jensen-Shannon divergence.
+#'
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+#' design based on power priors. arXiv:2309.06988.
+#'
 #' @return An S3 object of class \code{jsdglobal}
 #' @export
 #'
@@ -204,6 +227,14 @@ setup_jsdglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template p0
 #' @template shape_beta
 #'
+#' @design The class \code{cpp} implements a version of the power prior design,
+#' in which the amount of information that is shared between baskets is
+#' determined by the Kolmogorov-Smirnov test statistic between baskets (which
+#' is equivalent to the absolut difference in response rates).
+#'
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+#' design based on power priors. arXiv:2309.06988.
+#'
 #' @return An S3 object of class \code{cpp}
 #' @export
 #'
@@ -221,6 +252,15 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template k
 #' @template p0
 #' @template shape_beta
+#'
+#' @design The class \code{cppglobal} implements a version of the power prior
+#' design, in which the amount of information that is shared between baskets is
+#' determined by the Kolmogorov-Smirnov test statistic between basekts and
+#' a function based on response rate differences that quantifies the
+#' overall heterogeneity.
+#'
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+#' design based on power priors. arXiv:2309.06988.
 #'
 #' @return An S3 object of class \code{cppglobal}
 #' @export
