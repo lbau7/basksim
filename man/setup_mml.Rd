@@ -24,7 +24,13 @@ Creates an object of class \code{mml}.
 \details{
 The class \code{mml} implements a modified version of the
 empirical Bayes method by Gravestock & Held (2017) which was proposed for
-borrowing strength from an external study.
+borrowing strength from an external study. In their approach, the sharing
+weight is found as the maximum of the marginal likelihood of the
+weight, given the external data set. This leads, however, to
+non-symmetric weights when applied to sharing in basket trials, i.e.
+Basket i would not share the information from Basket j as the other way
+round. Therefore, a symmetrised version is used, where the mean of the
+two weights reuslting from sharing in both directions is used.
 }
 \examples{
 design_mml <- setup_mml(k = 3, p0 = 0.2)
@@ -33,4 +39,7 @@ design_mml <- setup_mml(k = 3, p0 = 0.2)
 Gravestock, I., & Held, L. (2017). Adaptive power priors with
 empirical Bayes for clinical trials. Pharmaceutical statistics, 16(5),
 349-360.
+
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+power priors. arXiv:2309.06988.
 }

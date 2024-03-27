@@ -21,6 +21,12 @@ An S3 object of class \code{fujikawa}
 \description{
 Setup Fujikawa Design Object
 }
+\details{
+The class \code{fujikawa} implements a design by Fujikawa et al.
+(2020) in which information is shared based on the pairwise similarity
+between baskets which is quantified using the Jensen-Shannon divergence
+between the individual posterior distributions between baskets.
+}
 \examples{
 design_fujikawa <- setup_fujikawa(k = 3, p0 = 0.2)
 }
