@@ -7,8 +7,6 @@ beta_borrow_pp <- function(design, n, r, weights) {
   weight_mat[lower.tri(weight_mat)] <- weights_vec
   weight_mat <- t(weight_mat)
   weight_mat <- weight_mat + t(weight_mat)
-  # weight_mat[lower.tri(weight_mat)] <- weight_mat[upper.tri(weight_mat)] <-
-  #   weights_vec
   diag(weight_mat) <- 1
 
   # Compute posterior shapes

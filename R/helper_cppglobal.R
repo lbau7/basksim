@@ -8,9 +8,9 @@ beta_borrow_cppglobal <- function(design, n, r, weights_pair, epsilon) {
   weights_vec <- weights_pair[all_combs] * weight_all
 
   # Create weight k x k weight matrix
-  weight_mat <- matrix(nrow = design$k, ncol = design$k)
-  weight_mat[lower.tri(weight_mat)] <- weight_mat[upper.tri(weight_mat)] <-
-    weights_vec
+  weight_mat <- matrix(0, nrow = design$k, ncol = design$k)
+  weight_mat[lower.tri(weight_mat)] <- weights_vec
+  weight_mat <- weight_mat + t(weight_mat)
   diag(weight_mat) <- 1
 
   # Compute posterior shapes
