@@ -88,10 +88,10 @@ test_that("adjust_lambda works for exnex", {
 
   # Check if selected lambda controls the TOER
   set.seed(126)
-  toer1 <- toer(design, n = 15, p1 = 0.2, lambda = res1$lambda,
+  toer1 <- toer(design, n = 15, p1 = 0.2, lambda = res3$lambda,
     design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = 100,
     n_mcmc = 2500)
-  toer2 <- toer(design, n = 15, p1 = 0.2, lambda = res1$lambda - 0.01,
+  toer2 <- toer(design, n = 15, p1 = 0.2, lambda = res3$lambda - 0.01,
     design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = 100,
     n_mcmc = 2500)
 

@@ -11,7 +11,7 @@ test_that("toer works", {
   expect_equal(res1, res2$FWER)
 
   # Compare with results from baskexact
-  expect_true(abs(0.03845609 - res) < 0.01)
+  expect_true(abs(0.03845609 - res1) < 0.01)
 })
 
 test_that("ecd works", {
@@ -27,5 +27,5 @@ test_that("ecd works", {
   expect_equal(res1, res2$ECD)
 
   # Compare with results from baskexact
-  expect_true(abs(2.338286 - res) < 0.01)
+  expect_true(abs(2.338286 - res1) < 0.01)
 })
