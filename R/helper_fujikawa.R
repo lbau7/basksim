@@ -1,23 +1,39 @@
 # weight matrix for jsd-weights
 
 get_weight_mat_jsd <- function(design, n, r, weights){
+
+  k <- design$k
+  weight_mat <- matrix(data = NA, nrow = k, ncol = k)
+
   if(length(unique(n)) == 1 || length(n) == 1){
 
-    all_combs <- arrangements::combinations(r, 2) + 1
-    weights_vec <- weights[all_combs]
-    weight_mat <- matrix(nrow = design$k, ncol = design$k)
-    weight_mat[lower.tri(weight_mat)] <- weight_mat[upper.tri(weight_mat)] <-
-      weights_vec
-    diag(weight_mat) <- 1
+    # rows define the current basket (columns the compared ones)
+    for(i in 1:k){
+      for(j in 1:k){
+        if(i == j){
+          weight_mat[i,j] <- 1
+          next
+        }else{
+          weight_mat[i,j] <- weights[r[i]+1, r[j]+1]
+        }
+      }
+    }
+
+    # all_combs <- arrangements::combinations(r, 2) + 1
+    # weights_vec <- weights[all_combs]
+    # weight_mat <- matrix(nrow = design$k, ncol = design$k)
+    # weight_mat[lower.tri(weight_mat)] <- weight_mat[upper.tri(weight_mat)] <-
+    #   weights_vec
+    # diag(weight_mat) <- 1
 
   } else{
 
     # find all possible combinations
     unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
 
-    k <- design$k
-
-    weight_mat <- matrix(data = NA, nrow = k, ncol = k)
+    # k <- design$k
+    #
+    # weight_mat <- matrix(data = NA, nrow = k, ncol = k)
 
     # rows define the current basket (columns the compared ones)
     for(i in 1:k){
@@ -31,7 +47,8 @@ get_weight_mat_jsd <- function(design, n, r, weights){
           n_comp <- n[j]
 
           # The same basket is used for both combinations
-          index <- which((unique_combs[,1] == n_cur & unique_combs[,2] == n_comp) | (unique_combs[,2] == n_cur & unique_combs[,1] == n_comp))
+          index <- which((unique_combs[,1] == n_cur & unique_combs[,2] == n_comp) |
+                           (unique_combs[,2] == n_cur & unique_combs[,1] == n_comp))
           matching_weights <- weights[[index]]
 
           # Ensure that the rows indicate the current basket
