@@ -31,28 +31,6 @@ test_that("get_details works for bma", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
-test_that("get_details works for ebcomb", {
-  design <- setup_ebcomb(k = 3, p0 = 0.2)
-  set.seed(20230222)
-  res1 <- get_details(design = design, n = 20, p1 = c(0.2, 0.4, 0.4),
-    lambda = 0.95, pmp0 = 1, iter = 100)
-
-  res2 <- get_details(design = design, n = 20, p1 = c(0.3, 0.5, 0.5),
-    lambda = 0.95, pmp0 = 1, iter = 100)
-
-  res3 <- get_details(design = design, n = 20, p1 = c(0.5, 0.5, 0.5),
-    lambda = 0.95, pmp0 = 1, iter = 100)
-
-  # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 20, p1 = NULL, lambda = 0.95,
-    pmp0 = 1, iter = 100))
-
-  # Rejection probabilities are higher when p is higher
-  expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
-
-  # Posterior means are close to p
-  expect_true(all(abs(res3$Mean - 0.5) < 0.02))
-})
 
 test_that("get_details works for bhm", {
   set.seed(1)
@@ -227,23 +205,6 @@ test_that("get_details works for fujikawa", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
-test_that("get_details works for jsdgen", {
-  set.seed(20230515)
-  design <- setup_jsdgen(k = 3, p0 = 0.2)
-  res <- get_details(design = design, n = 12, p1 = c(0.2, 0.5, 0.6),
-    lambda = 0.95, eps_pair = 1.5, eps_all = 0, iter = 1000)
-
-  # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 12, p1 = NULL, lambda = 0.95,
-    eps_pair = 1.5, eps_all = 0, iter = 1000))
-
-  # Compare with results from baskexact
-  expect_true(all(abs(res$Rejection_Probabilities -
-      c(0.3500560, 0.8917081, 0.9701317)) < 0.015))
-  expect_true(all(abs(res$Mean - c(0.2976754, 0.4857321, 0.5432103)) < 0.01))
-  expect_true(all(abs(res$MSE -
-      c(0.02132311, 0.01401632, 0.01667987)) < 0.01))
-})
 
 test_that("get_details works for cpp", {
   set.seed(20230319)
@@ -269,23 +230,6 @@ test_that("get_details works for cpp", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
-test_that("get_details works for cppgen", {
-  set.seed(20230512)
-  design <- setup_cppgen(k = 3, p0 = 0.15)
-  res <- get_details(design = design, n = 15, p1 = c(0.2, 0.4, 0.5),
-    lambda = 0.98, tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000)
-
-  # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.98,
-    tune_a = 1.5, tune_b = 1.5, epsilon = 2.5, iter = 5000))
-
-  # Compare with results from baskexact
-  expect_true(all(abs(res$Rejection_Probabilities -
-      c(0.3270933, 0.8168261, 0.9432173)) < 0.01))
-  expect_true(all(abs(res$Mean - c(0.2764610, 0.3967091, 0.4596072)) < 0.01))
-  expect_true(all(abs(res$MSE -
-      c(0.013143002, 0.009512997, 0.013149404)) < 0.01))
-})
 
 test_that("get_details works for cpplim", {
   # compare with CPP (w = 1, alpha_0 = 1, gamma = 0)

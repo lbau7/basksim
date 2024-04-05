@@ -63,35 +63,7 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
   }
 }
 
-#' Get Results for Simulation of a Basket Trial with the ebcomb Design
-#'
-#' @template design_ebcomb
-#' @template n
-#' @template p1
-#' @template lambda
-#' @template iter
-#' @template data
-#' @template dotdotdot
-#'
-#' @return A matrix of results with \code{iter} rows. A 0 means, that the
-#' null hypothesis that the response probability exceeds \code{p0} was not
-#' rejected, a 1 means, that the null hypothesis was rejected.
-#' @export
-#'
-#' @examples
-#' design <- setup_ebcomb(k = 3, p0 = 0.2)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   iter = 100)
-get_results.ebcomb <- function(design, n, p1 = NULL, lambda, iter = 1000,
-                               data = NULL, ...) {
 
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
-                   .options.future = list(seed = TRUE)) %dofuture% {
-    ana_ebcombined(design = design, n = n, r = data[i, ], lambda = lambda)
-  }
-}
 
 #' Get Results for Simulation of a Basket Trial with the BHM Design
 #'
@@ -249,40 +221,7 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
   }
 }
 
-#' Get Results for Simulation of a Basket Trial with the Power Prior Design
-#' Based on Generalized JSD Weights
-#'
-#' @template design_jsdgen
-#' @template n
-#' @template p1
-#' @template lambda
-#' @template tuning_jsdgen
-#' @template iter
-#' @template data
-#' @template dotdotdot
-#'
-#' @return A matrix of results with \code{iter} rows. A 0 means, that the
-#' null hypothesis that the response probability exceeds \code{p0} was not
-#' rejected, a 1 means, that the null hypothesis was rejected.
-#' @export
-#'
-#' @examples
-#' design <- setup_jsdgen(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   eps_pair = 2, eps_all = 2, iter = 100)
-get_results.jsdgen <- function(design, n, p1 = NULL, lambda, eps_pair, tau = 0,
-                               eps_all, logbase = 2, iter = 1000, data = NULL,
-                               ...) {
 
-  weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
-    tau = tau, logbase = logbase)
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
-    ana_jsdgen(design = design, n = n, r = data[i, ], eps_all = eps_all,
-      lambda = lambda, weights_pair = weights_pair)
-  }
-}
 
 #' Get Results for Simulation of a Basket Trial with a Calibrated Power Prior
 #' Design
@@ -322,38 +261,7 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
   }
 }
 
-#' Get Results for Simulation of a Basket Trial with a Generalized Calibrated
-#' Power Prior Design
-#'
-#' @template design_cppgen
-#' @template n
-#' @template p1
-#' @template lambda
-#' @template tuning_cppgen
-#' @template iter
-#' @template data
-#' @template dotdotdot
-#'
-#' @return A matrix of results with \code{iter} rows. A 0 means, that the
-#' null hypothesis that the response probability exceeds \code{p0} was not
-#' rejected, a 1 means, that the null hypothesis was rejected.
-#' @export
-#'
-#' @examples
-#' design <- setup_cppgen(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
-get_results.cppgen <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
-                               epsilon, iter = 1000, data = NULL, ...) {
 
-  weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
-    ana_cppgen(design = design, n = n, r = data[i, ], lambda = lambda,
-      weights_pair = weights_pair, epsilon = epsilon)
-  }
-}
 
 
 #' Get Results for Simulation of a Basket Trial with a Limited Calibrated Power
