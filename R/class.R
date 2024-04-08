@@ -151,6 +151,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
 }
 
 
+
 #' Setup Limited Calibrated Power Prior Design Object
 #'
 #' @template k
