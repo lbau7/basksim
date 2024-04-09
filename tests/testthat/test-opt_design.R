@@ -16,18 +16,6 @@ test_that("opt_design works", {
   expect_equal(mean(as.numeric(res1[1, 5:8])), unname(res1[1, 9]))
   expect_true(abs(res1[1, 6] - ecdres1) < 0.1)
 
-  ###########################
-
-  # design2 <- setup_ebcomb(k = 3, p0 = 0.2)
-  # res2 <- opt_design(design = design2, n = 10, alpha = 0.05,
-  #   scenarios = scenarios, prec_digits = 3)
-  #
-  # ecdres2 <- ecd(design = design2, n = 10, p1 = c(0.2, 0.2, 0.5),
-  #   lambda = as.numeric(res2[1, 1]))
-  #
-  # expect_equal(mean(as.numeric(res2[1, 2:5])), unname(res2[1, 6]))
-  # expect_true(abs(res2[1, 3] - ecdres2) < 0.1)
-
   design2 <- setup_app(k = 3, p0 = 0.2)
   res2 <- opt_design(design = design2, n = 10, alpha = 0.05,
     scenarios = scenarios, prec_digits = 3)
@@ -38,7 +26,6 @@ test_that("opt_design works", {
   expect_equal(mean(as.numeric(res2[1, 2:5])), unname(res2[1, 6]))
   expect_true(abs(res2[1, 3] - ecdres2) < 0.1)
 
-  ##########################
 
   # With simulated data
   set.seed(123456)
