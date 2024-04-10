@@ -23,7 +23,7 @@ test_that("get_weights_jsd works", {
   wmat <- get_weights_jsd(design = design, n = 20, epsilon = 1.5, tau = 0,
     logbase = 2)
 
-  shape <- rbind(1 + c(12, 7), 1 + (n - c(12, 7)))
+  shape <- rbind(1 + c(12, 7), 1 + (20 - c(12, 7)))
   w1 <- jsd_global(shape, epsilon = 1.5)
 
   expect_true(isSymmetric(wmat))
