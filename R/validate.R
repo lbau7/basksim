@@ -29,12 +29,12 @@ val_borrow_jsdglobal <- function(design, n, r, epsilon, tau, logbase,
                               eps_all) {
   kl_fun <- function(x, y) {
     f <- function(z) x(z) * log(x(z) / y(z), base = logbase)
-    integrate(f, lower = 0, upper = 1)$value
+    stats::integrate(f, lower = 0, upper = 1)$value
   }
 
   jsd_fun <- function(sp1, sp2, n, epsilon, tau, logbase) {
-    j1 <- function(x) dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
-    j2 <- function(x) dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
+    j1 <- function(x) stats::dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
+    j2 <- function(x) stats::dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
     m <- function(x) (1 / 2) * (j1(x) + j2(x))
     jsd <- (1 / 2) * kl_fun(j1, m) + (1 / 2) * kl_fun(j2, m)
     w <- (1 - jsd)^epsilon
@@ -59,12 +59,12 @@ val_borrow_jsdglobal <- function(design, n, r, epsilon, tau, logbase,
 val_borrow_fujikawa <- function(design, n, r, epsilon, tau, logbase) {
   kl_fun <- function(x, y) {
     f <- function(z) x(z) * log(x(z) / y(z), base = logbase)
-    integrate(f, lower = 0, upper = 1)$value
+    stats::integrate(f, lower = 0, upper = 1)$value
   }
 
   jsd_fun <- function(sp1, sp2, n, epsilon, tau, logbase) {
-    j1 <- function(x) dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
-    j2 <- function(x) dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
+    j1 <- function(x) stats::dbeta(x, shape1 = sp1[1], shape2 = sp2[1])
+    j2 <- function(x) stats::dbeta(x, shape1 = sp1[2], shape2 = sp2[2])
     m <- function(x) (1 / 2) * (j1(x) + j2(x))
     jsd <- (1 / 2) * kl_fun(j1, m) + (1 / 2) * kl_fun(j2, m)
     w <- (1 - jsd)^epsilon
@@ -86,15 +86,15 @@ val_borrow_fujikawa <- function(design, n, r, epsilon, tau, logbase) {
 }
 
 jsd_global4 <- function(shape, epsilon) {
-  f1 <- function(x) dbeta(x, shape1 = shape[1, 1], shape2 = shape[2, 1])
-  f2 <- function(x) dbeta(x, shape1 = shape[1, 2], shape2 = shape[2, 2])
-  f3 <- function(x) dbeta(x, shape1 = shape[1, 3], shape2 = shape[2, 3])
-  f4 <- function(x) dbeta(x, shape1 = shape[1, 4], shape2 = shape[2, 4])
+  f1 <- function(x) stats::dbeta(x, shape1 = shape[1, 1], shape2 = shape[2, 1])
+  f2 <- function(x) stats::dbeta(x, shape1 = shape[1, 2], shape2 = shape[2, 2])
+  f3 <- function(x) stats::dbeta(x, shape1 = shape[1, 3], shape2 = shape[2, 3])
+  f4 <- function(x) stats::dbeta(x, shape1 = shape[1, 4], shape2 = shape[2, 4])
   m <- function(x) (f1(x) + f2(x) + f3(x) + f4(x)) / 4
 
   kl_fun <- function(x, y) {
     f <- function(z) x(z) * log(x(z) / y(z), base = 4)
-    integrate(f, lower = 0, upper = 1)$value
+    stats::integrate(f, lower = 0, upper = 1)$value
   }
 
   j1 <- kl_fun(f1, m)
