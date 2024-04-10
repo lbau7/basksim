@@ -39,7 +39,4 @@ design_mml <- setup_mml(k = 3, p0 = 0.2)
 Gravestock, I., & Held, L. (2017). Adaptive power priors with
 empirical Bayes for clinical trials. Pharmaceutical statistics, 16(5),
 349-360.
-
-Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
-power priors. arXiv:2309.06988.
 }

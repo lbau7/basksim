@@ -24,3 +24,7 @@ Setup Calibrated Power Prior Design Object
 \examples{
 design_cpp <- setup_cpp(k = 3, p0 = 0.2)
 }
+\references{
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+design based on power priors. arXiv:2309.06988.
+}
