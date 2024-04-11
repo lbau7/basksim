@@ -47,8 +47,8 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
                           .options.future = list(seed = TRUE)) %dofuture% {
-    res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
-      n = rep(n, design$k), pmp0 = pmp0)
+    res_temp <- suppressWarnings(bmabasket::bma(pi0 = design$p0, y = data[i, ],
+      n = rep(n, design$k), pmp0 = pmp0))
     list(
       ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
       as.vector(res_temp$bmaMeans)
