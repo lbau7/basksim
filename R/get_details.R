@@ -180,8 +180,8 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, iter = 100)
+#' \donttest{get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)}
 get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tau_scale, iter = 1000, n_mcmc = 10000,
                             data = NULL, ...) {
@@ -247,9 +247,9 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @export
 #'
 #' @examples
-#' design <- setup_exnex(k = 3, p0 = 0.2)
+#' \donttest{design <- setup_exnex(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5, iter = 100)
+#'   tau_scale = 1, w = 0.5, iter = 100)}
 get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
                               tau_scale, w, iter = 1000, n_mcmc = 10000,
                               data = NULL, ...) {

@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/lbau7/basksim/branch/master/graph/badge.svg?token=AVO4V52BTH)](https://codecov.io/gh/lbau7/basksim)
+[![codecov](https://codecov.io/gh/lbau7/basksim/branch/master/graph/badge.svg?token=AVO4V52BTH)](https://app.codecov.io/gh/lbau7/basksim)
 <!-- badges: end -->
 
 ## Overview

@@ -136,8 +136,8 @@ get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, iter = 100)
+#' \donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'   tau_scale = 1, iter = 100)}
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
   p1 <- check_p1(design = design, p1 = p1, data = data)
@@ -190,8 +190,8 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5, iter = 100)
+#' \donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'   tau_scale = 1, w = 0.5, iter = 100)}
 get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
   p1 <- check_p1(design = design, p1 = p1, data = data)
