@@ -15,6 +15,25 @@ test_that("get_details works for bma", {
 
   # Posterior means are close to p
   expect_true(all(abs(res3$Mean - 0.5) < 0.02))
+
+  # Same results with differently sorted p1 vector
+  set.seed(20240411)
+  data <- get_data(k = 4, n = 20, p = c(0.2, 0.2, 0.4, 0.4), iter = 500,
+    type = "matrix")
+  data_rev <- data[, 4:1]
+  attr(data_rev, "n") <- 20
+  attr(data_rev, "p") <- c(0.4, 0.4, 0.2, 0.2)
+
+  design2 <- setup_bma(k = 4, p0 = 0.2)
+  res4 <- get_details(design = design2, n = 20, p1 = c(0.2, 0.2, 0.4, 0.4),
+    lambda = 0.95, pmp0 = 1, iter = 500, data = data)
+  res5 <- get_details(design = design2, n = 20, p1 = c(0.4, 0.4, 0.2, 0.2),
+    lambda = 0.95, pmp0 = 1, iter = 500, data = data_rev)
+
+  expect_equal(res4$Rejection_Probabilities, rev(res5$Rejection_Probabilities))
+  expect_equal(res4$FWER, res5$FWER)
+  expect_equal(res4$Mean, rev(res5$Mean))
+  expect_equal(res4$MSE, rev(res5$MSE))
 })
 
 test_that("get_details works for mmlglobal", {
