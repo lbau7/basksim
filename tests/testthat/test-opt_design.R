@@ -53,3 +53,24 @@ test_that("opt_design works", {
   expect_equal(lambdares$lambda, res3$Lambda[1])
   expect_equal(res3[1, 4], ecdres)
 })
+
+
+
+test_that("CPP and LCPP work",{
+  design_cpp <- setup_cpp(k = 3, p0 = 0.15, shape1 = 1, shape2 = 1)
+  design_cpplim <- setup_cpplim(k = 3, p0 = 0.15, shape1 = 1, shape2 = 1)
+
+  n <- c(10,20,30)
+  p <- c(rep(0.35,3))
+
+  set.seed(12042024)
+  data <- get_data(k = 3, n = n, p = p, iter = 1000)
+
+  res_cpp <- get_details(design = design_cpp, n = n, p1 = p, lambda = 0.95,
+                         tune_a = 2, tune_b = 2, data = data)
+  res_cpplim <- get_details(design = design_cpplim, n = n, p1 = p, lambda = 0.95,
+                            tune_a = 2, tune_b = 2, data = data)
+
+  expect_equal(res_cpp$Rejection_Probabilities[3], res_cpplim$Rejection_Probabilities[3])
+
+})
