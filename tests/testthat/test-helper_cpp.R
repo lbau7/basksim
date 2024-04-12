@@ -12,3 +12,16 @@ test_that("get_weight_mat_cpp works", {
                get_weight_mat_cpp(design = design, n = n_vec, r = r, weights = weights_vec)[1:2,1:2])
 
 })
+
+
+test_that("beta_borow_cpp works", {
+
+  design <- setup_cpp(k = 3, p0 = 0.2)
+  weights<- get_weights_cpp(n = c(4,6,8), tune_a = 1, tune_b = 1)
+
+  expect_equal(rbind(shape1post = c(5.284732, 9.560643, 9.728394),
+                     shape2post = c(5.826573, 6.601986, 6.78523)),
+               beta_borrow_cpp(design = design, n = c(4,6,8), r = c(1,4,5), weights = weights),
+               tolerance = 1e-6)
+
+})
