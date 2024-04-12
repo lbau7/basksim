@@ -201,7 +201,7 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template p0
 #' @template shape_beta
 #'
-#' @design The class \code{jsdglobal} implements a version of the power prior
+#' @details The class \code{jsdglobal} implements a version of the power prior
 #' design, in which information is shared based on pairwise similarity
 #' and overall heterogeneity between baskets. Both pairwise similarity and
 #' overall heterogeneity are assessed using the Jensen-Shannon divergence.
@@ -227,7 +227,7 @@ setup_jsdglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template p0
 #' @template shape_beta
 #'
-#' @design The class \code{cpp} implements a version of the power prior design,
+#' @details The class \code{cpp} implements a version of the power prior design,
 #' in which the amount of information that is shared between baskets is
 #' determined by the Kolmogorov-Smirnov test statistic between baskets (which
 #' is equivalent to the absolut difference in response rates).
@@ -253,7 +253,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @template p0
 #' @template shape_beta
 #'
-#' @design The class \code{cppglobal} implements a version of the power prior
+#' @details The class \code{cppglobal} implements a version of the power prior
 #' design, in which the amount of information that is shared between baskets is
 #' determined by the Kolmogorov-Smirnov test statistic between basekts and
 #' a function based on response rate differences that quantifies the

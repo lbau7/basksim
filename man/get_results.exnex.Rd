@@ -52,6 +52,6 @@ Get Results for Simulation of a Basket Trial with the EXNEX Design
 }
 \examples{
 design <- setup_exnex(k = 3, p0 = 0.2)
-get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  tau_scale = 1, w = 0.5, iter = 100)
+\donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+  tau_scale = 1, w = 0.5, iter = 100)}
 }

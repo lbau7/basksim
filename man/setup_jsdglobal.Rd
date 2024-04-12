@@ -21,6 +21,12 @@ An S3 object of class \code{jsdglobal}
 \description{
 Setup Global JSD Design Object
 }
+\details{
+The class \code{jsdglobal} implements a version of the power prior
+design, in which information is shared based on pairwise similarity
+and overall heterogeneity between baskets. Both pairwise similarity and
+overall heterogeneity are assessed using the Jensen-Shannon divergence.
+}
 \examples{
 design_jsdglobal <- setup_jsdglobal(k = 3, p0 = 0.2)
 }

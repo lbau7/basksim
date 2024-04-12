@@ -30,7 +30,7 @@ weight, given the external data set. This leads, however, to
 non-symmetric weights when applied to sharing in basket trials, i.e.
 Basket i would not share the information from Basket j as the other way
 round. Therefore, a symmetrised version is used, where the mean of the
-two weights reuslting from sharing in both directions is used.
+two weights resulting from sharing in both directions is used.
 }
 \examples{
 design_mml <- setup_mml(k = 3, p0 = 0.2)

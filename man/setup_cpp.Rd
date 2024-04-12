@@ -21,6 +21,12 @@ An S3 object of class \code{cpp}
 \description{
 Setup Calibrated Power Prior Design Object
 }
+\details{
+The class \code{cpp} implements a version of the power prior design,
+in which the amount of information that is shared between baskets is
+determined by the Kolmogorov-Smirnov test statistic between baskets (which
+is equivalent to the absolut difference in response rates).
+}
 \examples{
 design_cpp <- setup_cpp(k = 3, p0 = 0.2)
 }

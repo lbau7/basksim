@@ -55,6 +55,6 @@ Adjust Lambda for the BHM Design
 }
 \examples{
 design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-adjust_lambda(design = design, n = 15, design_params = list(tau_scale = 1),
-  iter = 100, n_mcmc = 5000)
+\donttest{adjust_lambda(design = design, n = 15,
+  design_params = list(tau_scale = 1), iter = 100, n_mcmc = 5000)}
 }

@@ -21,6 +21,13 @@ An S3 object of class \code{cppglobal}
 \description{
 Setup Global Calibrated Power Prior Design Object
 }
+\details{
+The class \code{cppglobal} implements a version of the power prior
+design, in which the amount of information that is shared between baskets is
+determined by the Kolmogorov-Smirnov test statistic between basekts and
+a function based on response rate differences that quantifies the
+overall heterogeneity.
+}
 \examples{
 design_cppglobal <- setup_cppglobal(k = 3, p0 = 0.2)
 }

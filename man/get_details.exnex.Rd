@@ -54,7 +54,7 @@ as the family-wise error rate.
 Get Details of a Basket Trial Simulation with the EXNEX Design
 }
 \examples{
-design <- setup_exnex(k = 3, p0 = 0.2)
+\donttest{design <- setup_exnex(k = 3, p0 = 0.2)
 get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  tau_scale = 1, w = 0.5, iter = 100)
+  tau_scale = 1, w = 0.5, iter = 100)}
 }
