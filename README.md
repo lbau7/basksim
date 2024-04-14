@@ -7,6 +7,8 @@
 
 [![R-CMD-check](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml)
 [![codecov](https://codecov.io/gh/lbau7/basksim/branch/master/graph/badge.svg?token=AVO4V52BTH)](https://app.codecov.io/gh/lbau7/basksim)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/basksim)](https://CRAN.R-project.org/package=basksim)
 <!-- badges: end -->
 
 ## Overview
