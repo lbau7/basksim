@@ -71,6 +71,8 @@ test_that("CPP and LCPP work",{
   res_cpplim <- get_details(design = design_cpplim, n = n, p1 = p, lambda = 0.95,
                             tune_a = 2, tune_b = 2, data = data)
 
+  # Since basket 3 has the largest sample size, alpha_o = 1 and both models should
+  # have the same power in the largest basket.
   expect_equal(res_cpp$Rejection_Probabilities[3], res_cpplim$Rejection_Probabilities[3])
 
 })
