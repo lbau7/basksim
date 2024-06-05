@@ -18,6 +18,7 @@
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' scenarios <- get_scenarios(design, p1 = 0.5)
 #'
+#' ## Equal sample sizes
 #' # Without simulated data
 #' opt_design(design, n = 20, alpha = 0.05, design_params =
 #'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
@@ -28,6 +29,21 @@
 #' data_list <- lapply(scenario_list,
 #'   function(x) get_data(k = 3, n = 20, p = x, iter = 1000))
 #' opt_design(design, n = 20, alpha = 0.05, design_params =
+#'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'   prec_digits = 3, data = data_list)
+#'
+#'
+#' ## Unequal sample sizes
+#' # Without simulated data
+#' opt_design(design, n = n = c(15, 20, 25), alpha = 0.05, design_params =
+#' list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#' prec_digits = 3)
+#'
+#' # With simulated data
+#' scenario_list <- as.list(data.frame(scenarios))
+#' data_list <- lapply(scenario_list,
+#'   function(x) get_data(k = 3, n = c(15, 20, 25), p = x, iter = 1000))
+#' opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
 #'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
 #'   prec_digits = 3, data = data_list)
 opt_design <- function(design, n, alpha, design_params = list(), scenarios,
