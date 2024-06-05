@@ -22,5 +22,5 @@ Imports:
 Suggests:
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-URL: https://github.com/lbau7/basksim
-BugReports: https://github.com/lbau7/basksim/issues
+URL: https://github.com/sabrinaschmitt/basksim
+BugReports: https://github.com/sabrinaschmitt/basksim/issues
