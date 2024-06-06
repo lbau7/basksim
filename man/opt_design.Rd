@@ -19,7 +19,7 @@ opt_design(
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{alpha}{The one-sided significance level.}
 
@@ -66,9 +66,9 @@ opt_design(design, n = 20, alpha = 0.05, design_params =
 
 ## Unequal sample sizes
 # Without simulated data
-opt_design(design, n = n = c(15, 20, 25), alpha = 0.05, design_params =
-list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
-prec_digits = 3)
+opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
+  list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+  prec_digits = 3)
 
 # With simulated data
 scenario_list <- as.list(data.frame(scenarios))

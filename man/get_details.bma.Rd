@@ -9,7 +9,7 @@
 \arguments{
 \item{design}{An object of class \code{bma}.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities under the alternative hypothesis.}
 
@@ -37,6 +37,12 @@ Get Details of a BMA Basket Trial Simulation
 }
 \examples{
 design <- setup_bma(k = 3, p0 = 0.2)
-get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, pmp0 = 1,
-  iter = 100)
+
+# Equal sample sizes
+get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95,
+  pmp0 = 1, iter = 100)
+
+# Unequal sample sizes
+get_details(design = design, n = c(15, 20, 25), p1 = 0.5,
+  lambda = 0.95, pmp0 = 1, iter = 100)
 }

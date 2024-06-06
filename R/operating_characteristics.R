@@ -15,8 +15,16 @@
 #' @examples
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' ecd(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
+#'
+#' # Equal sample sizes
+#' ecd(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, design_params = list(epsilon = 2, tau = 0),
+#'   iter = 1000)
+#'
+#' # Unequal sample sizes
+#' ecd(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, design_params = list(epsilon = 2, tau = 0),
+#'   iter = 1000)
 ecd <- function(design, n, p1, lambda, design_params = list(), iter = 1000,
                 data = NULL, ...) {
 
@@ -45,8 +53,16 @@ ecd <- function(design, n, p1, lambda, design_params = list(), iter = 1000,
 #' @examples
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' toer(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
+#'
+#' # Equal sample sizes
+#' toer(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, design_params = list(epsilon = 2, tau = 0),
+#'   iter = 1000)
+#'
+#' # Unequal sample sizes
+#' toer(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, design_params = list(epsilon = 2, tau = 0),
+#'   iter = 1000)
 toer <- function(design, n, p1 = NULL, lambda, design_params = list(),
                  iter = 1000, data = NULL, ...) {
   if (is.null(p1)) p1 <- rep(design$p0, design$k)

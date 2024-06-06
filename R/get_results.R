@@ -11,8 +11,14 @@
 #' @examples
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
 get_results <- function(design, ...) {
   UseMethod("get_results", design)
 }
@@ -35,8 +41,14 @@ get_results <- function(design, ...) {
 #'
 #' @examples
 #' design <- setup_bma(k = 3, p0 = 0.2)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   pmp0 = 1, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, pmp0 = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, pmp0 = 1, iter = 100)
 get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
 
@@ -84,8 +96,14 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
 
@@ -142,8 +160,14 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
 get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
 
@@ -200,8 +224,14 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 #'
 #' @examples
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
 get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  logbase = 2, iter = 1000, data = NULL,
                                  ...) {
@@ -242,8 +272,14 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 #'
 #' @examples
 #' design <- setup_cpp(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
 
@@ -284,8 +320,14 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #'
 #' @examples
 #' design <- setup_cpplim(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                                iter = 1000, data = NULL, ...) {
 
@@ -328,8 +370,14 @@ get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #'
 #' @examples
 #' design <- setup_app(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, iter = 100)
 get_results.app <- function(design, n, p1 = NULL, lambda,
                             iter = 1000, data = NULL, ...) {
 

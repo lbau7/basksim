@@ -35,9 +35,9 @@
 #'
 #' ## Unequal sample sizes
 #' # Without simulated data
-#' opt_design(design, n = n = c(15, 20, 25), alpha = 0.05, design_params =
-#' list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
-#' prec_digits = 3)
+#' opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
+#'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'   prec_digits = 3)
 #'
 #' # With simulated data
 #' scenario_list <- as.list(data.frame(scenarios))

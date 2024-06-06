@@ -20,7 +20,7 @@
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities under the alternative hypothesis.}
 
@@ -54,6 +54,14 @@ Adjust Lambda for the EXNEX Design
 }
 \examples{
 design <- setup_exnex(k = 3, p0 = 0.2)
+
+# Equal sample sizes
 adjust_lambda(design = design, n = 15,
-  design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 5000)
+  design_params = list(tau_scale = 1, w = 0.5),
+  iter = 100, n_mcmc = 5000)
+
+# Unequal sample sizes
+adjust_lambda(design = design, n = c(15, 20, 25),
+  design_params = list(tau_scale = 1, w = 0.5),
+  iter = 100, n_mcmc = 5000)
 }
