@@ -62,5 +62,5 @@ adjust_lambda(design = design, n = 15, design_params = list(tau_scale = 1),
 # Unequal sample sizes
 adjust_lambda(design = design, n = c(15, 20, 25),
   design_params = list(tau_scale = 1),
-  iter = 100, n_mcmc = 5000
+  iter = 100, n_mcmc = 5000)
 }

@@ -223,7 +223,7 @@ adjust_lambda.exnex <- function(design, n, p1 = NULL, alpha = 0.05,
 #' # Unequal sample sizes
 #' adjust_lambda(design = design, n = c(15, 20, 25),
 #'   design_params = list(tau_scale = 1),
-#'   iter = 100, n_mcmc = 5000
+#'   iter = 100, n_mcmc = 5000)
 adjust_lambda.bhm <- function(design, n, p1 = NULL, alpha = 0.05,
                               design_params = list(), iter = 1000,
                               n_mcmc = 10000, prec_digits = 3, data = NULL,

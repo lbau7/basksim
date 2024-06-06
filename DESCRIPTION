@@ -15,7 +15,6 @@ Imports:
     bhmbasket,
     bmabasket,
     doFuture,
-    extraDistr,
     foreach,
     HDInterval,
 	progressr

@@ -137,7 +137,8 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
     boundary_rules = str2lang(br),
     ...
   )
-  res$scenario_1$decisions_list$berry[, -1]
+
+  ifelse(res$scenario_1$decisions_list$berry[, -1] == "TRUE", 1, 0)
 }
 
 #' Get Results for Simulation of a Basket Trial with the EXNEX Design
@@ -203,7 +204,7 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
     boundary_rules = str2lang(br)
   )
 
-  res$scenario_1$decisions_list$exnex[, -1]
+  ifelse(res$scenario_1$decisions_list$exnex[, -1] == "TRUE", 1, 0)
 }
 
 #' Get Results for Simulation of a Basket Trial with Fujikawa's Design
