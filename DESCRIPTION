@@ -3,8 +3,8 @@ Type: Package
 Title: Simulation-Based Evaluation of Basket Trials 
 Version: 0.1.0
 Authors@R: c(
-    person("Sabrina", "Schmitt", "schmitt@imbi.uni-heidelberg.de", role = c("aut", "cre")), 
-    person("Lukas", "Baumann", "baumann@imbi.uni-heidelberg.de", role = "aut",
+    person("Sabrina", "Schmitt", ,"schmitt@imbi.uni-heidelberg.de", role = c("aut", "cre")), 
+    person("Lukas", "Baumann", role = "aut",
             comment = c(ORCID = "0000-0001-7931-7470"))
     )
 Description: Provides a unified syntax for the simulation-based comparison of different single-stage basket trial
