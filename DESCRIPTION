@@ -2,11 +2,11 @@ Package: basksim
 Type: Package
 Title: Simulation-Based Evaluation of Basket Trials 
 Version: 0.1.0
-Authors@R: c(person("Sabrina", "Schmitt", "schmitt@imbi.uni-heidelberg.de", role = "aut"), 
-            person("Lukas", "Baumann", "baumann@imbi.uni-heidelberg.de", role = "aut",
+Authors@R: c(
+    person("Sabrina", "Schmitt", "schmitt@imbi.uni-heidelberg.de", role = c("aut", "cre")), 
+    person("Lukas", "Baumann", "baumann@imbi.uni-heidelberg.de", role = "aut",
             comment = c(ORCID = "0000-0001-7931-7470"))
-            )
-Maintainer: Sabrina Schmitt <schmitt@imbi.uni-heidelberg.de>
+    )
 Description: Provides a unified syntax for the simulation-based comparison of different single-stage basket trial
 	designs with a binary endpoint and baskets of equal or unequal sample sizes. Methods include the designs by 
 	Baumann et al. (2024) <doi:10.48550/arXiv.2309.06988>, Fujikawa et al. (2020) <doi:10.1002/bimj.201800404>,
