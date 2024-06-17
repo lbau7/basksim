@@ -18,7 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
@@ -38,11 +37,7 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - name: Install jags (macOS)
-        if: runner.os == 'macOS'
-        run : |
-          brew install jags
-          
+             
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
