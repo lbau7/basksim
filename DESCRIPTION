@@ -2,7 +2,7 @@ Package: basksim
 Type: Package
 Title: Simulation-Based Evaluation of Basket Trials 
 Version: 0.1.0
-AuthorsR: c(person("Sabrina", "Schmitt", "schmitt@imbi.uni-heidelberg.de", role = "aut"), 
+Authors@R: c(person("Sabrina", "Schmitt", "schmitt@imbi.uni-heidelberg.de", role = "aut"), 
             person("Lukas", "Baumann", "baumann@imbi.uni-heidelberg.de", role = "aut",
             comment = c(ORCID = "0000-0001-7931-7470"))
             )
