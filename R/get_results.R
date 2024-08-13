@@ -39,12 +39,15 @@ get_results <- function(design, ...) {
 #'   pmp0 = 1, iter = 100)
 get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
                             data = NULL, ...) {
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
                    .options.future = list(seed = TRUE)) %dofuture% {
-    res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
-      n = rep(n, design$k), pmp0 = pmp0, ...)
+    res_temp <- suppressWarnings(bmabasket::bma(pi0 = design$p0, y = data[i, ],
+      n = rep(n, design$k), pmp0 = pmp0, ...))
     ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0)
   }
 }
@@ -70,9 +73,12 @@ get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
 #'   iter = 100)
 get_results.mml <- function(design, n, p1 = NULL, lambda, iter = 1000,
                             data = NULL, ...) {
-  weights <- get_weights_mml(design, n, ...)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  weights <- get_weights_mml(design, n, ...)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_pp(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
@@ -100,8 +106,11 @@ get_results.mml <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'   iter = 100)
 get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
                                   data = NULL, ...) {
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
                    .options.future = list(seed = TRUE)) %dofuture% {
     ana_mmlglobal(design = design, n = n, r = data[i, ], lambda = lambda)
@@ -127,10 +136,12 @@ get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, iter = 100)
+#' \donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'   tau_scale = 1, iter = 100)}
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -179,10 +190,12 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5, iter = 100)
+#' \donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'   tau_scale = 1, w = 0.5, iter = 100)}
 get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -236,10 +249,13 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  logbase = 2, iter = 1000, data = NULL,
                                  ...) {
-  weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau, logbase = logbase)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
+    tau = tau, logbase = logbase)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_fujikawa(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
@@ -270,10 +286,13 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 get_results.jsdglobal <- function(design, n, p1 = NULL, lambda, eps_pair,
                                   tau = 0, eps_all, logbase = 2, iter = 1000,
                                   data = NULL, ...) {
-  weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
-    tau = tau, logbase = logbase)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
+    tau = tau, logbase = logbase)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_jsdglobal(design = design, n = n, r = data[i, ], eps_all = eps_all,
       lambda = lambda, weights_pair = weights_pair)
@@ -303,9 +322,12 @@ get_results.jsdglobal <- function(design, n, p1 = NULL, lambda, eps_pair,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
-  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_pp(design = design, n = n, r = data[i, ], lambda = lambda,
       weights = weights)
@@ -335,9 +357,12 @@ get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 #'   tune_a = 1, tune_b = 1, epsilon = 2, iter = 100)
 get_results.cppglobal <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                                   epsilon, iter = 1000, data = NULL, ...) {
-  weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+
   foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
     ana_cppglobal(design = design, n = n, r = data[i, ], lambda = lambda,
       weights_pair = weights_pair, epsilon = epsilon)

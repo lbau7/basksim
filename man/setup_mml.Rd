@@ -24,7 +24,13 @@ Creates an object of class \code{mml}.
 \details{
 The class \code{mml} implements a modified version of the
 empirical Bayes method by Gravestock & Held (2017) which was proposed for
-borrowing strength from an external study.
+borrowing strength from an external study. In their approach, the sharing
+weight is found as the maximum of the marginal likelihood of the
+weight, given the external data set. This leads, however, to
+non-symmetric weights when applied to sharing in basket trials, i.e.
+Basket i would not share the information from Basket j as the other way
+round. Therefore, a symmetrised version is used, where the mean of the
+two weights resulting from sharing in both directions is used.
 }
 \examples{
 design_mml <- setup_mml(k = 3, p0 = 0.2)

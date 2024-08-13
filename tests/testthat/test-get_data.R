@@ -29,6 +29,8 @@ test_that("check_data_matrix works", {
     p = 0.5, iter = 100))
   expect_message(check_data_matrix(data = data1, design = design, n = 20,
     p = NULL, iter = 101))
+  expect_equal(data1, check_data_matrix(data = data1, design = design,
+    n = 20, p = NULL, iter = 100))
 })
 
 test_that("check_data_bhmbasket works", {
@@ -47,6 +49,8 @@ test_that("check_data_bhmbasket works", {
     p = 0.5, iter = 100))
   expect_message(check_data_bhmbasket(data = data1, design = design, n = 20,
     p = NULL, iter = 101))
+  expect_equal(data1, check_data_bhmbasket(data = data1, design = design, n = 20,
+    p = NULL, iter = 100))
 })
 
 test_that("check_data_list works", {

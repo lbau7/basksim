@@ -4,15 +4,24 @@
 \name{basksim-package}
 \alias{basksim}
 \alias{basksim-package}
-\title{basksim: What the Package Does (Title Case)}
+\title{basksim: Simulation-Based Calculation of Basket Trial Operating Characteristics}
 \description{
-More about what it does (maybe more than one line) Use four spaces when indenting paragraphs within the Description.
+Calculates the operating characteristics of single-stage basket trials with different designs.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/lbau7/basksim}
   \item Report bugs at \url{https://github.com/lbau7/basksim/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Lukas Baumann \email{baumann@imbi.uni-heidelberg.de} (\href{https://orcid.org/0000-0001-7931-7470}{ORCID})
+
+Other contributors:
+\itemize{
+  \item Lukas Sauer (0000-0002-1340-9994) [contributor]
 }
 
 }

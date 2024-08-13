@@ -19,17 +19,17 @@
 #' scenarios <- get_scenarios(design, p1 = 0.5)
 #'
 #' # Without simulated data
-#' opt_design(design, n = 20, alpha = 0.05, design_params =
+#' \donttest{opt_design(design, n = 20, alpha = 0.05, design_params =
 #'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
-#'   prec_digits = 3)
+#'   prec_digits = 3)}
 #'
 #' # With simulated data
 #' scenario_list <- as.list(data.frame(scenarios))
 #' data_list <- lapply(scenario_list,
 #'   function(x) get_data(k = 3, n = 20, p = x, iter = 1000))
-#' opt_design(design, n = 20, alpha = 0.05, design_params =
+#' \donttest{opt_design(design, n = 20, alpha = 0.05, design_params =
 #'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
-#'   prec_digits = 3, data = data_list)
+#'   prec_digits = 3, data = data_list)}
 opt_design <- function(design, n, alpha, design_params = list(), scenarios,
                        prec_digits, iter = 1000, data = NULL, ...) {
   check_data_list(data = data, scenarios = scenarios)

@@ -39,15 +39,16 @@ get_details <- function(design, ...) {
 #'   iter = 100)
 get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
                             iter = 1000, data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  targ <- design$p0 == p1
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
                           .options.future = list(seed = TRUE)) %dofuture% {
-    res_temp <- bmabasket::bma(pi0 = design$p0, y = data[i, ],
-      n = rep(n, design$k), pmp0 = pmp0)
+    res_temp <- suppressWarnings(bmabasket::bma(pi0 = design$p0, y = data[i, ],
+      n = rep(n, design$k), pmp0 = pmp0))
     list(
       ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
       as.vector(res_temp$bmaMeans)
@@ -83,11 +84,13 @@ get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             iter = 1000, data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-  weights <- get_weights_mml(design, n = n, ...)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+
+  targ <- design$p0 == p1
+  weights <- get_weights_mml(design, n = n, ...)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
     shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
@@ -130,10 +133,11 @@ get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, iter = 100)
 get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                   iter = 1000, data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+  targ <- design$p0 == p1
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1',
                           .options.future = list(seed = TRUE)) %dofuture% {
@@ -176,15 +180,16 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, iter = 100)
+#' \donttest{get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)}
 get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tau_scale, iter = 1000, n_mcmc = 10000,
                             data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
+  targ <- design$p0 == p1
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
@@ -242,16 +247,17 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @export
 #'
 #' @examples
-#' design <- setup_exnex(k = 3, p0 = 0.2)
+#' \donttest{design <- setup_exnex(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5, iter = 100)
+#'   tau_scale = 1, w = 0.5, iter = 100)}
 get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
                               tau_scale, w, iter = 1000, n_mcmc = 10000,
                               data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
+  targ <- design$p0 == p1
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = data,
@@ -315,13 +321,15 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, iter = 1000,
                                  data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+
   targ <- design$p0 == p1
   not_targ <- design$p0 != p1
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
       shape_loop <- beta_borrow_fujikawa(design = design, n = n, r = data[i, ],
@@ -370,12 +378,14 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                   eps_pair, tau = 0, eps_all, logbase = 2,
                                   iter = 1000, data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-  weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
-    tau = tau, logbase = logbase)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+
+  weights_pair <- get_weights_jsd(design = design, n = n, epsilon = eps_pair,
+    tau = tau, logbase = logbase)
+  targ <- design$p0 == p1
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
       shape_loop <- beta_borrow_jsdglobal(design = design, n = n, r = data[i, ],
@@ -422,11 +432,13 @@ get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tune_a, tune_b, iter = 1000, data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+
+  targ <- design$p0 == p1
+  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
       shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
@@ -473,11 +485,13 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                   tune_a, tune_b, epsilon, iter = 1000,
                                   data = NULL, ...) {
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-  weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
+
+  targ <- design$p0 == p1
+  weights_pair <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
     shape_loop <- beta_borrow_cppglobal(design = design, n = n, r = data[i, ],
@@ -498,4 +512,3 @@ get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
     ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
-

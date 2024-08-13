@@ -4,7 +4,7 @@
 \alias{setup_bma}
 \title{Setup bma Design Object}
 \usage{
-setup_bma(k, p0, shape1 = 0.5, shape2 = 0.5)
+setup_bma(k, p0, shape1 = 1, shape2 = 1)
 }
 \arguments{
 \item{k}{The number of baskets.}
@@ -23,7 +23,8 @@ Creates an object of class \code{bma}.
 }
 \details{
 The class \code{bma} implements the Bayesian Model Averaging
-design by Pisoda et al. (2021).
+design by Pisoda et al. (2021). Functions for this class are mostly
+wrappers for functions of the \code{bmabasket} package.
 }
 \examples{
 design_bma <- setup_bma(k = 3, p0 = 0.2)

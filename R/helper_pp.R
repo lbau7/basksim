@@ -3,9 +3,10 @@ beta_borrow_pp <- function(design, n, r, weights) {
   shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
   all_combs <- arrangements::combinations(r, 2) + 1
   weights_vec <- weights[all_combs]
-  weight_mat <- matrix(nrow = design$k, ncol = design$k)
-  weight_mat[lower.tri(weight_mat)] <- weight_mat[upper.tri(weight_mat)] <-
-    weights_vec
+  weight_mat <- matrix(0, nrow = design$k, ncol = design$k)
+  weight_mat[lower.tri(weight_mat)] <- weights_vec
+  weight_mat <- t(weight_mat)
+  weight_mat <- weight_mat + t(weight_mat)
   diag(weight_mat) <- 1
 
   # Compute posterior shapes

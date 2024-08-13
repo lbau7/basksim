@@ -23,7 +23,8 @@ Design}
 
 \item{n}{The sample size per basket.}
 
-\item{p1}{Probabilities under the alternative hypothesis.}
+\item{p1}{Probabilities used for the simulation. If \code{NULL}
+then all probabilities are set to p0.}
 
 \item{lambda}{The posterior probability threshold.}
 
