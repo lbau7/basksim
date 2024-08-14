@@ -15,6 +15,7 @@
   logbase = 2,
   iter = 1000,
   data = NULL,
+  use_future = TRUE,
   ...
 )
 }
@@ -45,6 +46,12 @@ calculate the Jensen-Shannon divergence.}
 \item{data}{A data matrix with k column with the number of responses for each
 basket. Has to be generated with \code{get_data}. If \code{data} is used,
 then \code{iter} is ignored.}
+
+\item{use_future}{A logical, should \code{\%dofuture\%} or \code{\%do\%} be used
+for the call to \code{foreach}. Default is \code{TRUE} which means that
+\code{\%dofuture\%} is used. \code{\%dofuture\%}
+is needed for parallelization. Note that for actually using parallelized
+calculations, one needs to activate a \code{future} backend.}
 
 \item{...}{Further arguments.}
 }
