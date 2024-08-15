@@ -184,19 +184,20 @@ test_that("get_details works for exnex", {
     tau_scale = 1, w = 0.5, iter = 100, data = scenarios))
 })
 
+
 test_that("get_details works for fujikawa", {
   # With 3 baskets
   set.seed(20230319)
   design1 <- setup_fujikawa(k = 3, p0 = 0.2)
   res1 <- get_details(design = design1, n = 15, p1 = c(0.2, 0.2, 0.5),
-    lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
+                      lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res1$Rejection_Probabilities -
-      c(0.1003108, 0.1003108, 0.5965844)) < 0.01))
+                        c(0.1003108, 0.1003108, 0.5965844)) < 0.01))
   expect_true(all(abs(res1$Mean - c(0.2717930 , 0.2717930 , 0.4145559)) < 0.01))
   expect_true(all(abs(res1$MSE -
-      c(0.01043607, 0.01043607, 0.01674920)) < 0.01))
+                        c(0.01043607, 0.01043607, 0.01674920)) < 0.01))
   expect_equal(res1$EWP, 0.5965844, tolerance = 0.01)
   expect_equal(res1$FWER, 0.1480935, tolerance = 0.01)
 
@@ -204,18 +205,40 @@ test_that("get_details works for fujikawa", {
   set.seed(20240308)
   design2 <- setup_fujikawa(k = 4, p0 = 0.15)
   res2 <- get_details(design = design2, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
-    lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1, iter = 5000)
+                      lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res2$Rejection_Probabilities -
-      c(0.3133054, 0.7274739, 0.9793341, 0.3133054)) < 0.01))
+                        c(0.3133054, 0.7274739, 0.9793341, 0.3133054)) < 0.01))
   expect_true(abs(res2$FWER - 0.4696476) < 0.01)
   expect_true(abs(res2$EWP - 0.9850177) < 0.01)
   expect_true(all(abs(res2$Mean -
-      c(0.2145436, 0.3134261, 0.4571671, 0.2145436)) < 0.01))
+                        c(0.2145436, 0.3134261, 0.4571671, 0.2145436)) < 0.01))
   expect_true(all(abs(res2$MSE -
-      c(0.009882112, 0.009797917, 0.016591157, 0.009882112)) < 0.01))
+                        c(0.009882112, 0.009797917, 0.016591157, 0.009882112)) < 0.01))
   expect_true(abs(res2$ECD - 3.080197) < 0.01)
+})
+
+test_that("switching of parallelization does not change the results of
+          get_details.fujikawa()", {
+  # With 4 baskets
+  design <- setup_fujikawa(k = 4, p0 = 0.15)
+  set.seed(20240308)
+  res1 <- get_details(design = design, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
+                      lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1,
+                      iter = 5000, use_future = TRUE)
+  set.seed(20240308)
+  res2 <- get_details(design = design, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
+                      lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1,
+                      iter = 5000, use_future = FALSE)
+
+  # Compare with results from baskexact
+  expect_equal(res1$Rejection_Probabilities, res2$Rejection_Probabilities)
+  expect_equal(res1$FWER, res2$FWER)
+  expect_equal(res1$EWP, res2$EWP)
+  expect_equal(res1$Mean, res2$Mean)
+  expect_equal(res1$MSE, res2$MSE)
+  expect_equal(res1$ECD, res2$ECD)
 })
 
 test_that("get_details works for jsdglobal", {
