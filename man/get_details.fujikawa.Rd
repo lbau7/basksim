@@ -47,10 +47,12 @@ calculate the Jensen-Shannon divergence.}
 basket. Has to be generated with \code{get_data}. If \code{data} is used,
 then \code{iter} is ignored.}
 
-\item{use_future}{A logical, should the call to `foreach` be executed in
-paralleled using `%dofuture%` or sequentially using `%do%`. Default is `TRUE`.
-Note that for actually using parallelization, one must additionally activate
-a `future` backend.}
+\item{use_future}{A logical, should \code{\%dofuture\%} or \code{\%do\%} be used
+for the call to \code{foreach}. Default is \code{TRUE} which means that
+\code{\%dofuture\%} is used. \code{\%dofuture\%}
+is needed for parallelization. Note that for actually using parallelized
+calculations, one needs to activate a \code{future} backend.}
+
 
 \item{...}{Further arguments.}
 }
