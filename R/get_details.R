@@ -333,10 +333,10 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
     tau = tau, logbase = logbase)
 
   if(use_future){
-    message("Use of %dofuture% in get_details() is switched on.")
+    # message("Use of %dofuture% in get_details() is switched on.")
     do_fun <- doFuture::`%dofuture%`
   } else {
-    message("Use of %dofuture% in get_details() is switched off.")
+    # message("Use of %dofuture% in get_details() is switched off.")
     do_fun <- foreach::`%do%`
   }
   res <- do_fun(foreach::foreach(i = 1:nrow(data), .combine = 'cfun1'), {
