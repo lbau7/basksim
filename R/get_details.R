@@ -321,7 +321,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, iter = 1000,
-                                 data = NULL, use_future = TRUE, ...) {
+                                 data = NULL, use_future = NULL, ...) {
   p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -333,8 +333,10 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
     tau = tau, logbase = logbase)
 
   if(use_future){
+    message("Use of %dofuture% in get_details() is switched on.")
     do_fun <- doFuture::`%dofuture%`
   } else {
+    message("Use of %dofuture% in get_details() is switched off.")
     do_fun <- foreach::`%do%`
   }
   res <- do_fun(foreach::foreach(i = 1:nrow(data), .combine = 'cfun1'), {
