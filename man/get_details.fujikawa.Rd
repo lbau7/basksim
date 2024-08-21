@@ -15,7 +15,7 @@
   logbase = 2,
   iter = 1000,
   data = NULL,
-  use_future = TRUE,
+  use_future = NULL,
   ...
 )
 }
@@ -52,7 +52,6 @@ for the call to \code{foreach}. Default is \code{TRUE} which means that
 \code{\%dofuture\%} is used. \code{\%dofuture\%}
 is needed for parallelization. Note that for actually using parallelized
 calculations, one needs to activate a \code{future} backend.}
-
 
 \item{...}{Further arguments.}
 }
