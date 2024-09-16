@@ -321,7 +321,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, iter = 1000,
-                                 data = NULL, use_future = NULL, ...) {
+                                 data = NULL, use_future = FALSE, ...) {
   p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
