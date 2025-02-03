@@ -55,7 +55,7 @@ get_details <- function(design, ...) {
 get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
                             iter = 1000, data = NULL, ...) {
 
-  # n must be passed in te correct form
+  # n must be passed in the correct form
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
@@ -455,7 +455,7 @@ get_details.cpplim <- function(design, n, p1 = NULL, lambda, level = 0.95,
 
 
 
-#' Get Details of a Basket Trial Simulation with the adaptive power prior design
+#' Get Details of a Basket Trial Simulation with the Adaptive Power Prior Design
 #' for sequential clinical trials
 #'
 #' @template design_app
