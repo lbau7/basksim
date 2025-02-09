@@ -3,11 +3,23 @@
 #' @template design
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates and,
+#' for some methods, the posterior probabilities that the estimated response rates are above
+#' a specified threshold p0.
 #' @export
 #'
 #' @examples
-#' #
+#' # Example for a basket trial with Fujikawa's Design
+#' design <- setup_fujikawa(k = 3, p0 = 0.2)
+#'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = 20, r = c(10, 15, 5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25),
+#'    r = c(10, 15, 17), lambda = 0.95, epsilon = 2,
+#'    tau = 0, iter = 100)
 #'
 get_evaluation <- function(design, ...) {
   UseMethod("get_evaluation", design)
@@ -24,12 +36,20 @@ get_evaluation <- function(design, ...) {
 #' @template pmp0
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates and the
+#' posterior probabilities that the estimated response rates are above a specified threshold p0.
 #' @export
 #'
 #' @examples
 #' design <- setup_bma(k = 3, p0 = 0.2)
 #'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = 20, r = c(10, 15, 5), lambda = 0.95,
+#'   pmp0 = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
+#'   lambda = 0.95, pmp0 = 1, iter = 100)
 get_evaluation.bma <- function(design, n, r, lambda, pmp0, ...) {
 
   # n must be passed in the correct form
@@ -64,12 +84,18 @@ get_evaluation.bma <- function(design, n, r, lambda, pmp0, ...) {
 #' @template n_mcmc
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates.
 #' @export
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 #'
+#' get_evaluation(design = design, n = c(20, 20, 20), r = c(10, 15, 5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)
 get_evaluation.bhm <- function(design, n, r, lambda, level = 0.95,
                             tau_scale, n_mcmc = 10000, ...) {
 
@@ -77,10 +103,6 @@ get_evaluation.bhm <- function(design, n, r, lambda, level = 0.95,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
-
-  # data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
-  #                              iter = iter)
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = bhmbasket::createTrial(n_subjects = n, n_responders = r),
@@ -95,26 +117,11 @@ get_evaluation.bhm <- function(design, n, r, lambda, level = 0.95,
     n_mcmc_iterations = n_mcmc
   ))
 
-  br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
-                            collapse = ", "), ")")
-
-  res <- bhmbasket::getGoDecisions(
-    analyses_list = analyses,
-    cohort_names = paste("p", 1:design$k, sep = "_"),
-    evidence_levels = rep(lambda, design$k),
-    boundary_rules = str2lang(br)
-  )$scenario_1$decisions_list$berry[, -1]   # hier stattdessen posterior Wahrscheinlichkeiten speichern!
-
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
                                  alpha_level = (1 - level))$berry
 
   list(
-    # Rejection_Probabilities = unname(colMeans(res)),
-    # FWER = mean(apply(res, 1, function(x) any(x[targ] == 1))),
-    Estimates = unname(est[, 1])#,
-    # MSE = unname(est[, 7]),
-    # Lower_CL = unname(est[, 3]),
-    # Upper_CL = unname(est[, 5])
+    Estimates = unname(est[, 1])
   )
 }
 
@@ -133,12 +140,19 @@ get_evaluation.bhm <- function(design, n, r, lambda, level = 0.95,
 #' @template n_mcmc
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates.
 #' @export
 #'
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
 #'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = c(20, 20, 20), r = c(10, 15, 5),
+#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
+#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
 get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
                               tau_scale, w, n_mcmc = 10000, ...) {
 
@@ -146,9 +160,6 @@ get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
-  # data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
-  #                              iter = iter)
 
   analyses <- suppressMessages(bhmbasket::performAnalyses(
     scenario_list = bhmbasket::createTrial(n_subjects = n, n_responders = r),
@@ -165,25 +176,11 @@ get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
     n_mcmc_iterations = n_mcmc
   ))
 
-  br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
-                            collapse = ", "), ")")
-  res <- bhmbasket::getGoDecisions(
-    analyses_list = analyses,
-    cohort_names = paste("p", 1:design$k, sep = "_"),
-    evidence_levels = rep(lambda, design$k),
-    boundary_rules = str2lang(br)
-  )$scenario_1$decisions_list$exnex[, -1]    # hier stattdessen posterior Wahrscheinlichkeiten speichern!
-
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
                                  alpha_level = (1 - level))$exnex
 
   list(
-    # Rejection_Probabilities = unname(colMeans(res)),
-    # FWER = mean(apply(res, 1, function(x) any(x[targ] == 1))),
-    Estimates = unname(est[, 1])#,
-    # MSE = unname(est[, 7]),
-    # Lower_CL = unname(est[, 3]),
-    # Upper_CL = unname(est[, 5])
+    Estimates = unname(est[, 1])
   )
 }
 
@@ -200,12 +197,21 @@ get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
 #' @template tuning_fujikawa
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates and the
+#' posterior probabilities that the estimated response rates are above a specified threshold p0.
 #' @export
 #'
 #' @examples
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = 20, r = c(10, 15, 5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25),
+#'    r = c(10, 15, 17), lambda = 0.95, epsilon = 2,
+#'    tau = 0, iter = 100)
 get_evaluation.fujikawa <- function(design, n, r, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, ...) {
   # n must be passed in the correct form
@@ -241,12 +247,20 @@ get_evaluation.fujikawa <- function(design, n, r, lambda, level = 0.95,
 #' @template tuning_cpp
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates and the
+#' posterior probabilities that the estimated response rates are above a specified threshold p0.
 #' @export
 #'
 #' @examples
 #' design <- setup_cpp(k = 3, p0 = 0.2)
 #'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = 20, r = c(10, 15, 5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 get_evaluation.cpp <- function(design, n, r, lambda, level = 0.95,
                             tune_a, tune_b, ...) {
   # n must be passed in the correct form
@@ -281,12 +295,20 @@ get_evaluation.cpp <- function(design, n, r, lambda, level = 0.95,
 #' @template tuning_cpp
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates and the
+#' posterior probabilities that the estimated response rates are above a specified threshold p0.
 #' @export
 #'
 #' @examples
 #' design <- setup_cpplim(k = 3, p0 = 0.2)
 #'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = 20, r = c(10, 15, 5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 get_evaluation.cpplim <- function(design, n, r, lambda, level = 0.95,
                                tune_a, tune_b, ...) {
 
@@ -326,12 +348,20 @@ get_evaluation.cpplim <- function(design, n, r, lambda, level = 0.95,
 #' @template level
 #' @template dotdotdot
 #'
-#' @return Posterior probabilities and the point estimates of the response rates for all baskets.
+#' @return A list containing the point estimates of the basket-specific response rates and the
+#' posterior probabilities that the estimated response rates are above a specified threshold p0.
 #' @export
 #'
 #' @examples
 #' design <- setup_app(k = 3, p0 = 0.2)
 #'
+#' # Equal sample sizes
+#' get_evaluation(design = design, n = 20, r = c(10, 15, 5),
+#'  lambda = 0.95, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
+#'  lambda = 0.95, iter = 100)
 #'
 get_evaluation.app <- function(design, n, r, lambda, level = 0.95, ...) {
 
