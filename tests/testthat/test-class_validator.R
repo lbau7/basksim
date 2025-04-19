@@ -23,6 +23,7 @@ test_that("errors in setup functions work", {
   expect_error(setup_cpp(k = 2.5, p0 = 0.5))
   expect_error(setup_cpp(k = 2, p0 = 0))
   expect_error(setup_cpp(k = 2, p0 = 1))
+  expect_error(setup_cpp(k = 2, p0 = 2))
   expect_error(setup_cpp(k = 3.5, p0 = 0.5))
   expect_error(setup_cpplim(k = 4, p0 = 0.2, shape1 = 0, shape2 = 0))
 })
