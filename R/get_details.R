@@ -309,6 +309,8 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #' @template use_future
+#' @template weight_fun
+#' @template weight_params
 #'
 #' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
@@ -319,9 +321,21 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
 #'   epsilon = 2, tau = 0, iter = 100)
+#' # A custom weight function can be defined, e.g.
+#' weight_noshare <- function(design, n, epsilon, tau, logbase){
+#'   n_sum <- n + 1
+#'   return(diag(n_sum))
+#' }
+#' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+#'            epsilon = 2, tau = 0, iter = 1000, weight_fun = weight_noshare)
 get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                  epsilon, tau, logbase = 2, iter = 1000,
-                                 data = NULL, use_future = FALSE, ...) {
+                                 data = NULL, use_future = FALSE,
+                                 weight_fun = NULL,
+                                 weight_params = list(epsilon = epsilon,
+                                                      tau = tau,
+                                                      logbase = logbase),
+                                 ...) {
   p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
@@ -329,8 +343,16 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 
   targ <- design$p0 == p1
   not_targ <- design$p0 != p1
-  weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau, logbase = logbase)
+  weights <- NULL
+  if(is.null(weight_fun)){
+    weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
+                               tau = tau, logbase = logbase)
+  } else {
+    weights <- do.call(weight_fun, args = c(design = list(design),
+                                            n = n,
+                                            weight_params))
+  }
+
 
   if(use_future){
     # message("Use of %dofuture% in get_details() is switched on.")

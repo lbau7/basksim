@@ -241,6 +241,33 @@ test_that("switching of parallelization does not change the results of
   expect_equal(res1$ECD, res2$ECD)
 })
 
+test_that("get_details works for fujikawa with custom weights functions", {
+  # With 3 baskets
+  set.seed(20230319)
+  weight_noshare <- function(design, n, epsilon, tau, logbase){
+    n_sum <- n + 1
+    return(diag(n_sum))
+  }
+  design1 <- setup_fujikawa(k = 3, p0 = 0.2)
+  n <- 15
+  p1 <- c(0.2, 0.5, 0.5)
+  lambda <- 0.99
+  logbase <- exp(1)
+  tau <- 0
+  epsilon <- 2
+  iter <- 5000
+  res <- get_details(design = design1, n = n, p1 = p1,
+                      lambda = lambda, epsilon = epsilon, logbase = logbase,
+                      tau = tau, iter = iter)
+  rescustom <- get_details(design = design1, n = n, p1 = p1,
+                      lambda = lambda, epsilon = epsilon, logbase = logbase,
+                      tau = tau, iter = iter, weight_fun = weight_noshare)
+  # Compare with results with sharing - sharing should increase power and TOER
+  expect_true(all(rescustom$Rejection_Probabilities <
+                    res$Rejection_Probabilities))
+  expect_true(rescustom$FWER < res$FWER)
+})
+
 test_that("get_details works for jsdglobal", {
   # With 3 baskets
   set.seed(20230515)

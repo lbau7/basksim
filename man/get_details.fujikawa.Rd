@@ -16,6 +16,8 @@
   iter = 1000,
   data = NULL,
   use_future = FALSE,
+  weight_fun = NULL,
+  weight_params = list(epsilon = epsilon, tau = tau, logbase = logbase),
   ...
 )
 }
@@ -53,6 +55,14 @@ for the call to \code{foreach}. Default is \code{FALSE} which means that
 is needed for parallelization. Note that for actually using parallelized
 calculations, one needs to activate a \code{future} backend.}
 
+\item{weight_fun}{A function of the form \code{function(design, n, ...)} that
+additionally takes the arguments given in \code{weight_params}. If \code{NULL}, the
+original weights suggested by Fujikawa are used (based on the Jensen-Shannon
+divergence).}
+
+\item{weight_params}{A named list of input parameters (additional to \code{design}
+and \code{n}) for the function \code{weight_fun}.}
+
 \item{...}{Further arguments.}
 }
 \value{
@@ -67,4 +77,11 @@ Get Details of a Basket Trial Simulation with Fujikawa's Design
 design <- setup_fujikawa(k = 3, p0 = 0.2)
 get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
   epsilon = 2, tau = 0, iter = 100)
+# A custom weight function can be defined, e.g.
+weight_noshare <- function(design, n, epsilon, tau, logbase){
+  n_sum <- n + 1
+  return(diag(n_sum))
+}
+get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
+           epsilon = 2, tau = 0, iter = 1000, weight_fun = weight_noshare)
 }
