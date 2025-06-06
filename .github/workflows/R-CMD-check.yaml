@@ -21,8 +21,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macos-latest,   r: 'release'}
-          - {os: windows-latest, r: 'release'}
+          # rjags installation fails on GitHub actions for Win/Mac, but runs
+          # fine on our own systems
+          #- {os: macos-latest,   r: 'release'}
+          #- {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
