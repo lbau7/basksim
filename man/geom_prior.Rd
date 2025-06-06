@@ -8,6 +8,8 @@ geom_prior(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
@@ -25,5 +27,5 @@ ggplot() +
     facet_wrap(vars(basket))
 # Colour different baskets
 ggplot() +
-    geom_prior(aes(colour = basket), design)
+    geom_prior(design, aes(colour = basket))
 }

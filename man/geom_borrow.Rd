@@ -8,6 +8,8 @@ geom_borrow(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
@@ -29,6 +31,6 @@ ggplot() +
     facet_wrap(vars(basket))
 # Colour different baskets
 ggplot() +
-    geom_borrow(aes(colour = basket), design, n, r, epsilon, tau,
-                logbase = exp(1))
+    geom_borrow(design, n, r, epsilon, tau,
+                logbase = exp(1), aes(colour = basket))
 }

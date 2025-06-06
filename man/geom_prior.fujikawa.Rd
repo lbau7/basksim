@@ -27,5 +27,5 @@ ggplot() +
     facet_wrap(vars(basket))
 # Colour different baskets
 ggplot() +
-    geom_prior(aes(colour = basket), design)
+    geom_prior(design, aes(colour = basket))
 }

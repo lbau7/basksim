@@ -13,6 +13,15 @@
 
 \item{r}{Vector of responses.}
 
+\item{epsilon}{Tuning parameter that determines the amount of borrowing.
+See \code{\link{setup_fujikawa}}).}
+
+\item{tau}{Tuning parameter that determines how similar the baskets
+have to be that information is shared. See \code{\link{setup_fujikawa}}).}
+
+\item{logbase}{Tuning parameter. The base of the logarithm that is used to
+calculate the Jensen-Shannon divergence.}
+
 \item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
@@ -35,6 +44,6 @@ ggplot() +
     facet_wrap(vars(basket))
 # Colour different baskets
 ggplot() +
-    geom_borrow(aes(colour = basket), design, n, r, epsilon, tau,
-                logbase = exp(1))
+    geom_borrow(design, n, r, epsilon, tau,
+                logbase = exp(1), aes(colour = basket))
 }

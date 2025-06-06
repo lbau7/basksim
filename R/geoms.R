@@ -1,6 +1,7 @@
 #' Plot a Bayesian basket trial's prior distribution
 #'
 #' @template design
+#' @template dotdotdot_geom
 #'
 #' @return A list of ggplot layers of type `geom_function`.
 #' @inherit geom_prior.fujikawa examples
@@ -27,13 +28,13 @@ geom_prior <- function(design, ...) {
 #'     facet_wrap(vars(basket))
 #' # Colour different baskets
 #' ggplot() +
-#'     geom_prior(aes(colour = basket), design)
+#'     geom_prior(design, aes(colour = basket))
 geom_prior.fujikawa <- function(design, ...) {
   purrr::pmap(data.frame(basket = (1:design$k)),
               function(basket) {
                 ggplot2::geom_function(
                   data = data.frame(basket = basket),
-                  fun = dbeta,
+                  fun = stats::dbeta,
                   args = list(shape1 = design$shape1,
                               shape2 = design$shape2),
                   ...
@@ -43,6 +44,7 @@ geom_prior.fujikawa <- function(design, ...) {
 #' Plot a Bayesian basket trial's posterior distribution
 #'
 #' @template design
+#' @template dotdotdot_geom
 #'
 #' @return A list of ggplot layers of type `geom_function`.
 #' @inherit geom_posterior.fujikawa examples
@@ -81,7 +83,7 @@ geom_posterior.fujikawa <- function(design, n, r, ...) {
               function(shape1post, shape2post, basket) {
                 ggplot2::geom_function(
                   data = data.frame(basket = factor(basket, levels = (1:design$k))),
-                  fun = dbeta,
+                  fun = stats::dbeta,
                   args = list(shape1 = shape1post,
                               shape2 = shape2post),
                   ...
@@ -103,6 +105,7 @@ geom_borrow <- function(design, ...) {
 #' @template design
 #' @template n
 #' @template r
+#' @template tuning_fujikawa
 #' @inherit geom_borrow  return
 #'
 #' @export
@@ -121,8 +124,8 @@ geom_borrow <- function(design, ...) {
 #'     facet_wrap(vars(basket))
 #' # Colour different baskets
 #' ggplot() +
-#'     geom_borrow(aes(colour = basket), design, n, r, epsilon, tau,
-#'                 logbase = exp(1))
+#'     geom_borrow(design, n, r, epsilon, tau,
+#'                 logbase = exp(1), aes(colour = basket))
 geom_borrow.fujikawa <-
   function(design, n, r, epsilon, tau, logbase, ...) {
     weights <-
@@ -138,7 +141,7 @@ geom_borrow.fujikawa <-
                 function(shape1post, shape2post, basket) {
                   ggplot2::geom_function(
                     data = data.frame(basket = factor(basket, levels = (1:design$k))),
-                    fun = dbeta,
+                    fun = stats::dbeta,
                     args = list(shape1 = shape1post,
                                 shape2 = shape2post),
                     ...

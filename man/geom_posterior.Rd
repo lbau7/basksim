@@ -8,6 +8,8 @@ geom_posterior(design, ...)
 }
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
+
+\item{...}{Further arguments to be passed to `geom_function`.}
 }
 \value{
 A list of ggplot layers of type `geom_function`.
