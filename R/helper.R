@@ -67,10 +67,14 @@ check_p1 <- function(design, p1, data) {
 }
 
 check_params <- function(n, lambda, iter) {
-  if (length(n) != 1) stop("n must have length 1")
-  if ((n <= 0) | (n %% 1 != 0)) stop("n must be a positive integer")
-  if (lambda <= 0 | lambda >= 1) stop("lambda must be between 0 and 1")
-  if ((iter <= 0) | (iter %% 1 != 0)) stop("iter must be a positive integer")
+  if (length(n) != 1) stop(paste0("n must have length 1. The current length is ",
+                                 length(n), "."))
+  if ((n <= 0) | (n %% 1 != 0)) stop(paste0("n must be a positive integer. ",
+                                           "n is ", n, "."))
+  if (lambda <= 0 | lambda >= 1) stop(paste0("lambda must be between 0 and 1. ",
+                                            "lambda is ", lambda, "."))
+  if ((iter <= 0) | (iter %% 1 != 0)) stop(paste0("iter must be a positive integer. ",
+                                                 "iter is ", iter, "."))
 }
 
 
