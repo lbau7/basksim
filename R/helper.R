@@ -77,4 +77,7 @@ check_params <- function(n, lambda, iter) {
                                                  "iter is ", iter, "."))
 }
 
+mcse_rate <- function(rate, iter){
+  return(sqrt(rate *  (1 - rate) /  iter))
+}
 

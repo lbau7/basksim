@@ -217,6 +217,15 @@ test_that("get_details works for fujikawa", {
   expect_true(all(abs(res2$MSE -
                         c(0.009882112, 0.009797917, 0.016591157, 0.009882112)) < 0.01))
   expect_true(abs(res2$ECD - 3.080197) < 0.01)
+
+  # Check MCSEs
+  expect_equal(res2$FWER_SE, sqrt( (res2$FWER) * (1 - res2$FWER) / 5000))
+  expect_equal(res2$EWP_SE, sqrt( (res2$EWP) * (1 - res2$EWP) / 5000))
+  expect_equal(res2$Rejection_Probabilities_SE,
+               sqrt( (res2$Rejection_Probabilities) *
+                       (1 - res2$Rejection_Probabilities) / 5000))
+  expect_true(res2$ECD_SE < 1/sqrt(5000))
+  expect_true(res2$ECD_SE > 0.001/sqrt(5000))
 })
 
 test_that("switching of parallelization does not change the results of
