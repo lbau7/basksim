@@ -371,7 +371,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
       list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   })
 
-  list(
+  res_list <- list(
     Rejection_Probabilities = colMeans(res[[1]]),
     FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
     EWP = mean(apply(res[[1]], 1, function(x) any(x[not_targ] == 1))),
@@ -379,8 +379,17 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
     MSE = colMeans(t(t(res[[2]]) - p1)^2),
     Lower_CL = colMeans(res[[3]]),
     Upper_CL = colMeans(res[[4]]),
-    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
+    ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ)))),
+    Rejection_Probabilities_SE = NA_real_,
+    FWER_SE = NA_real_,
+    EWP_SE = NA_real_,
+    ECD_SE = sd(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))/sqrt(iter)
   )
+  res_list$FWER_SE <- mcse_rate(res_list$FWER, iter)
+  res_list$EWP_SE <- mcse_rate(res_list$EWP, iter)
+  res_list$Rejection_Probabilities_SE <-
+    mcse_rate(res_list$Rejection_Probabilities, iter)
+  return(res_list)
 }
 
 #' Get Details of a Basket Trial Simulation with the Power Prior Design
