@@ -18,7 +18,7 @@ trial designs based on simulation.
 
 ## Installation
 
-Install the development veresion with:
+Install the development version with:
 
 ``` r
 # install.packages("devtools")
