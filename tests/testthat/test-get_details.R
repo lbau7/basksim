@@ -1,41 +1,3 @@
-test_that("get_details works for bma", {
-  design <- setup_bma(k = 3, p0 = 0.2)
-  set.seed(20230222)
-  res1 <- get_details(design = design, n = 20, p1 = c(0.2, 0.4, 0.4),
-    lambda = 0.95, pmp0 = 1, iter = 100)
-
-  res2 <- get_details(design = design, n = 20, p1 = c(0.3, 0.5, 0.5),
-    lambda = 0.95, pmp0 = 1, iter = 100)
-
-  res3 <- get_details(design = design, n = 20, p1 = c(0.5, 0.5, 0.5),
-    lambda = 0.95, pmp0 = 1, iter = 100)
-
-  # Rejection probabilities are higher when p is higher
-  expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
-
-  # Posterior means are close to p
-  expect_true(all(abs(res3$Mean - 0.5) < 0.02))
-
-  # Same results with differently sorted p1 vector
-  set.seed(20240411)
-  data <- get_data(k = 4, n = 20, p = c(0.2, 0.2, 0.4, 0.4), iter = 500,
-    type = "matrix")
-  data_rev <- data[, 4:1]
-  attr(data_rev, "n") <- 20
-  attr(data_rev, "p") <- c(0.4, 0.4, 0.2, 0.2)
-
-  design2 <- setup_bma(k = 4, p0 = 0.2)
-  res4 <- get_details(design = design2, n = 20, p1 = c(0.2, 0.2, 0.4, 0.4),
-    lambda = 0.95, pmp0 = 1, iter = 500, data = data)
-  res5 <- get_details(design = design2, n = 20, p1 = c(0.4, 0.4, 0.2, 0.2),
-    lambda = 0.95, pmp0 = 1, iter = 500, data = data_rev)
-
-  expect_equal(res4$Rejection_Probabilities, rev(res5$Rejection_Probabilities))
-  expect_equal(res4$FWER, res5$FWER)
-  expect_equal(res4$Mean, rev(res5$Mean))
-  expect_equal(res4$MSE, rev(res5$MSE))
-})
-
 test_that("get_details works for mmlglobal", {
   design <- setup_mmlglobal(k = 3, p0 = 0.2)
   set.seed(20230222)
@@ -228,7 +190,7 @@ test_that("get_details works for fujikawa", {
   expect_true(res2$ECD_SE > 0.001/sqrt(5000))
 })
 
-test_that("switching of parallelization does not change the results of
+test_that("switching off parallelization does not change the results of
           get_details.fujikawa()", {
   # With 4 baskets
   design <- setup_fujikawa(k = 4, p0 = 0.15)

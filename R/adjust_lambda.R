@@ -57,7 +57,7 @@ adjust_lambda.default <- function(design, n, p1 = NULL, alpha = 0.05,
   if (is.null(p1)) p1 <- rep(design$p0, design$k)
   upper_lim <- 1 - 10^(-prec_digits)
   root_fun <- function(x) do.call(toer, args = c(design = list(design),
-    n = n, p1 = list(p1), lambda = x, design_params, iter = iter,
+    n = list(n), p1 = list(p1), lambda = x, design_params, iter = iter,
     data = list(data),
     ...)) - alpha
 

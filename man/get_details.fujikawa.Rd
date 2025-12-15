@@ -66,7 +66,7 @@ and \code{n}) for the function \code{weight_fun}.}
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilites, posterior means,
+A list containing the rejection probabilities, posterior means,
 mean squared errors and mean limits of HDI intervals for all baskets as well
 as the family-wise error rate and the experiment-wise power.
 }

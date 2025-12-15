@@ -6,7 +6,7 @@
 \alias{basksim-package}
 \title{basksim: Simulation-Based Calculation of Basket Trial Operating Characteristics}
 \description{
-Provides a unified syntax for the simulation-based comparison of different single-stage basket trial designs with a binary endpoint and equal sample sizes in all baskets. Methods include the designs by Baumann et al. (2024) \doi{10.48550/arXiv.2309.06988}, Fujikawa et al. (2020) \doi{10.1002/bimj.201800404}, Berry et al. (2020) \doi{10.1177/1740774513497539}, Neuenschwander et al. (2016) \doi{10.1002/pst.1730} and Psioda et al. (2021) \doi{10.1093/biostatistics/kxz014}. For the latter three designs, the functions are mostly wrappers for functions provided by the packages 'bhmbasket' and 'bmabasket'.
+Provides a unified syntax for the simulation-based comparison of different single-stage basket trial designs with a binary endpoint and equal sample sizes in all baskets. Methods include the designs by Baumann et al. (2025) \doi{10.1080/19466315.2024.2402275}, Schmitt and Baumann (2025) \doi{10.1080/19466315.2025.2486231}, Fujikawa et al. (2020) \doi{10.1002/bimj.201800404}, Berry et al. (2020) \doi{10.1177/1740774513497539}, and Neuenschwander et al. (2016) \doi{10.1002/pst.1730}. For the latter two designs, the functions are mostly wrappers for functions provided by the package 'bhmbasket.
 }
 \seealso{
 Useful links:
@@ -19,9 +19,10 @@ Useful links:
 \author{
 \strong{Maintainer}: Lukas Baumann \email{baumann@imbi.uni-heidelberg.de} (\href{https://orcid.org/0000-0001-7931-7470}{ORCID})
 
-Other contributors:
+Authors:
 \itemize{
-  \item Lukas Sauer (\href{https://orcid.org/0000-0002-1340-9994}{ORCID}) [contributor]
+  \item Lukas D Sauer \email{sauer@imbi.uni-heidelberg.de} (\href{https://orcid.org/0000-0002-1340-9994}{ORCID})
+  \item Sabrina Schmitt \email{sabrina.schmitt@uni-wuerzburg.de} (\href{https://orcid.org/0009-0008-2719-6513}{ORCID})
 }
 
 }

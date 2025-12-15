@@ -3,7 +3,7 @@ test_that("get_data works", {
   data1 <- get_data(k = 3, n = 20, p = 0.2, iter = 100)
 
   expect_true(all(dim(data1) == c(100, 3)))
-  expect_equal(attr(data1, "n"), 20)
+  expect_equal(attr(data1, "n"), c(20,20,20))
   expect_equal(attr(data1, "p"), 0.2)
   expect_error(get_data(k = 3, n = 20, p = c(0.2, 0.5), iter = 100))
 

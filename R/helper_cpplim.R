@@ -1,7 +1,9 @@
-# Beta Borrowing for CPP Design
-beta_borrow_cpp <- function(design, n, r, weights) {
+# Beta Borrowing for Limited CPP Design
+
+beta_borrow_cpplim <- function(design, n, r, weights, alpha_0 = alpha_0){
 
   if(length(unique(n)) == 1 || length(n) == 1){
+
     n <- ifelse(length(n == 1), n, n[1])
 
     shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
@@ -12,7 +14,8 @@ beta_borrow_cpp <- function(design, n, r, weights) {
     weight_mat <- weight_mat + t(weight_mat)
     diag(weight_mat) <- 1
 
-  } else {
+
+  }else{
 
     shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
 
@@ -48,20 +51,30 @@ beta_borrow_cpp <- function(design, n, r, weights) {
         weight_mat[i,j] <- matching_weights[r[i]+1, r[j]+1]
       }
     }
-
   }
+
   # Compute posterior shapes
-  shape1post <- apply(weight_mat, 1, function(x) sum(shape_noprior[1, ] * x)) +
+  shape1post <- apply(alpha_0*weight_mat, 1, function(x) sum(shape_noprior[1, ] * x)) +
     design$shape1
-  shape2post <- apply(weight_mat, 1, function(x) sum(shape_noprior[2, ] * x)) +
+  shape2post <- apply(alpha_0*weight_mat, 1, function(x) sum(shape_noprior[2, ] * x)) +
     design$shape2
   rbind(shape1post, shape2post)
+
 }
 
-# Analyzing Results for CPP Design
-ana_cpp <- function(design, n, r, lambda, weights) {
-  shape_post <- beta_borrow_cpp(design = design, n = n, r = r,
-    weights = weights)
+
+
+
+# Analyzing Results for limited CPP Design
+ana_cpplim <- function(design, n, r, lambda, weights, alpha_0){
+  shape_post <- beta_borrow_cpplim(design = design, n = n, r = r,
+                                   weights = weights, alpha_0 = alpha_0)
   post_prob <- post_beta(shape = shape_post, p0 = design$p0)
   ifelse(post_prob >= lambda, 1, 0)
 }
+
+
+
+
+
+

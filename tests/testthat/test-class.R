@@ -1,8 +1,3 @@
-test_that("setup_bma works", {
-  design <- setup_bma(k = 3, p0 = 0.2)
-  expect_s3_class(design, "bma")
-})
-
 test_that("setup_mml works", {
   design <- setup_mml(k = 3, p0 = 0.2)
   expect_s3_class(design, "mml")
