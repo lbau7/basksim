@@ -5,8 +5,8 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/lbau7/basksim/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/lbau7/basksim/branch/master/graph/badge.svg?token=AVO4V52BTH)](https://codecov.io/gh/lbau7/basksim)
+[![R-CMD-check](https://github.com/sabrinaschmitt/basksim/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sabrinaschmitt/basksim/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/sabrinaschmitt/basksim/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/sabrinaschmitt/basksim/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 ## Overview
@@ -16,11 +16,11 @@ trial designs based on simulation.
 
 ## Installation
 
-Install the development veresion with:
+Install the development version with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("lbau7/basksim")
+devtools::install_github("sabrinaschmitt/basksim")
 ```
 
 ## Usage
@@ -49,7 +49,7 @@ characteristics:
 ``` r
 get_details(
   design = design,
-  n = 20,
+  n = c(15, 20, 25),
   p1 = c(0.2, 0.5, 0.5),
   lambda = 0.95,
   epsilon = 1.5,
@@ -58,20 +58,20 @@ get_details(
 )
 
 # $Rejection_Probabilities
-# [1] 0.3448 0.9772 0.9764
+# [1] 0.4012 0.9780 0.9876
 # 
 # $FWER
-# [1] 0.3448
+# [1] 0.4012
 # 
 # $Mean
-# [1] 0.2781905 0.4795914 0.4789913
+# [1] 0.2990107 0.4814856 0.4841056
 # 
 # $MSE
-# [1] 0.014837404 0.008647713 0.008620234
+# [1] 0.020201723 0.007759721 0.006991584
 # 
 # $Lower_CL
-# [1] 0.1395151 0.3341910 0.3336988
+# [1] 0.1509890 0.3401165 0.3445177
 # 
 # $Upper_CL
-# [1] 0.4262371 0.6252845 0.6245943
+# [1] 0.4576028 0.6231458 0.6239504
 ```

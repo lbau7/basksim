@@ -6,4 +6,4 @@
 ## usethis namespace: end
 NULL
 
-utils::globalVariables("i")
+utils::globalVariables(c("i", "data"))

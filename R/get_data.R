@@ -15,7 +15,13 @@
 #' @export
 #'
 #' @examples
-#' get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000)
+#' # Equal sample sizes
+#' get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000,
+#'   type = "matrix")
+#'
+#' # Unequal sample sizes
+#' get_data(k = 3, n = c(15, 20, 25), p = c(0.2, 0.2, 0.5),
+#'   iter = 1000, type = "matrix")
 #
 
 get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
@@ -29,6 +35,10 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
   }
 
   if(length(n) == 1)  n <- c(rep(n,k))
+
+  if(length(n) < k || length(n) > k){
+    stop("n must be either an integer or a vector of length k")
+  }
 
   data <- matrix(data = NA, nrow = iter, ncol = k)
 

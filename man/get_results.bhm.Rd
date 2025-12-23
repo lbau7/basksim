@@ -19,7 +19,7 @@
 \arguments{
 \item{design}{An object of class \code{bhm}.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities under the alternative hypothesis.}
 
@@ -48,6 +48,12 @@ Get Results for Simulation of a Basket Trial with the BHM Design
 }
 \examples{
 design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  tau_scale = 1, iter = 100)
+
+# Equal sample sizes
+get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
+  lambda = 0.95, tau_scale = 1, iter = 100)
+
+# Unequal sample sizes
+get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+  lambda = 0.95, tau_scale = 1, iter = 100)
 }

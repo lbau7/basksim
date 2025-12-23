@@ -27,33 +27,7 @@ setup_bma <- function(k, p0, shape1 = 0.5, shape2 = 0.5) {
   )
 }
 
-#' Setup ebcomb Design Object
-#'
-#' Creates an object of class \code{ebcomb}.
-#'
-#' @template k
-#' @template p0
-#' @template shape_beta
-#'
-#' @details The class \code{ebcomb} implements an empirical Bayes method
-#' by Gravestock & Held (2019) which was proposed for borrowing strength
-#' from multiple external studies.
-#'
-#' @references Gravestock, I., & Held, L. (2019). Power priors based on
-#' multiple historical studies for binary outcomes. Biometrical Journal, 61(5),
-#' 1201-1218.
-#'
-#' @return An S3 object of class \code{bma}
-#' @export
-#'
-#' @examples
-#' design_bma <- setup_bma(k = 3, p0 = 0.2)
-setup_ebcomb <- function(k, p0, shape1 = 1, shape2 = 1) {
-  validate_betabin(structure(
-    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
-    class = "ebcomb"
-  ))
-}
+
 
 #' Setup BHM Design Object
 #'
@@ -90,6 +64,7 @@ setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
     class = "bhm"
   )
 }
+
 
 #' Setup EXNEX Design Object
 #'
@@ -129,6 +104,7 @@ setup_exnex <- function(k, p0, basket_mean = NULL, basket_sd = 100,
   )
 }
 
+
 #' Setup Fujikawa Design Object
 #'
 #' @template k
@@ -152,23 +128,6 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Generalized JSD Design Object
-#'
-#' @template k
-#' @template p0
-#' @template shape_beta
-#'
-#' @return An S3 object of class \code{jsdgen}
-#' @export
-#'
-#' @examples
-#' design_jsdgen <- setup_jsdgen(k = 3, p0 = 0.2)
-setup_jsdgen <- function(k, p0, shape1 = 1, shape2 = 1) {
-  validate_betabin(structure(
-    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
-    class = "jsdgen"
-  ))
-}
 
 #' Setup Calibrated Power Prior Design Object
 #'
@@ -188,25 +147,6 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
   validate_betabin(structure(
     list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
     class = "cpp"
-  ))
-}
-
-
-#' Setup Generalized Calibrated Power Prior Design Object
-#'
-#' @template k
-#' @template p0
-#' @template shape_beta
-#'
-#' @return An S3 object of class \code{cppgen}
-#' @export
-#'
-#' @examples
-#' design_cppgen <- setup_cppgen(k = 3, p0 = 0.2)
-setup_cppgen <- function(k, p0, shape1 = 1, shape2 = 1) {
-  validate_betabin(structure(
-    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
-    class = "cppgen"
   ))
 }
 
