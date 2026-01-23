@@ -19,7 +19,7 @@ opt_design(
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{alpha}{The one-sided significance level.}
 
@@ -49,6 +49,7 @@ Optimize a Basket Trial Design
 design <- setup_fujikawa(k = 3, p0 = 0.2)
 scenarios <- get_scenarios(design, p1 = 0.5)
 
+## Equal sample sizes
 # Without simulated data
 \donttest{opt_design(design, n = 20, alpha = 0.05, design_params =
   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
@@ -59,6 +60,21 @@ scenario_list <- as.list(data.frame(scenarios))
 data_list <- lapply(scenario_list,
   function(x) get_data(k = 3, n = 20, p = x, iter = 1000))
 \donttest{opt_design(design, n = 20, alpha = 0.05, design_params =
+  list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+  prec_digits = 3, data = data_list)
+
+
+## Unequal sample sizes
+# Without simulated data
+opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
+  list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+  prec_digits = 3)
+
+# With simulated data
+scenario_list <- as.list(data.frame(scenarios))
+data_list <- lapply(scenario_list,
+  function(x) get_data(k = 3, n = c(15, 20, 25), p = x, iter = 1000))
+opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
   prec_digits = 3, data = data_list)}
 }

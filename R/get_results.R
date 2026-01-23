@@ -11,46 +11,18 @@
 #' @examples
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
 get_results <- function(design, ...) {
   UseMethod("get_results", design)
 }
 
-#' Get Results for Simulation of a Basket Trial with the BMA Design
-#'
-#' @template design_bma
-#' @template n
-#' @template p1
-#' @template lambda
-#' @template pmp0
-#' @template iter
-#' @template data
-#' @template dotdotdot
-#'
-#' @return A matrix of results with \code{iter} rows. A 0 means, that the
-#' null hypothesis that the response probability exceeds \code{p0} was not
-#' rejected, a 1 means, that the null hypothesis was rejected.
-#' @export
-#'
-#' @examples
-#' design <- setup_bma(k = 3, p0 = 0.2)
-#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   pmp0 = 1, iter = 100)
-get_results.bma <- function(design, n, p1 = NULL, lambda, pmp0, iter = 1000,
-                            data = NULL, ...) {
-  p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
-
-  foreach::foreach(i = 1:nrow(data), .combine = 'rbind',
-                   .options.future = list(seed = TRUE)) %dofuture% {
-    res_temp <- suppressWarnings(bmabasket::bma(pi0 = design$p0, y = data[i, ],
-      n = rep(n, design$k), pmp0 = pmp0, ...))
-    ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0)
-  }
-}
 
 #' Get Results for Simulation of a Basket Trial with the MML Design
 #'
@@ -136,12 +108,22 @@ get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' \donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, iter = 100)}
+#'
+#' # Equal sample sizes
+#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, iter = 100)
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
-  p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -167,7 +149,8 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
     boundary_rules = str2lang(br),
     ...
   )
-  res$scenario_1$decisions_list$berry[, -1]
+
+  ifelse(res$scenario_1$decisions_list$berry[, -1] == "TRUE", 1, 0)
 }
 
 #' Get Results for Simulation of a Basket Trial with the EXNEX Design
@@ -190,12 +173,22 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #'
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
-#' \donttest{get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tau_scale = 1, w = 0.5, iter = 100)}
+#' \donttest{
+#' # Equal sample sizes
+#' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#' }
 get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
-  p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -223,7 +216,7 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
     boundary_rules = str2lang(br)
   )
 
-  res$scenario_1$decisions_list$exnex[, -1]
+  ifelse(res$scenario_1$decisions_list$exnex[, -1] == "TRUE", 1, 0)
 }
 
 #' Get Results for Simulation of a Basket Trial with Fujikawa's Design
@@ -244,13 +237,25 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
 #'
 #' @examples
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, epsilon = 2, tau = 0, iter = 100)
 get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  logbase = 2, iter = 1000, data = NULL,
                                  ...) {
-  p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
+  weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
+    tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
@@ -318,12 +323,23 @@ get_results.jsdglobal <- function(design, n, p1 = NULL, lambda, eps_pair,
 #'
 #' @examples
 #' design <- setup_cpp(k = 3, p0 = 0.2)
-#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
-  p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
+  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -369,3 +385,104 @@ get_results.cppglobal <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
   }
 }
 
+
+
+#' Get Results for Simulation of a Basket Trial with a Limited Calibrated Power
+#' Prior Design
+#'
+#' @template design_cpplim
+#' @template n
+#' @template p1
+#' @template lambda
+#' @template tuning_cpp
+#' @template iter
+#' @template data
+#' @template dotdotdot
+#'
+#' @return A matrix of results with \code{iter} rows. A 0 means, that the
+#' null hypothesis that the response probability exceeds \code{p0} was not
+#' rejected, a 1 means, that the null hypothesis was rejected.
+
+#' @export
+#'
+#' @examples
+#' design <- setup_cpplim(k = 3, p0 = 0.2)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
+                               iter = 1000, data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
+  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+
+  alpha_0 <- get_alpha_0_app(design = design, n = n)
+
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+                            iter = iter)
+
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
+    ana_cpplim(design = design, n = n, r = data[i, ], lambda = lambda,
+            weights = weights, alpha_0 = alpha_0)
+  }
+
+
+}
+
+
+
+#' Get Results for Simulation of a Basket Trial with Adaptive Power Prior Design
+#'
+#' @template design_app
+#' @template n
+#' @template p1
+#' @template lambda
+#' @template iter
+#' @template data
+#' @template dotdotdot
+#'
+#' @return A matrix of results with \code{iter} rows. A 0 means, that the
+#' null hypothesis that the response probability exceeds \code{p0} was not
+#' rejected, a 1 means, that the null hypothesis was rejected.
+#' @export
+#'
+#' @examples
+#' design <- setup_app(k = 3, p0 = 0.2)
+#'
+#' # Equal sample sizes
+#' get_results(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, iter = 100)
+#'
+#' # Unequal sample sizes
+#' get_results(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+#'   lambda = 0.95, iter = 100)
+get_results.app <- function(design, n, p1 = NULL, lambda,
+                            iter = 1000, data = NULL, ...) {
+
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+                            iter = iter)
+
+  alpha_0 <- get_alpha_0_app(design = design, n = n)
+
+  foreach::foreach(i = 1:nrow(data), .combine = 'rbind') %dofuture% {
+    ana_app(design = design, n = n, r = data[i, ], lambda = lambda,
+            alpha_0 = alpha_0)
+  }
+
+
+
+}

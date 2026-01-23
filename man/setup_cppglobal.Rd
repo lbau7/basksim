@@ -32,6 +32,7 @@ overall heterogeneity.
 design_cppglobal <- setup_cppglobal(k = 3, p0 = 0.2)
 }
 \references{
-Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
-design based on power priors. arXiv:2309.06988.
+Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+Design Based on Power Priors. Statistics in Biopharmaceutical Research,
+17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 }

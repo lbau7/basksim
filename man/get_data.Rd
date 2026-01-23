@@ -9,7 +9,7 @@ get_data(k, n, p, iter, type = c("matrix", "bhmbasket"))
 \arguments{
 \item{k}{The number of baskets.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p}{Probabilities used to simulate the data}
 

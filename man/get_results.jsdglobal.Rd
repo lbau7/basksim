@@ -22,7 +22,7 @@ Based on Global JSD Weights}
 \arguments{
 \item{design}{An object of class \code{jsdgen}.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities used for the simulation. If \code{NULL}
 then all probabilities are set to p0.}

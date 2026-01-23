@@ -15,7 +15,7 @@ validate_betabin <- function(x) {
   x
 }
 
-# Calculate Posterior Probabilites of a Beta Distribution
+# Calculate Posterior probabilities of a Beta Distribution
 post_beta <- function(shape, p0) {
   stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],
     lower.tail = FALSE)

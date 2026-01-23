@@ -9,9 +9,9 @@
 \arguments{
 \item{design}{An object created with one of the \code{setup} functions.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
-\item{r}{Vector of responses.}
+\item{r}{The number of responses observed in each basket.}
 
 \item{epsilon}{Tuning parameter that determines the amount of borrowing.
 See \code{\link{setup_fujikawa}}).}
