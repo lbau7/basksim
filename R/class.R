@@ -1,3 +1,33 @@
+#' Setup bma Design Object
+#'
+#' Creates an object of class \code{bma}.
+#'
+#' @template k
+#' @template p0
+#' @template shape_beta
+#'
+#' @return An S3 object of class \code{bma}
+#' @export
+#'
+#' @details The class \code{bma} implements the Bayesian Model Averaging
+#' design by Pisoda et al. (2021). Functions for this class are mostly
+#' wrappers for functions of the \code{bmabasket} package.
+#'
+#' @references Psioda, M. A., Xu, J., Jiang, Q. I., Ke, C., Yang, Z., &
+#' Ibrahim, J. G. (2021). Bayesian adaptive basket trial design using model
+#' averaging. Biostatistics, 22(1), 19-34.
+#'
+#' @examples
+#' design_bma <- setup_bma(k = 3, p0 = 0.2)
+setup_bma <- function(k, p0, shape1 = 1, shape2 = 1) {
+  mu0 <- shape1 / (shape1 + shape2)
+  phi0 <- shape1 + shape2
+  structure(
+    list(k = k, p0 = p0, mu0 = mu0, phi0 = phi0),
+    class = "bma"
+  )
+}
+
 #' Setup mml Design Object
 #'
 #' Creates an object of class \code{mml}.
@@ -48,9 +78,8 @@ setup_mml <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' multiple historical studies for binary outcomes. Biometrical Journal, 61(5),
 #' 1201-1218.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-#' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-#' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
+#' Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+#' power priors. arXiv:2309.06988.
 #'
 #' @return An S3 object of class \code{mmlglobal}
 #' @export
@@ -177,9 +206,8 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' and overall heterogeneity between baskets. Both pairwise similarity and
 #' overall heterogeneity are assessed using the Jensen-Shannon divergence.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-#' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-#' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+#' design based on power priors. arXiv:2309.06988.
 #'
 #' @return An S3 object of class \code{jsdglobal}
 #' @export
@@ -204,9 +232,8 @@ setup_jsdglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' determined by the Kolmogorov-Smirnov test statistic between baskets (which
 #' is equivalent to the absolut difference in response rates).
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-#' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-#' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+#' design based on power priors. arXiv:2309.06988.
 #'
 #' @return An S3 object of class \code{cpp}
 #' @export
@@ -220,7 +247,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Generalized Calibrated Power Prior Design Object
+#' Setup Global Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -232,9 +259,8 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' a function based on response rate differences that quantifies the
 #' overall heterogeneity.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-#' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-#' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
+#' @references Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+#' design based on power priors. arXiv:2309.06988.
 #'
 #' @return An S3 object of class \code{cppglobal}
 #' @export
@@ -245,66 +271,5 @@ setup_cppglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
   validate_betabin(structure(
     list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
     class = "cppglobal"
-  ))
-}
-
-
-
-#' Setup Limited Calibrated Power Prior Design Object
-#'
-#' @template k
-#' @template p0
-#' @template shape_beta
-#'
-#' @details
-#' The class \code{cpplim} implements a combined version of the adaptive power
-#' prior (\code{app}) and the calibrated power prior (\code{cpp}), where the
-#' parameter limiting the amount of information to be borrowed in the adaptive
-#' power prior design is included in the calibrated power prior design.
-#'
-#'
-#' @return An S3 object of class \code{cpplim}
-#' @export
-#'
-#' @references Ollier, A., Morita, S., Ursino, M., & Zohar, S. (2020). An
-#' adaptive power prior for sequential clinical trials - Application to bridging
-#' studies. Statistical methods in medical research, 29(8), 2282–2294.
-#'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-#' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-#' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
-#'
-#' @examples
-#' design_cpplim <- setup_cpplim(k = 3, p0 = 0.2)
-setup_cpplim <- function(k, p0, shape1 = 1, shape2 = 1) {
-  validate_betabin(structure(
-    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
-    class = "cpplim"
-  ))
-}
-
-
-#' Setup Adaptive Power Prior Design Object
-#'
-#' @template k
-#' @template p0
-#' @template shape_beta
-#'
-#' @details The class \code{app} implements the adaptive power prior design for
-#' sequential clinical trials proposed by Ollier et al. (2020).
-#'
-#' @return An S3 object of class \code{app}
-#' @export
-#'
-#' @references Ollier, A., Morita, S., Ursino, M., & Zohar, S. (2020). An
-#' adaptive power prior for sequential clinical trials - Application to bridging
-#' studies. Statistical methods in medical research, 29(8), 2282–2294.
-#'
-#' @examples
-#' design_app <- setup_app(k = 3, p0 = 0.2)
-setup_app <- function(k, p0, shape1 = 1, shape2 = 1) {
-  validate_betabin(structure(
-    list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
-    class = "app"
   ))
 }

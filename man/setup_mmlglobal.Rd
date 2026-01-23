@@ -34,7 +34,6 @@ Gravestock, I., & Held, L. (2019). Power priors based on
 multiple historical studies for binary outcomes. Biometrical Journal, 61(5),
 1201-1218.
 
-. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial design based on
+power priors. arXiv:2309.06988.
 }

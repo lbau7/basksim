@@ -1,28 +1,19 @@
 Package: basksim
 Type: Package
 Title: Simulation-Based Calculation of Basket Trial Operating Characteristics
-Version: 2.0.0
+Version: 1.0.2
 Authors@R: c(
-    person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", 
-           role = c("aut", "cre"),
-	         comment = c(ORCID = "0000-0001-7931-7470")),
-    person("Lukas D", "Sauer", ,"sauer@imbi.uni-heidelberg.de", 
-           role = c("aut"),
-		       comment = c(ORCID = "0000-0002-1340-9994")),
-		person("Sabrina", "Schmitt", ,"sabrina.schmitt@uni-wuerzburg.de", 
-		       role = c("aut"),
-		       comment = c(ORCID = "0009-0008-2719-6513"))
+    person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", role = c("aut", "cre"),
+	       comment = c(ORCID = "0000-0001-7931-7470")),
+    person("Lukas", "Sauer", role = "ctb",
+		   comment = c(ORCID = "0000-0002-1340-9994"))
   )
-Description: Provides a unified syntax for the simulation-based comparison of 
-  different single-stage basket trial designs with a binary endpoint and equal 
-  sample sizes in all baskets. Methods include the designs by 
-	Baumann et al. (2025) <doi:10.1080/19466315.2024.2402275>, 
-	Schmitt and Baumann (2025) <doi:10.1080/19466315.2025.2486231>,
-	Fujikawa et al. (2020) <doi:10.1002/bimj.201800404>,
-	Berry et al. (2020) <doi:10.1177/1740774513497539>, and
-	Neuenschwander et al. (2016) <doi:10.1002/pst.1730>. For the 
-	latter two designs, the functions are mostly 
-	wrappers for functions provided by the package 'bhmbasket.
+Description: Provides a unified syntax for the simulation-based comparison of different single-stage basket trial
+	designs with a binary endpoint and equal sample sizes in all baskets. Methods include the designs by 
+	Baumann et al. (2024) <doi:10.48550/arXiv.2309.06988>, Fujikawa et al. (2020) <doi:10.1002/bimj.201800404>,
+	Berry et al. (2020) <doi:10.1177/1740774513497539>, Neuenschwander et al. (2016) <doi:10.1002/pst.1730> and
+	Psioda et al. (2021) <doi:10.1093/biostatistics/kxz014>. For the latter three designs, the functions are mostly 
+	wrappers for functions provided by the packages 'bhmbasket' and 'bmabasket'.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
@@ -30,6 +21,7 @@ RoxygenNote: 7.3.2
 Imports: 
     arrangements,
     bhmbasket,
+    bmabasket,
     doFuture,
     extraDistr,
     foreach,

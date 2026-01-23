@@ -12,7 +12,7 @@ get_details(design, ...)
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilities, posterior means, mean
+A list containing the rejection probabilites, posterior means, mean
 squared errors of all baskets and the family-wise error rate. For some
 methods the mean limits of HDI intervals are also returned.
 }

@@ -3,7 +3,7 @@
 #' @template design
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means, mean
+#' @return A list containing the rejection probabilites, posterior means, mean
 #' squared errors of all baskets and the family-wise error rate. For some
 #' methods the mean limits of HDI intervals are also returned.
 #' @export
@@ -17,6 +17,51 @@ get_details <- function(design, ...) {
   UseMethod("get_details", design)
 }
 
+#' Get Details of a BMA Basket Trial Simulation
+#'
+#' @template design_bma
+#' @template n
+#' @template p1
+#' @template lambda
+#' @template pmp0
+#' @template iter
+#' @template data
+#' @template dotdotdot
+#'
+#' @return A list containing the rejection probabilites, posterior means,
+#' and mean squared errors for all baskets as well as the family-wise error
+#' rate.
+#' @export
+#'
+#' @examples
+#' design <- setup_bma(k = 3, p0 = 0.2)
+#' get_details(design = design, n = 20, p1 = 0.5, lambda = 0.95, pmp0 = 1,
+#'   iter = 100)
+get_details.bma <- function(design, n, p1 = NULL, lambda, pmp0,
+                            iter = 1000, data = NULL, ...) {
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
+  targ <- design$p0 == p1
+
+  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun2',
+                          .options.future = list(seed = TRUE)) %dofuture% {
+    res_temp <- suppressWarnings(bmabasket::bma(pi0 = design$p0, y = data[i, ],
+      n = rep(n, design$k), pmp0 = pmp0))
+    list(
+      ifelse(as.vector(res_temp$bmaProbs) > lambda, 1, 0),
+      as.vector(res_temp$bmaMeans)
+    )
+  }
+  list(
+    Rejection_Probabilities = colMeans(res[[1]]),
+    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
+    Mean = colMeans(res[[2]]),
+    MSE = colMeans(t(t(res[[2]]) - p1)^2)
+  )
+}
+
 #' Get Details of a Basket Trial Simulation with the MML Design
 #'
 #' @template design_cpp
@@ -28,7 +73,7 @@ get_details <- function(design, ...) {
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -48,7 +93,7 @@ get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
   weights <- get_weights_mml(design, n = n, ...)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-    shape_loop <- beta_borrow_cpp(design = design, n = n, r = data[i, ],
+    shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
       weights = weights)
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
@@ -128,7 +173,7 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data_bhm
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -140,14 +185,8 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tau_scale, iter = 1000, n_mcmc = 10000,
                             data = NULL, ...) {
-
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
   targ <- design$p0 == p1
@@ -167,7 +206,6 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 
   br <- paste0("c(", paste0("x[", 1:design$k, "] > ", design$p0,
     collapse = ", "), ")")
-
   res <- bhmbasket::getGoDecisions(
     analyses_list = analyses,
     cohort_names = paste("p", 1:design$k, sep = "_"),
@@ -203,7 +241,7 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data_bhm
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -215,14 +253,8 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
                               tau_scale, w, iter = 1000, n_mcmc = 10000,
                               data = NULL, ...) {
-
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
   targ <- design$p0 == p1
@@ -280,7 +312,7 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template weight_fun
 #' @template weight_params
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate and the experiment-wise power.
 #' @export
@@ -304,12 +336,11 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                                       tau = tau,
                                                       logbase = logbase),
                                  ...) {
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
+  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
+    iter = iter)
 
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
   targ <- design$p0 == p1
   not_targ <- design$p0 != p1
   weights <- NULL
@@ -321,8 +352,6 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                             n = n,
                                             weight_params))
   }
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-                            iter = iter)
 
 
   if(use_future){
@@ -363,9 +392,6 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
   return(res_list)
 }
 
-
-
-
 #' Get Details of a Basket Trial Simulation with the Power Prior Design
 #' Based on Global JSD Weights
 #'
@@ -379,7 +405,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -434,7 +460,7 @@ get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -445,29 +471,23 @@ get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'   tune_a = 1, tune_b = 1, iter = 100)
 get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tune_a, tune_b, iter = 1000, data = NULL, ...) {
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-                            iter = iter)
+    iter = iter)
 
   targ <- design$p0 == p1
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-    shape_loop <- beta_borrow_cpp(design = design, n = n, r = data[i, ],
-                                  weights = weights)
-    res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
-    mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-    hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-                                                                 shape1 = x[1], shape2 = x[2], credMass = level))
-    list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-  }
+      shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
+        weights = weights)
+      res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
+      mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
+      hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
+        shape1 = x[1], shape2 = x[2], credMass = level))
+      list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
+    }
   list(
     Rejection_Probabilities = colMeans(res[[1]]),
     FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
@@ -479,7 +499,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
   )
 }
 
-#' Get Details of a Basket Trial Simulation with the Generalized Calibrated
+#' Get Details of a Basket Trial Simulation with the Global Calibrated
 #' Power Prior Design
 #'
 #' @template design_cppglobal
@@ -492,7 +512,7 @@ get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #' @template data
 #' @template dotdotdot
 #'
-#' @return A list containing the rejection probabilities, posterior means,
+#' @return A list containing the rejection probabilites, posterior means,
 #' mean squared errors and mean limits of HDI intervals for all baskets as well
 #' as the family-wise error rate.
 #' @export
@@ -531,125 +551,3 @@ get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
     ECD = mean(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))
   )
 }
-
-
-#' Get Details of a Basket Trial Simulation with the Limited Calibrated Power
-#' Prior Design
-#'
-#' @template design_cpplim
-#' @template n
-#' @template p1
-#' @template lambda
-#' @template level
-#' @template tuning_cpp
-#' @template iter
-#' @template data
-#' @template dotdotdot
-#'
-#' @return A list containing the rejection probabilities, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets as well
-#' as the family-wise error rate.
-#' @export
-#'
-#' @examples
-#' design <- setup_cpplim(k = 3, p0 = 0.2)
-#' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'   tune_a = 1, tune_b = 1, iter = 100)
-get_details.cpplim <- function(design, n, p1 = NULL, lambda, level = 0.95,
-                            tune_a, tune_b, iter = 1000, data = NULL, ...) {
-
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-
-  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
-
-  alpha_0 <- get_alpha_0_app(design = design, n = n)
-
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-                            iter = iter)
-
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-    shape_loop <- beta_borrow_cpplim(design = design, n = n, r = data[i, ],
-                                  weights = weights, alpha_0 = alpha_0)
-    res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
-    mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-    hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-                                                                 shape1 = x[1], shape2 = x[2], credMass = level))
-    list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-  }
-  list(
-    Rejection_Probabilities = colMeans(res[[1]]),
-    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
-    Mean = colMeans(res[[2]]),
-    MSE = colMeans(t(t(res[[2]]) - p1)^2),
-    Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
-  )
-
-}
-
-
-
-
-#' Get Details of a Basket Trial Simulation with the adaptive power prior design
-#' for sequential clinical trials
-#'
-#' @template design_app
-#' @template n
-#' @template p1
-#' @template lambda
-#' @template level
-#' @template iter
-#' @template data
-#' @template dotdotdot
-#'
-#' @return A list containing the rejection probabilities, posterior means,
-#' mean squared errors and mean limits of HDI intervals for all baskets as well
-#' as the family-wise error rate.
-#' @export
-#'
-#' @examples
-#' design <- setup_app(k = 3, p0 = 0.2)
-#' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-#'  iter = 100)
-get_details.app <- function(design, n, p1 = NULL, lambda, level = 0.95,
-                               iter = 1000, data = NULL, ...) {
-
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-
-  data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-                            iter = iter)
-
-  alpha_0 <- get_alpha_0_app(design = design, n = n)
-
-  res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
-    shape_loop <- beta_borrow_app(design = design, n = n, r = data[i, ],
-                                     alpha_0 = alpha_0)
-    res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
-    mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
-    hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-                                                                 shape1 = x[1], shape2 = x[2], credMass = level))
-    list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
-  }
-  list(
-    Rejection_Probabilities = colMeans(res[[1]]),
-    FWER = mean(apply(res[[1]], 1, function(x) any(x[targ] == 1))),
-    Mean = colMeans(res[[2]]),
-    MSE = colMeans(t(t(res[[2]]) - p1)^2),
-    Lower_CL = colMeans(res[[3]]),
-    Upper_CL = colMeans(res[[4]])
-  )
-
-}
-

@@ -19,11 +19,9 @@
 #'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
 ecd <- function(design, n, p1, lambda, design_params = list(), iter = 1000,
                 data = NULL, ...) {
-
-  res <- do.call(get_results, args = c(design = list(design), n = list(n),
-                                       p1 = list(p1), lambda = lambda,
-                                       design_params, iter = iter,
-                                       data = list(data), ...))
+  res <- do.call(get_results, args = c(design = list(design), n = n,
+    p1 = list(p1), lambda = lambda, design_params, iter = iter,
+    data = list(data), ...))
   targ <- design$p0 != p1
   mean(rowSums(t(apply(res, 1, function(x) x == targ))))
 }

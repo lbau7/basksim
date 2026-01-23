@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_details.R
 \name{get_details.cppglobal}
 \alias{get_details.cppglobal}
-\title{Get Details of a Basket Trial Simulation with the Generalized Calibrated
+\title{Get Details of a Basket Trial Simulation with the Global Calibrated
 Power Prior Design}
 \usage{
 \method{get_details}{cppglobal}(
@@ -50,12 +50,12 @@ then \code{iter} is ignored.}
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilities, posterior means,
+A list containing the rejection probabilites, posterior means,
 mean squared errors and mean limits of HDI intervals for all baskets as well
 as the family-wise error rate.
 }
 \description{
-Get Details of a Basket Trial Simulation with the Generalized Calibrated
+Get Details of a Basket Trial Simulation with the Global Calibrated
 Power Prior Design
 }
 \examples{

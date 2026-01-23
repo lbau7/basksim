@@ -50,14 +50,14 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
   for (i in 1:lgrid) {
     params_loop <- lapply(as.list(grid), function(x) x[i])
     l <- do.call(adjust_lambda, args = list(design = design, n = n,
-                                            p1 = NULL, alpha = alpha, design_params = params_loop, iter = iter,
-                                            prec_digits = prec_digits, data = data[[null_scen]], ...))
+      p1 = NULL, alpha = alpha, design_params = params_loop, iter = iter,
+      prec_digits = prec_digits, data = data[[null_scen]], ...))
     lambdas[i] <- l$lambda
 
     for (j in 1:ncol(scenarios)) {
-      ecd_res[i, j] <- do.call(ecd, args = c(design = list(design), n = list(n),
-                                             p1 = list(scenarios[, j]), lambda = l$lambda, params_loop,
-                                             iter = iter, data = list(data[[j]]), ...))
+      ecd_res[i, j] <- do.call(ecd, args = c(design = list(design), n = n,
+        p1 = list(scenarios[, j]), lambda = l$lambda, params_loop,
+        iter = iter, data = list(data[[j]]), ...))
     }
     p()
   }

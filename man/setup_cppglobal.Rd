@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_cppglobal}
 \alias{setup_cppglobal}
-\title{Setup Generalized Calibrated Power Prior Design Object}
+\title{Setup Global Calibrated Power Prior Design Object}
 \usage{
 setup_cppglobal(k, p0, shape1 = 1, shape2 = 1)
 }
@@ -19,7 +19,7 @@ setup_cppglobal(k, p0, shape1 = 1, shape2 = 1)
 An S3 object of class \code{cppglobal}
 }
 \description{
-Setup Generalized Calibrated Power Prior Design Object
+Setup Global Calibrated Power Prior Design Object
 }
 \details{
 The class \code{cppglobal} implements a version of the power prior
@@ -32,7 +32,6 @@ overall heterogeneity.
 design_cppglobal <- setup_cppglobal(k = 3, p0 = 0.2)
 }
 \references{
-. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
-Design Based on Power Priors. Statistics in Biopharmaceutical Research,
-17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
+Baumann, L., Sauer, L., & Kieser, M. (2024). A basket trial
+design based on power priors. arXiv:2309.06988.
 }
