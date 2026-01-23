@@ -29,6 +29,10 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
 
   if(length(n) == 1)  n <- c(rep(n,k))
 
+  if(length(n) < k || length(n) > k){
+    stop("n must be either an integer or a vector of length k")
+  }
+
   data <- matrix(data = NA, nrow = iter, ncol = k)
 
   if(type == "matrix"){
@@ -38,14 +42,13 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
     attr(data, "n") <- n
     attr(data, "p") <- p
     data
-  } else {
+  }else {
     bhmbasket::simulateScenarios(
       n_subjects_list = n,
       response_rates_list = list(pvec),
       n_trials = iter
     )
   }
-
 }
 
 check_data_matrix <- function(data, design, n, p, iter) {
