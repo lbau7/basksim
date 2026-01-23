@@ -156,7 +156,7 @@ test_that("get_details works for fujikawa", {
                       lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+  expect_no_error(get_details(design = design1, n = 15, p1 = NULL, lambda = 0.99,
     epsilon = 2, logbase = exp(1), tau = 0, iter = 5000))
 
   # Compare with results from baskexact
@@ -288,7 +288,7 @@ test_that("get_details works for cpp", {
     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
   # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+  expect_no_error(get_details(design = design1, n = 15, p1 = NULL, lambda = 0.99,
     tune_a = 2, tune_b = 2, iter = 5000))
 
   # Compare with results from baskexact
