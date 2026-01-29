@@ -2,7 +2,7 @@
 beta_borrow_cpplim <- function(design, n, r, weights, alpha_0 = alpha_0){
 
   shape_noprior <- matrix(c(r, n - r), nrow = 2, byrow = TRUE)
-  weight_mat <- get_weight_mat_cpp(design, n, r, weights)
+  weight_mat <- get_weight_mat_pp(design, n, r, weights)
 
   # Compute posterior shapes
   shape1post <- apply(alpha_0*weight_mat, 1, function(x) sum(shape_noprior[1, ] * x)) +

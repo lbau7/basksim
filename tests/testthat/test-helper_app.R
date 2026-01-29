@@ -46,7 +46,7 @@ test_that("beta_borrow_app works", {
   alpha_0 <- get_alpha_0_app(design = design_app, n = n)
 
   expect_equal(beta_borrow_app(design = design_app, n = n, r = r, alpha_0 = alpha_0),
-               beta_borrow_cpp(design = design_cpp, n = n, r = r, weights = weights))
+               beta_borrow_pp(design = design_cpp, n = n, r = r, weights = weights))
 
 
 })
@@ -65,7 +65,7 @@ test_that("ana_app works", {
 
   expect_equal(ana_app(design = design_app, n = n, r = r, lambda = lambda,
                        alpha_0 = alpha_0),
-               ana_cpp(design = design_cpp, n = n, r = r, lambda = lambda,
+               ana_pp(design = design_cpp, n = n, r = r, lambda = lambda,
                        weights = weights))
 
 

@@ -226,7 +226,7 @@ get_evaluation.cpp <- function(design, n, r, lambda, level = 0.95,
 
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
-  shape <- beta_borrow_cpp(design = design, n = n, r = r, weights = weights)
+  shape <- beta_borrow_pp(design = design, n = n, r = r, weights = weights)
   posterior <- post_beta(shape, design$p0)
   estimates <- apply(shape, 2, function(x) x[1] / (x[1] + x[2]))
 

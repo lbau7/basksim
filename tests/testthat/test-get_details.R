@@ -359,8 +359,8 @@ test_that("get_details works for mml", {
                       lambda = 0.95, iter = 5000)
 
   # Compare with results from baskexact
-  expect_true(all(abs(res1$Rejection_Probabilities -
-                        c(0.2317285, 0.7058685, 0.9801984)) < 0.01))
+  expect_equal(res1$Rejection_Probabilities,
+               c(0.2317285, 0.7058685, 0.9801984), tolerance = 0.01)
   expect_true(all(abs(res1$Mean - c(0.2606807, 0.4056437, 0.5567046)) < 0.01))
   expect_true(abs(res1$ECD - 2.454338) < 0.01)
 

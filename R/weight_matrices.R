@@ -84,87 +84,26 @@ get_weights_jsd <- function(design, n, epsilon, tau, logbase, ...) {
 
 # Weight matrix with MML weights
 get_weights_mml <- function(design, n, ...) {
-  # the format of the weights depends on whether the sample sizes of the
-  # individual baskets are all the same
-  if(length(unique(n)) == 1 || length(n) == 1){
+  n_sum <- n + 1
+  mat <- matrix(0, nrow = n_sum, ncol = n_sum)
+  r <- 0:n
+  for (i in 1:n_sum) {
+    for (j in 1:n_sum) {
+      f <- function(delta) -extraDistr::dbbinom(
+        x = r[i],
+        size = n,
+        alpha = design$shape1 + delta * r[j],
+        beta = design$shape2 + delta * (n - r[j])
+      )
 
-    n <- ifelse(length(n) == 1, n, n[1])
-
-    shape1_post <- design$shape1 + c(0:n)
-    shape2_post <- design$shape2 + c(n:0)
-    n_sum <- n + 1
-
-    p <- function(x) stats::dbeta(x, shape1_post[i], shape2_post[i])
-    q <- function(x) stats::dbeta(x, shape1_post[j], shape2_post[j])
-    m <- function(x) 0.5 * (p(x) + q(x))
-    f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-    g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
-
-    jsd_mat <- matrix(0, nrow = n_sum, ncol = n_sum)
-    for (i in 1:n_sum) {
-      for (j in i:n_sum) {
-        if (i == j) {
-          next
-        } else {
-          kl_f <- stats::integrate(f, 0, 1)$value
-          kl_g <- stats::integrate(g, 0, 1)$value
-          jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
-        }
-      }
+      l <- stats::optim(0.5, fn = f, lower = 0, upper = 1,
+                        method = "Brent")$par
+      mat[i, j] <- ifelse(l <= 6.474096e-09, 0, l)
     }
-    jsd_mat <- jsd_mat + t(jsd_mat)
-    weight_mat <- (1 - jsd_mat)^epsilon
-    weight_mat[weight_mat <= tau] <- 0
-
-    weight_mat
-
-  }else{
-
-    # find all possible combinations
-    unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
-
-    weights_list <- list()
-
-    for(l in 1:dim(unique_combs)[1]){
-      dim_act <- unique_combs[l,]
-      n1 <- dim_act[1]
-      n2 <- dim_act[2]
-
-      jsd_mat <- matrix(0, nrow = n1+1, ncol = n2+1)
-
-      shape1_post1 <- design$shape1 + c(0:n1)
-      shape1_post2 <- design$shape1 + c(0:n2)
-
-      shape2_post1 <- design$shape2 + c(n1:0)
-      shape2_post2 <- design$shape2 + c(n2:0)
-
-      p <- function(x) stats::dbeta(x, shape1_post1[i], shape2_post1[i])
-      q <- function(x) stats::dbeta(x, shape1_post2[j], shape2_post2[j])
-      m <- function(x) 0.5 * (p(x) + q(x))
-      f <- function(x) p(x) * log(p(x) / m(x), base = logbase)
-      g <- function(x) q(x) * log(q(x) / m(x), base = logbase)
-
-      for (i in 1:(n1+1) ) {
-        for (j in 1:(n2+1)) {
-
-          kl_f <- stats::integrate(f, 0, 1)$value
-          kl_g <- stats::integrate(g, 0, 1)$value
-          jsd_mat[i, j] <- 0.5 * kl_f + 0.5 * kl_g
-
-        }
-      }
-
-      weight_mat <- (1 - jsd_mat)^epsilon
-      weight_mat[weight_mat <= tau] <- 0
-
-      weights_list[[l]] <- weight_mat
-
-    }
-
-    weights_list
-
   }
-
+  mat <- (mat + t(mat)) / 2
+  diag(mat) <- 1
+  mat
 }
 
 
@@ -202,7 +141,6 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
     weight_mat
 
   } else {
-
     # find all possible combinations
     unique_combs <- unique(t(apply(arrangements::combinations(k = 2, v = n),1,sort)))
 

@@ -50,18 +50,18 @@ get_details.mml <- function(design, n, p1 = NULL, lambda, level = 0.95,
   p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
-    iter = iter)
+                            iter = iter)
 
   targ <- design$p0 == p1
   weights <- get_weights_mml(design, n = n, ...)
 
   res <- foreach::foreach(i = 1:nrow(data), .combine = 'cfun1') %dofuture% {
     shape_loop <- beta_borrow_pp(design = design, n = n, r = data[i, ],
-      weights = weights)
+                                 weights = weights)
     res_loop <- ifelse(post_beta(shape_loop, design$p0) >= lambda, 1, 0)
     mean_loop <- apply(shape_loop, 2, function(x) x[1] / (x[1] + x[2]))
     hdi_loop <- apply(shape_loop, 2, function(x) HDInterval::hdi(stats::qbeta,
-      shape1 = x[1], shape2 = x[2], credMass = level))
+                                                                 shape1 = x[1], shape2 = x[2], credMass = level))
     list(res_loop, mean_loop, hdi_loop[1, ], hdi_loop[2, ])
   }
   list(
