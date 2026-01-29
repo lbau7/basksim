@@ -175,7 +175,6 @@ get_evaluation.fujikawa <- function(design, n, r, lambda, level = 0.95,
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
                              tau = tau, logbase = logbase)
 

@@ -167,6 +167,7 @@ get_weights_mml <- function(design, n, ...) {
 
 }
 
+
 # Weight matrix with CPP weights
 get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
   # The format of the weights depends on whether the sample sizes of the
@@ -236,3 +237,4 @@ get_weights_cpp <- function(n, tune_a = 1, tune_b = 1, ...) {
 
   }
 }
+
