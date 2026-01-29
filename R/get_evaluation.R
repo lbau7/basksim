@@ -37,7 +37,6 @@ get_evaluation <- function(design, ...) {
 #' @template lambda
 #' @template level
 #' @template tau_bhm
-#' @template iter
 #' @template n_mcmc
 #' @template dotdotdot
 #'

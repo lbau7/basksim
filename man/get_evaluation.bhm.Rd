@@ -32,9 +32,6 @@ for the variance of the thetas.}
 \item{n_mcmc}{Number of MCMC samples.}
 
 \item{...}{Further arguments.}
-
-\item{iter}{The number of iterations in the simulation. Is ignored if
-\code{data} is specified.}
 }
 \value{
 A list containing the point estimates of the basket-specific response rates.

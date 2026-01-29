@@ -371,7 +371,7 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
     Rejection_Probabilities_SE = NA_real_,
     FWER_SE = NA_real_,
     EWP_SE = NA_real_,
-    ECD_SE = sd(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))/sqrt(iter)
+    ECD_SE = stats::sd(rowSums(t(apply(res[[1]], 1, function(x) x != targ))))/sqrt(iter)
   )
   res_list$FWER_SE <- mcse_rate(res_list$FWER, iter)
   res_list$EWP_SE <- mcse_rate(res_list$EWP, iter)

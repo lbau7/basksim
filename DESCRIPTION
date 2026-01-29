@@ -31,10 +31,12 @@ Imports:
     arrangements,
     bhmbasket,
     doFuture,
+    extraDistr,
     foreach,
     HDInterval,
 	  progressr,
-	  purrr
+	  purrr,
+	  stats
 Suggests:
     covr,
     testthat (>= 3.0.0),

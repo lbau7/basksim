@@ -6,7 +6,7 @@ test_that("diff_all works", {
   expect_equal(res2, 1)
 })
 
-test_that("beta_borrow_cpp works", {
+test_that("beta_borrow_cppglobal works", {
   design <- setup_cpp(k = 4, p0 = 0.2)
   r <- c(17, 15, 9, 5)
 

@@ -11,7 +11,7 @@ test_that("beta_borrow_cpplim works", {
 
   expect_equal(beta_borrow_cpplim(design = design_cpplim, n = n, r = r,
                                   weights = weights, alpha_0 = alpha_0),
-               beta_borrow_cpp(design = design_cpp, n = n, r = r,
+               beta_borrow_pp(design = design_cpp, n = n, r = r,
                                weights = weights))
 
 
@@ -32,7 +32,7 @@ test_that("ana_cpplim works", {
 
   expect_equal(ana_cpplim(design = design_cpplim, n = n, r = r, lambda = lambda,
                        weights = weights, alpha_0 = alpha_0),
-               ana_cpp(design = design_cpp, n = n, r = r, lambda = lambda,
+               ana_pp(design = design_cpp, n = n, r = r, lambda = lambda,
                        weights = weights))
 
 })
