@@ -155,8 +155,9 @@ get_details.mmlglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tau_scale, iter = 1000, n_mcmc = 10000,
                             data = NULL, ...) {
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
   targ <- design$p0 == p1
@@ -231,8 +232,9 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
                               tau_scale, w, iter = 1000, n_mcmc = 10000,
                               data = NULL, ...) {
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
   targ <- design$p0 == p1
@@ -321,8 +323,9 @@ get_details.fujikawa <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                                       tau = tau,
                                                       logbase = logbase),
                                  ...) {
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
+
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -463,8 +466,8 @@ get_details.jsdglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 #'   lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 get_details.cpp <- function(design, n, p1 = NULL, lambda, level = 0.95,
                             tune_a, tune_b, iter = 1000, data = NULL, ...) {
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   p1 <- check_p1(design = design, p1 = p1, data = data)
-  check_params(n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -576,12 +579,8 @@ get_details.cppglobal <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.cpplim <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                tune_a, tune_b, iter = 1000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   targ <- design$p0 == p1
 
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -641,16 +640,11 @@ get_details.cpplim <- function(design, n, p1 = NULL, lambda, level = 0.95,
 get_details.app <- function(design, n, p1 = NULL, lambda, level = 0.95,
                                iter = 1000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  if (is.null(p1)) p1 <- rep(design$p0, design$k)
-  targ <- design$p0 == p1
-
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
                             iter = iter)
+  targ <- design$p0 == p1
 
   alpha_0 <- get_alpha_0_app(design = design, n = n)
 

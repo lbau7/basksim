@@ -31,5 +31,11 @@ For \code{type = "bhmbasket"} this is simply a wraper for
 \code{bhmbasket::simulateScenarios}.
 }
 \examples{
-get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000)
+# Equal sample sizes
+get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000,
+  type = "matrix")
+
+# Unequal sample sizes
+get_data(k = 3, n = c(15, 20, 25), p = c(0.2, 0.2, 0.5),
+  iter = 1000, type = "matrix")
 }

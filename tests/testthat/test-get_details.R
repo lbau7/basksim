@@ -156,7 +156,7 @@ test_that("get_details works for fujikawa", {
                       lambda = 0.99, epsilon = 2, logbase = exp(1), tau = 0, iter = 5000)
 
   # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+  expect_no_error(get_details(design = design1, n = 15, p1 = NULL, lambda = 0.99,
     epsilon = 2, logbase = exp(1), tau = 0, iter = 5000))
 
   # Compare with results from baskexact
@@ -169,9 +169,9 @@ test_that("get_details works for fujikawa", {
   expect_equal(res1$FWER, 0.1480935, tolerance = 0.01)
 
   # If n is passed as a vector, it should have k entries
-  expect_error(get_details.fujikawa(design = design, n = c(10,20), p1 = NULL,
+  expect_error(get_details.fujikawa(design = design1, n = c(10,20), p1 = NULL,
                                     lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  expect_error(get_details.fujikawa(design = design, n = c(10,20,30,40), p1 = NULL,
+  expect_error(get_details.fujikawa(design = design1, n = c(10,20,30,40), p1 = NULL,
                                     lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 
   # With 4 baskets
@@ -288,7 +288,7 @@ test_that("get_details works for cpp", {
     lambda = 0.99, tune_a = 2, tune_b = 2, iter = 5000)
 
   # Works without supplied p1
-  expect_no_error(get_details(design = design, n = 15, p1 = NULL, lambda = 0.99,
+  expect_no_error(get_details(design = design1, n = 15, p1 = NULL, lambda = 0.99,
     tune_a = 2, tune_b = 2, iter = 5000))
 
   # Compare with results from baskexact
@@ -356,11 +356,11 @@ test_that("get_details works for mml", {
   set.seed(20240320)
   design1 <- setup_mml(k = 3, p0 = 0.2)
   res1 <- get_details(design = design1, n = 15, p1 = c(0.2, 0.4, 0.6),
-    lambda = 0.95, iter = 5000)
+                      lambda = 0.95, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res1$Rejection_Probabilities -
-      c(0.2317285, 0.7058685, 0.9801984)) < 0.01))
+                        c(0.2317285, 0.7058685, 0.9801984)) < 0.01))
   expect_true(all(abs(res1$Mean - c(0.2606807, 0.4056437, 0.5567046)) < 0.01))
   expect_true(abs(res1$ECD - 2.454338) < 0.01)
 
@@ -368,16 +368,16 @@ test_that("get_details works for mml", {
   set.seed(20240308)
   design2 <- setup_mml(k = 4, p0 = 0.15)
   res2 <- get_details(design = design2, n = 20, p1 = c(0.15, 0.15, 0.4, 0.4),
-    lambda = 0.95, iter = 5000)
+                      lambda = 0.95, iter = 5000)
 
   # Compare with results from baskexact
   expect_true(all(abs(res2$Rejection_Probabilities -
-      c(0.2614598, 0.2614598, 0.9254998, 0.9254998)) < 0.01))
+                        c(0.2614598, 0.2614598, 0.9254998, 0.9254998)) < 0.01))
   expect_true(abs(res2$FWER - 0.3914886) < 0.01)
   expect_true(all(abs(res2$Mean -
-      c(0.1943315, 0.1943315, 0.3738412, 0.3738412)) < 0.01))
+                        c(0.1943315, 0.1943315, 0.3738412, 0.3738412)) < 0.01))
   expect_true(all(abs(res2$MSE -
-      c(0.006931833, 0.006931833, 0.010724183, 0.010724183)) < 0.01))
+                        c(0.006931833, 0.006931833, 0.010724183, 0.010724183)) < 0.01))
   expect_true(abs(res2$ECD - 3.32808) < 0.01)
 })
 
