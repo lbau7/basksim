@@ -333,14 +333,14 @@ test_that("get_details works for cpp", {
       c(0.005062454, 0.005062454, 0.005062454, 0.017710313)) < 0.01))
   expect_true(abs(res2$ECD - 3.226655) < 0.01)
   # If n is passed as a vector, it should have k entries
-  expect_error(get_details.cpp(design = design, n = c(10,20), p1 = NULL,
+  expect_error(get_details.cpp(design = design1, n = c(10,20), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  expect_error(get_details.cpp(design = design, n = c(10,20,30,40), p1 = NULL,
+  expect_error(get_details.cpp(design = design1, n = c(10,20,30,40), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  # If n cannot be a non-positive number or a non-integer rational number
-  expect_error(get_details.cpp(design = design, n = c(10, 20, -1), p1 = NULL,
+  # n cannot be a non-positive number or a non-integer rational number
+  expect_error(get_details.cpp(design = design1, n = c(10, 20, -1), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
-  expect_error(get_details.cpp(design = design, n = c(10, 20, 10.5), p1 = NULL,
+  expect_error(get_details.cpp(design = design1, n = c(10, 20, 10.5), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
