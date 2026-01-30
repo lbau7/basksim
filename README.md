@@ -22,7 +22,7 @@ Install the development version with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("sabrinaschmitt/basksim")
+devtools::install_github("lbau7/basksim")
 ```
 
 ## Usage
@@ -49,6 +49,7 @@ Use `get_details` to estimate several important operating
 characteristics:
 
 ``` r
+set.seed(123)
 get_details(
   design = design,
   n = c(15, 20, 25),
@@ -60,20 +61,38 @@ get_details(
 )
 
 # $Rejection_Probabilities
-# [1] 0.4012 0.9780 0.9876
+# [1] 0.4226 0.9824 0.9874
 # 
 # $FWER
-# [1] 0.4012
+# [1] 0.4226
+# 
+# $EWP
+# [1] 0.999
 # 
 # $Mean
-# [1] 0.2990107 0.4814856 0.4841056
+# [1] 0.2992626 0.4823250 0.4836304
 # 
 # $MSE
-# [1] 0.020201723 0.007759721 0.006991584
+# [1] 0.020532553 0.007330251 0.006862607
 # 
 # $Lower_CL
-# [1] 0.1509890 0.3401165 0.3445177
+# [1] 0.1517281 0.3407342 0.3440962
 # 
 # $Upper_CL
-# [1] 0.4576028 0.6231458 0.6239504
+# [1] 0.4574680 0.6241900 0.6234426
+# 
+# $ECD
+# [1] 2.5472
+# 
+# $Rejection_Probabilities_SE
+# [1] 0.006985832 0.001859583 0.001577418
+# 
+# $FWER_SE
+# [1] 0.006985832
+# 
+# $EWP_SE
+# [1] 0.0004469899
+# 
+# $ECD_SE
+# [1] 0.007147353
 ```

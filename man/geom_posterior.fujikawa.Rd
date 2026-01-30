@@ -11,7 +11,7 @@
 
 \item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
-\item{r}{The number of responses observed in each basket.}
+\item{r}{Vector of responses.}
 
 \item{...}{Further arguments to be passed to `geom_function`.}
 }

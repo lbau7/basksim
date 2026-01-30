@@ -119,11 +119,8 @@ get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -185,10 +182,8 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   data <- check_data_bhmbasket(data = data, design = design, n = n, p = p1,
     iter = iter)
 
@@ -249,10 +244,8 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
                                  logbase = 2, iter = 1000, data = NULL,
                                  ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
 
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
     tau = tau, logbase = logbase)
@@ -334,12 +327,8 @@ get_results.jsdglobal <- function(design, n, p1 = NULL, lambda, eps_pair,
 get_results.cpp <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                             iter = 1000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
-  weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
@@ -418,10 +407,8 @@ get_results.cppglobal <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
                                iter = 1000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
 
   weights <- get_weights_cpp(n = n, tune_a = tune_a, tune_b = tune_b)
 
@@ -468,11 +455,8 @@ get_results.cpplim <- function(design, n, p1 = NULL, lambda, tune_a, tune_b,
 get_results.app <- function(design, n, p1 = NULL, lambda,
                             iter = 1000, data = NULL, ...) {
 
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-
+  p1 <- check_p1(design = design, p1 = p1, data = data)
+  check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
                             iter = iter)
 

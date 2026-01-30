@@ -1,3 +1,22 @@
+test_that("get_details works for mmlglobal", {
+  design <- setup_mmlglobal(k = 3, p0 = 0.2)
+  set.seed(20230222)
+  res1 <- get_details(design = design, n = 20, p1 = c(0.2, 0.4, 0.4),
+                      lambda = 0.95, pmp0 = 1, iter = 100)
+
+  res2 <- get_details(design = design, n = 20, p1 = c(0.3, 0.5, 0.5),
+                      lambda = 0.95, pmp0 = 1, iter = 100)
+
+  res3 <- get_details(design = design, n = 20, p1 = c(0.5, 0.5, 0.5),
+                      lambda = 0.95, pmp0 = 1, iter = 100)
+
+  # Rejection probabilities are higher when p is higher
+  expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
+
+  # Posterior means are close to p
+  expect_true(all(abs(res3$Mean - 0.5) < 0.02))
+})
+
 test_that("get_details works for bhm", {
   set.seed(1)
   scenarios <- bhmbasket::simulateScenarios(
@@ -306,7 +325,7 @@ test_that("get_details works for cpp", {
 
   # Compare with results from baskexact
   expect_true(all(abs(res2$Rejection_Probabilities -
-      c(0.05833261, 0.05833261, 0.05833261, 0.40165309)) < 0.015))
+      c(0.05833261, 0.05833261, 0.05833261, 0.40165309)) < 0.01))
   expect_true(abs(res2$FWER - 0.1142539) < 0.01)
   expect_true(all(abs(res2$Mean -
       c(0.1938748, 0.1938748, 0.1938748, 0.2966433)) < 0.01))
