@@ -30,13 +30,6 @@ cfun1 <- function(x, y) {
   )
 }
 
-cfun2 <- function(x, y) {
-  list(
-    rbind(x[[1]], y[[1]]),
-    rbind(x[[2]], y[[2]])
-  )
-}
-
 check_scenarios <- function(scenarios, design) {
   if (!(is.matrix(scenarios) | is.data.frame(scenarios))) {
     stop("scenarios is not a matrix or a data.frame")
@@ -71,8 +64,11 @@ check_params_differentn <- function(design, n, lambda, iter) {
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
     stop("n must either have length 1 or k")
   }
-  if (any((n <= 0)) | any((n %% 1 != 0))) stop(paste0("n must be a positive integer. ",
-                                            "n is ", n, "."))
+  if (any((n <= 0)) | any((n %% 1 != 0))) {
+    stop(paste0("n must be a vector of positive integers. ",
+                "n is c(", do.call(paste, c(as.list(n),
+                                          sep = ", ")), ")."))
+  }
   check_lambda_iter(lambda, iter)
 }
 

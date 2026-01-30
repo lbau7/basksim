@@ -337,6 +337,11 @@ test_that("get_details works for cpp", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
   expect_error(get_details.cpp(design = design, n = c(10,20,30,40), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  # If n cannot be a non-positive number or a non-integer rational number
+  expect_error(get_details.cpp(design = design, n = c(10, 20, -1), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+  expect_error(get_details.cpp(design = design, n = c(10, 20, 10.5), p1 = NULL,
+                               lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 })
 
 test_that("get_details works for cppglobal", {
