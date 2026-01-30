@@ -15,9 +15,13 @@
 #' @export
 #'
 #' @examples
-#' get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000)
-#
-
+#' # Equal sample sizes
+#' get_data(k = 3, n = 20, p = c(0.2, 0.2, 0.5), iter = 1000,
+#'   type = "matrix")
+#'
+#' # Unequal sample sizes
+#' get_data(k = 3, n = c(15, 20, 25), p = c(0.2, 0.2, 0.5),
+#'   iter = 1000, type = "matrix")
 get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
   type <- match.arg(type)
   if (length(p) == 1) {
@@ -30,6 +34,10 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
 
   if(length(n) == 1)  n <- c(rep(n,k))
 
+  if(length(n) < k || length(n) > k){
+    stop("n must be either an integer or a vector of length k")
+  }
+
   data <- matrix(data = NA, nrow = iter, ncol = k)
 
   if(type == "matrix"){
@@ -39,16 +47,14 @@ get_data <- function(k, n, p, iter, type = c("matrix", "bhmbasket")) {
     attr(data, "n") <- n
     attr(data, "p") <- p
     data
-  } else {
+  }else {
     bhmbasket::simulateScenarios(
       n_subjects_list = n,
       response_rates_list = list(pvec),
       n_trials = iter
     )
   }
-
 }
-
 
 check_data_matrix <- function(data, design, n, p, iter) {
   if (is.null(data)) {
@@ -83,14 +89,8 @@ check_data_bhmbasket <- function(data, design, n, p, iter) {
     if (ncol(data$scenario_1$n_responders) != design$k) {
       stop("data do not have k columns")
     }
-    if (length(n) == 1){
-      if (!all(data$scenario_1$n_subjects == n)) {
-        stop("data were not generated with the specified n")
-      }
-    }else{
-      if (!all(apply(data$scenario_1$n_subjects, 1, function(x) all(x == n)))){
-        stop("data were not generated with the specified n")
-      }
+    if (!all(data$scenario_1$n_subjects == n)) {
+      stop("data were not generated with the specified n")
     }
     if (!all(data$scenario_1$response_rates == p) & !is.null(p)) {
       stop("data were not generated with the specified p1")
@@ -101,7 +101,6 @@ check_data_bhmbasket <- function(data, design, n, p, iter) {
     data
   }
 }
-
 
 check_data_list <- function(data, scenarios) {
   if (!is.null(data)) {

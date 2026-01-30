@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_details.R
 \name{get_details.app}
 \alias{get_details.app}
-\title{Get Details of a Basket Trial Simulation with the adaptive power prior design
+\title{Get Details of a Basket Trial Simulation with the Adaptive Power Prior Design
 for sequential clinical trials}
 \usage{
 \method{get_details}{app}(
@@ -19,7 +19,7 @@ for sequential clinical trials}
 \arguments{
 \item{design}{An object of class \code{app}.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities used for the simulation. If \code{NULL}
 then all probabilities are set to p0.}
@@ -43,11 +43,17 @@ mean squared errors and mean limits of HDI intervals for all baskets as well
 as the family-wise error rate.
 }
 \description{
-Get Details of a Basket Trial Simulation with the adaptive power prior design
+Get Details of a Basket Trial Simulation with the Adaptive Power Prior Design
 for sequential clinical trials
 }
 \examples{
 design <- setup_app(k = 3, p0 = 0.2)
-get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
- iter = 100)
+
+# Equal sample sizes
+get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+ lambda = 0.95, iter = 100)
+
+# Unequal sample sizes
+get_details(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+ lambda = 0.95, iter = 100)
 }

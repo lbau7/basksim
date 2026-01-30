@@ -48,7 +48,7 @@ setup_mml <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' multiple historical studies for binary outcomes. Biometrical Journal, 61(5),
 #' 1201-1218.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+#' Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
 #' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
 #' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 #'
@@ -63,6 +63,7 @@ setup_mmlglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
     class = "mmlglobal"
   ))
 }
+
 
 #' Setup BHM Design Object
 #'
@@ -99,6 +100,7 @@ setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
     class = "bhm"
   )
 }
+
 
 #' Setup EXNEX Design Object
 #'
@@ -137,6 +139,7 @@ setup_exnex <- function(k, p0, basket_mean = NULL, basket_sd = 100,
     class = "exnex"
   )
 }
+
 
 #' Setup Fujikawa Design Object
 #'
@@ -177,7 +180,7 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' and overall heterogeneity between baskets. Both pairwise similarity and
 #' overall heterogeneity are assessed using the Jensen-Shannon divergence.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+#' @references Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
 #' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
 #' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 #'
@@ -204,7 +207,7 @@ setup_jsdglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' determined by the Kolmogorov-Smirnov test statistic between baskets (which
 #' is equivalent to the absolut difference in response rates).
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+#' @references Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
 #' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
 #' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 #'
@@ -220,7 +223,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Generalized Calibrated Power Prior Design Object
+#' Setup Global Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -232,7 +235,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' a function based on response rate differences that quantifies the
 #' overall heterogeneity.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+#' @references Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
 #' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
 #' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 #'
@@ -247,8 +250,6 @@ setup_cppglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
     class = "cppglobal"
   ))
 }
-
-
 
 #' Setup Limited Calibrated Power Prior Design Object
 #'
@@ -270,7 +271,7 @@ setup_cppglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' adaptive power prior for sequential clinical trials - Application to bridging
 #' studies. Statistical methods in medical research, 29(8), 2282–2294.
 #'
-#' @references. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+#' Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
 #' Design Based on Power Priors. Statistics in Biopharmaceutical Research,
 #' 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 #'

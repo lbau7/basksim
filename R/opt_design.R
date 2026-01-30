@@ -18,18 +18,39 @@
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #' scenarios <- get_scenarios(design, p1 = 0.5)
 #'
+#' ## Equal sample sizes
 #' # Without simulated data
-#' \donttest{opt_design(design, n = 20, alpha = 0.05, design_params =
-#'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
-#'   prec_digits = 3)}
+#' \donttest{
+#' opt_design(design, n = 20, alpha = 0.05, design_params =
+#'            list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'            prec_digits = 3)
+#' }
 #'
 #' # With simulated data
 #' scenario_list <- as.list(data.frame(scenarios))
 #' data_list <- lapply(scenario_list,
 #'   function(x) get_data(k = 3, n = 20, p = x, iter = 1000))
-#' \donttest{opt_design(design, n = 20, alpha = 0.05, design_params =
-#'   list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
-#'   prec_digits = 3, data = data_list)}
+#' \donttest{
+#' opt_design(design, n = 20, alpha = 0.05, design_params =
+#'            list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'            prec_digits = 3, data = data_list)
+#'
+#'
+#' ## Unequal sample sizes
+#' # Without simulated data
+#' opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
+#'            list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'            prec_digits = 3)
+#'
+#' # With simulated data
+#' scenario_list <- as.list(data.frame(scenarios))
+#' data_list <- lapply(scenario_list,
+#'                     function(x) get_data(k = 3, n = c(15, 20, 25),
+#'                                          p = x, iter = 1000))
+#' opt_design(design, n = c(15, 20, 25), alpha = 0.05, design_params =
+#'            list(epsilon = c(1, 2), tau = c(0, 0.5)), scenarios = scenarios,
+#'            prec_digits = 3, data = data_list)
+#' }
 opt_design <- function(design, n, alpha, design_params = list(), scenarios,
                        prec_digits, iter = 1000, data = NULL, ...) {
   check_data_list(data = data, scenarios = scenarios)
@@ -50,14 +71,14 @@ opt_design <- function(design, n, alpha, design_params = list(), scenarios,
   for (i in 1:lgrid) {
     params_loop <- lapply(as.list(grid), function(x) x[i])
     l <- do.call(adjust_lambda, args = list(design = design, n = n,
-                                            p1 = NULL, alpha = alpha, design_params = params_loop, iter = iter,
-                                            prec_digits = prec_digits, data = data[[null_scen]], ...))
+      p1 = NULL, alpha = alpha, design_params = params_loop, iter = iter,
+      prec_digits = prec_digits, data = data[[null_scen]], ...))
     lambdas[i] <- l$lambda
 
     for (j in 1:ncol(scenarios)) {
       ecd_res[i, j] <- do.call(ecd, args = c(design = list(design), n = list(n),
-                                             p1 = list(scenarios[, j]), lambda = l$lambda, params_loop,
-                                             iter = iter, data = list(data[[j]]), ...))
+        p1 = list(scenarios[, j]), lambda = l$lambda, params_loop,
+        iter = iter, data = list(data[[j]]), ...))
     }
     p()
   }

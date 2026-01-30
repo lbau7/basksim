@@ -31,7 +31,7 @@ is equivalent to the absolut difference in response rates).
 design_cpp <- setup_cpp(k = 3, p0 = 0.2)
 }
 \references{
-. Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
+Baumann, L., Sauer, L. D., & Kieser, M. (2025). A Basket Trial
 Design Based on Power Priors. Statistics in Biopharmaceutical Research,
 17(3), 446–456. https://doi.org/10.1080/19466315.2024.2402275
 }

@@ -16,8 +16,14 @@
 #'
 #' @examples
 #' design <- setup_cpp(k = 3, p0 = 0.2)
+#'
+#' # Equal sample sizes
 #' adjust_lambda(design = design, n = 20, alpha = 0.05,
 #'   design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
+#'
+#' # Unequal sample sizes
+#' adjust_lambda(design = design, n = c(15, 20, 25), alpha = 0.05,
+#'    design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
 adjust_lambda <- function(design, ...) {
   UseMethod("adjust_lambda", design)
 }
@@ -36,7 +42,7 @@ adjust_lambda <- function(design, ...) {
 #'
 #' @details It is recommended to use \code{data} and then use the same simulated
 #' data set for all further calculations. If \code{data = NULL} then
-#' new data is generated in each step of the algorithm, so \code{lambda} doesn't
+#' new data are generated in each step of the algorithm, so \code{lambda} doesn't
 #' necessarily protect the family wise error rate for different simulated data
 #' due to Monte Carlo simulation error.
 #'
@@ -49,7 +55,13 @@ adjust_lambda <- function(design, ...) {
 #' @examples
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
+#'
+#' # Equal sample sizes
 #' adjust_lambda(design = design, n = 20, alpha = 0.05,
+#'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
+#'
+#' # Unequal sample sizes
+#' adjust_lambda(design = design, n = c(15, 20, 25), alpha = 0.05,
 #'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
 adjust_lambda.default <- function(design, n, p1 = NULL, alpha = 0.05,
                           design_params = list(), iter = 1000, prec_digits = 3,
@@ -128,8 +140,17 @@ adjust_lambda.default <- function(design, n, p1 = NULL, alpha = 0.05,
 #'
 #' @examples
 #' design <- setup_exnex(k = 3, p0 = 0.2)
-#' \donttest{adjust_lambda(design = design, n = 15,
-#'   design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 5000)}
+#' \donttest{
+#' # Equal sample sizes
+#' adjust_lambda(design = design, n = 15,
+#'   design_params = list(tau_scale = 1, w = 0.5),
+#'   iter = 100, n_mcmc = 5000)
+#'
+#' # Unequal sample sizes
+#' adjust_lambda(design = design, n = c(15, 20, 25),
+#'   design_params = list(tau_scale = 1, w = 0.5),
+#'   iter = 100, n_mcmc = 5000)
+#'   }
 adjust_lambda.exnex <- function(design, n, p1 = NULL, alpha = 0.05,
                                 design_params = list(), iter = 1000,
                                 n_mcmc = 10000, prec_digits = 3, data = NULL,
@@ -195,8 +216,16 @@ adjust_lambda.exnex <- function(design, n, p1 = NULL, alpha = 0.05,
 #'
 #' @examples
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-#' \donttest{adjust_lambda(design = design, n = 15,
-#'   design_params = list(tau_scale = 1), iter = 100, n_mcmc = 5000)}
+#' \donttest{
+#' # Equal sample sizes
+#' adjust_lambda(design = design, n = 15, design_params = list(tau_scale = 1),
+#'   iter = 100, n_mcmc = 5000)
+#'
+#' # Unequal sample sizes
+#' adjust_lambda(design = design, n = c(15, 20, 25),
+#'   design_params = list(tau_scale = 1),
+#'   iter = 100, n_mcmc = 5000)
+#' }
 adjust_lambda.bhm <- function(design, n, p1 = NULL, alpha = 0.05,
                               design_params = list(), iter = 1000,
                               n_mcmc = 10000, prec_digits = 3, data = NULL,

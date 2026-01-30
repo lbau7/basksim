@@ -1,7 +1,7 @@
 Package: basksim
 Type: Package
 Title: Simulation-Based Calculation of Basket Trial Operating Characteristics
-Version: 2.0.0
+Version: 2.0.1
 Authors@R: c(
     person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", 
            role = c("aut", "cre"),
@@ -35,7 +35,8 @@ Imports:
     foreach,
     HDInterval,
 	  progressr,
-	  purrr
+	  purrr,
+	  stats
 Suggests:
     covr,
     testthat (>= 3.0.0),
