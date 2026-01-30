@@ -48,6 +48,7 @@ rejected, a 1 means, that the null hypothesis was rejected.
 Get Results for Simulation of a Basket Trial with the BHM Design
 }
 \examples{
+\donttest{
 design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 
 # Equal sample sizes
@@ -57,4 +58,5 @@ get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
 # Unequal sample sizes
 get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
   lambda = 0.95, tau_scale = 1, iter = 100)
+}
 }

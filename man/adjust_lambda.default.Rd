@@ -59,6 +59,7 @@ necessarily protect the family wise error rate for different simulated data
 due to Monte Carlo simulation error.
 }
 \examples{
+\donttest{
 # Example for a basket trial with Fujikawa's Design
 design <- setup_fujikawa(k = 3, p0 = 0.2)
 
@@ -69,4 +70,5 @@ adjust_lambda(design = design, n = 20, alpha = 0.05,
 # Unequal sample sizes
 adjust_lambda(design = design, n = c(15, 20, 25), alpha = 0.05,
   design_params = list(epsilon = 2, tau = 0), iter = 1000)
+}
 }

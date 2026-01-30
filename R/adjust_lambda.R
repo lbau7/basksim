@@ -15,6 +15,7 @@
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' design <- setup_cpp(k = 3, p0 = 0.2)
 #'
 #' # Equal sample sizes
@@ -24,6 +25,7 @@
 #' # Unequal sample sizes
 #' adjust_lambda(design = design, n = c(15, 20, 25), alpha = 0.05,
 #'    design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
+#' }
 adjust_lambda <- function(design, ...) {
   UseMethod("adjust_lambda", design)
 }
@@ -53,6 +55,7 @@ adjust_lambda <- function(design, ...) {
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' # Example for a basket trial with Fujikawa's Design
 #' design <- setup_fujikawa(k = 3, p0 = 0.2)
 #'
@@ -63,6 +66,7 @@ adjust_lambda <- function(design, ...) {
 #' # Unequal sample sizes
 #' adjust_lambda(design = design, n = c(15, 20, 25), alpha = 0.05,
 #'   design_params = list(epsilon = 2, tau = 0), iter = 1000)
+#' }
 adjust_lambda.default <- function(design, n, p1 = NULL, alpha = 0.05,
                           design_params = list(), iter = 1000, prec_digits = 3,
                           data = NULL, ...) {

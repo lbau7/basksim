@@ -27,6 +27,7 @@ in every iteration. For methods implemented in the \code{bhmbasket} package
 there are separate methods that are computationally more efficient.
 }
 \examples{
+\donttest{
 design <- setup_cpp(k = 3, p0 = 0.2)
 
 # Equal sample sizes
@@ -36,4 +37,5 @@ adjust_lambda(design = design, n = 20, alpha = 0.05,
 # Unequal sample sizes
 adjust_lambda(design = design, n = c(15, 20, 25), alpha = 0.05,
    design_params = list(tune_a = 1, tune_b = 1), iter = 1000)
+}
 }

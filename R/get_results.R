@@ -107,6 +107,7 @@ get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' @export
 #'
 #' @examples
+#' \donttest{
 #' design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 #'
 #' # Equal sample sizes
@@ -116,6 +117,7 @@ get_results.mmlglobal <- function(design, n, p1 = NULL, lambda, iter = 1000,
 #' # Unequal sample sizes
 #' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
 #'   lambda = 0.95, tau_scale = 1, iter = 100)
+#' }
 get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
                             iter = 1000, n_mcmc = 10000, data = NULL, ...) {
 
