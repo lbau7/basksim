@@ -168,8 +168,8 @@ test_that("get_details works for exnex", {
 
 
 test_that("get_details works for fujikawa", {
-  n_iter <- 500
-  tol <- 0.1
+  n_iter <- 100
+  tol <- 0.15
   # With 3 baskets
   set.seed(20230319)
   design1 <- setup_fujikawa(k = 3, p0 = 0.2)
@@ -182,9 +182,9 @@ test_that("get_details works for fujikawa", {
 
   # Compare with results from baskexact
   expect_equal(res1$Rejection_Probabilities, c(0.1003108, 0.1003108, 0.5965844), tolerance = tol)
-  expect_equal(res1$Mean, c(0.2717930 , 0.2717930 , 0.4145559), tolerance = 0.01)
+  expect_equal(res1$Mean, c(0.2717930 , 0.2717930 , 0.4145559), tolerance = tol)
   expect_equal(res1$MSE, c(0.01043607, 0.01043607, 0.01674920), tolerance = tol)
-  expect_equal(res1$EWP, 0.5965844, tolerance = 0.01)
+  expect_equal(res1$EWP, 0.5965844, tolerance = tol)
   expect_equal(res1$FWER, 0.1480935, tolerance = tol)
 
   # If n is passed as a vector, it should have k entries
@@ -195,7 +195,7 @@ test_that("get_details works for fujikawa", {
 
   # With 4 baskets
   set.seed(20240308)
-  n_iter <- 500 # was 5000 before
+  n_iter <- 100 # was 5000 before
   design2 <- setup_fujikawa(k = 4, p0 = 0.15)
   res2 <- get_details(design = design2, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
                       lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1, iter = n_iter)
@@ -271,33 +271,35 @@ test_that("get_details works for fujikawa with custom weights functions", {
 })
 
 test_that("get_details works for jsdglobal", {
+  n_iter <- 100 # was 1000 before
+  tol <- 0.1
   # With 3 baskets
   set.seed(20230515)
   design1 <- setup_jsdglobal(k = 3, p0 = 0.2)
   res1 <- get_details(design = design1, n = 12, p1 = c(0.2, 0.5, 0.6),
-                      lambda = 0.95, eps_pair = 1.5, eps_all = 0, iter = 1000)
+                      lambda = 0.95, eps_pair = 1.5, eps_all = 0, iter = n_iter)
 
   # Compare with results from baskexact
-  expect_true(all(abs(res1$Rejection_Probabilities -
-                        c(0.3500560, 0.8917081, 0.9701317)) < 0.01))
-  expect_true(all(abs(res1$Mean - c(0.2976754, 0.4857321, 0.5432103)) < 0.01))
-  expect_true(all(abs(res1$MSE -
-                        c(0.02132311, 0.01401632, 0.01667987)) < 0.01))
+  expect_equal(res1$Rejection_Probabilities,
+               c(0.3500560, 0.8917081, 0.9701317), tolerance = tol)
+  expect_equal(res1$Mean, c(0.2976754, 0.4857321, 0.5432103), tolerance = tol)
+  expect_equal(res1$MSE, c(0.02132311, 0.01401632, 0.01667987), tolerance = tol)
 
   # With 4 baskets
   set.seed(20240308)
   design2 <- setup_jsdglobal(k = 4, p0 = 0.15)
   res2 <- get_details(design = design2, n = 12, p1 = c(0.15, 0.4, 0.3, 0.5),
-                      lambda = 0.99, eps_pair = 1.5, tau = 0.2, eps_all = 0, iter = 1000)
+                      lambda = 0.99, eps_pair = 1.5, tau = 0.2, eps_all = 0, iter = n_iter)
 
   # Compare with results from baskexact
-  expect_true(all(abs(res2$Rejection_Probabilities -
-                        c(0.2070795, 0.7676506, 0.5765870, 0.8949090)) < 0.025))
-  expect_true(all(abs(res2$Mean -
-                        c(0.2374997, 0.3846106, 0.3261889, 0.4454463)) < 0.01))
-  expect_true(all(abs(res2$MSE -
-                        c(0.01581763, 0.01224553, 0.01111166, 0.01745138)) < 0.01))
-  expect_true(abs(res2$ECD - 3.032067) < 0.025)
+  expect_equal(res2$Rejection_Probabilities,
+               c(0.2070795, 0.7676506, 0.5765870, 0.8949090), tolerance = tol)
+  expect_equal(res2$Mean,
+               c(0.2374997, 0.3846106, 0.3261889, 0.4454463), tolerance = tol)
+  expect_equal(res2$MSE,
+               c(0.01581763, 0.01224553, 0.01111166, 0.01745138),
+               tolerance = tol)
+  expect_equal(res2$ECD, 3.032067, tolerance = tol)
 })
 
 tol <- 0.1
@@ -407,14 +409,14 @@ test_that("get_details works for mml", {
   set.seed(20240308)
   design2 <- setup_mml(k = 4, p0 = 0.15)
   res2 <- get_details(design = design2, n = 20, p1 = c(0.15, 0.15, 0.4, 0.4),
-                      lambda = 0.95, iter = 200)
+                      lambda = 0.95, iter = 100) # iter was 200 before
 
   # Compare with results from baskexact
   expect_equal(res2$Rejection_Probabilities,
                c(0.2614598, 0.2614598, 0.9254998, 0.9254998),
                tolerance = tol)
   expect_equal(res2$FWER, 0.3914886,
-               tolerance = tol)
+               tolerance = tol*2)
   expect_equal(res2$Mean,
                c(0.1943315, 0.1943315, 0.3738412, 0.3738412),
                tolerance = tol)

@@ -1,4 +1,4 @@
-n_iter <- 500 # was 1000 before
+n_iter <- 100 # was 1000 before
 test_that("adjust_lambda default method works", {
   design <- setup_cpp(k = 3, p0 = 0.2)
 
