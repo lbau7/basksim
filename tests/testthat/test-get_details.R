@@ -193,6 +193,7 @@ test_that("get_details works for fujikawa", {
   expect_error(get_details.fujikawa(design = design1, n = c(10,20,30,40), p1 = NULL,
                                     lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
 
+  skip_on_cran()
   # With 4 baskets
   set.seed(20240308)
   n_iter <- 100 # was 5000 before
@@ -285,6 +286,7 @@ test_that("get_details works for jsdglobal", {
   expect_equal(res1$Mean, c(0.2976754, 0.4857321, 0.5432103), tolerance = tol)
   expect_equal(res1$MSE, c(0.02132311, 0.01401632, 0.01667987), tolerance = tol)
 
+  skip_on_cran()
   # With 4 baskets
   set.seed(20240308)
   design2 <- setup_jsdglobal(k = 4, p0 = 0.15)
@@ -322,6 +324,7 @@ test_that("get_details works for cpp", {
   expect_equal(res1$MSE, c(0.008506501, 0.008506501, 0.018349713),
                tolerance = tol)
 
+  skip_on_cran()
   # With 4 baskets
   set.seed(20240308)
   design2 <- setup_cpp(k = 4, p0 = 0.15)
@@ -369,6 +372,7 @@ test_that("get_details works for cppglobal", {
                c(0.013143002, 0.009512997, 0.013149404),
                tolerance = tol)
 
+  skip_on_cran()
   # With 4 baskets
   set.seed(20240308)
   design2 <- setup_cppglobal(k = 4, p0 = 0.15)
@@ -405,6 +409,7 @@ test_that("get_details works for mml", {
   expect_equal(res1$ECD, 2.454338,
                tolerance = tol)
 
+  skip_on_cran()
   # With 4 baskets
   set.seed(20240308)
   design2 <- setup_mml(k = 4, p0 = 0.15)
