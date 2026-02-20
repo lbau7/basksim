@@ -6,7 +6,7 @@
 \alias{basksim-package}
 \title{basksim: Simulation-Based Calculation of Basket Trial Operating Characteristics}
 \description{
-Provides a unified syntax for the simulation-based comparison of different single-stage basket trial designs with a binary endpoint and equal sample sizes in all baskets. Methods include the designs by Baumann et al. (2025) \doi{10.1080/19466315.2024.2402275}, Schmitt and Baumann (2025) \doi{10.1080/19466315.2025.2486231}, Fujikawa et al. (2020) \doi{10.1002/bimj.201800404}, Berry et al. (2020) \doi{10.1177/1740774513497539}, and Neuenschwander et al. (2016) \doi{10.1002/pst.1730}. For the latter two designs, the functions are mostly wrappers for functions provided by the package 'bhmbasket.
+Provides a unified syntax for the simulation-based comparison of different single-stage basket trial designs with a binary endpoint and equal sample sizes in all baskets. Methods include the designs by Baumann et al. (2025) \doi{10.1080/19466315.2024.2402275}, Schmitt and Baumann (2025) \doi{10.1080/19466315.2025.2486231}, Fujikawa et al. (2020) \doi{10.1002/bimj.201800404}, Berry et al. (2020) \doi{10.1177/1740774513497539}, and Neuenschwander et al. (2016) \doi{10.1002/pst.1730}. For the latter two designs, the functions are mostly wrappers for functions provided by the package 'bhmbasket'.
 }
 \seealso{
 Useful links:

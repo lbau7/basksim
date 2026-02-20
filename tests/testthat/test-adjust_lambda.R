@@ -12,6 +12,7 @@ test_that("adjust_lambda default method works", {
   expect_lte(res1$toer, 0.05)
   expect_equal(res1$toer, toer1, tolerance = 0.5)
 
+  skip_on_cran()
   set.seed(123)
   res2 <- adjust_lambda(design = design, n = 12, alpha = 0.05,
     design_params = list(tune_a = 2, tune_b = 2), iter = n_iter)

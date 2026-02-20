@@ -16,6 +16,7 @@ test_that("opt_design works", {
   expect_equal(mean(as.numeric(res1[1, 5:8])), unname(res1[1, 9]))
   expect_true(abs(res1[1, 6] - ecdres1) < 0.1)
 
+  skip_on_cran()
   ## Optimize MML global
   design2 <- setup_mmlglobal(k = 3, p0 = 0.2)
   res2 <- opt_design(design = design2, n = 10, alpha = 0.05,
@@ -66,25 +67,3 @@ test_that("opt_design works", {
   expect_equal(res3[1, 4], ecdres)
 })
 
-
-
-test_that("CPP and LCPP work",{
-  design_cpp <- setup_cpp(k = 3, p0 = 0.15, shape1 = 1, shape2 = 1)
-  design_cpplim <- setup_cpplim(k = 3, p0 = 0.15, shape1 = 1, shape2 = 1)
-
-  n <- c(10,20,30)
-  p <- c(rep(0.35,3))
-
-  set.seed(12042024)
-  data <- get_data(k = 3, n = n, p = p, iter = 100)
-
-  res_cpp <- get_details(design = design_cpp, n = n, p1 = p, lambda = 0.95,
-                         tune_a = 2, tune_b = 2, data = data, iter = 100)
-  res_cpplim <- get_details(design = design_cpplim, n = n, p1 = p, lambda = 0.95,
-                            tune_a = 2, tune_b = 2, data = data, iter = 100)
-
-  # Since basket 3 has the largest sample size, alpha_o = 1 and both models should
-  # have the same power in the largest basket.
-  expect_equal(res_cpp$Rejection_Probabilities[3], res_cpplim$Rejection_Probabilities[3])
-
-})

@@ -1,32 +1,43 @@
 test_that("get_details works for mmlglobal", {
   design <- setup_mmlglobal(k = 3, p0 = 0.2)
   set.seed(20230222)
+
+  # Posterior means are close to p
+  p1 <- c(0.5, 0.5, 0.5)
+  res3 <- get_details(design = design, n = 20, p1 = p1,
+                      lambda = 0.95, pmp0 = 1, iter = 100)
+  expect_equal(res3$Mean, p1, tolerance = 0.01)
+
+  skip_on_cran()
   res1 <- get_details(design = design, n = 20, p1 = c(0.2, 0.4, 0.4),
                       lambda = 0.95, pmp0 = 1, iter = 100)
 
   res2 <- get_details(design = design, n = 20, p1 = c(0.3, 0.5, 0.5),
                       lambda = 0.95, pmp0 = 1, iter = 100)
-  p1 <- c(0.5, 0.5, 0.5)
-  res3 <- get_details(design = design, n = 20, p1 = p1,
-                      lambda = 0.95, pmp0 = 1, iter = 100)
 
   # Rejection probabilities are higher when p is higher
   expect_true(all(res2$Rejection_Probabilities > res1$Rejection_Probabilities))
 
-  # Posterior means are close to p
-  expect_equal(res3$Mean, p1, tolerance = 0.01)
+
 })
 
 test_that("get_details works for bhm", {
   set.seed(1)
+  design <- setup_bhm(k = 3, p0 = 0.15, p_target = 0.5,
+                      mu_mean = -1.7346, mu_sd = 100)
+
+  # Works without supplied data
+  res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
+                      lambda = 0.9, tau_scale = 0.75, iter = 100)
+  expect_equal(length(res3), 7)
+  expect_equal(res3$Rejection_Probabilities[1], res3$FWER)
+
+  skip_on_cran()
   scenarios <- bhmbasket::simulateScenarios(
     n_subjects_list = list(rep(10, 3)),
     response_rates_list = list(c(0.15, 0.5, 0.5)),
     n_trials = 100
   )
-
-  design <- setup_bhm(k = 3, p0 = 0.15, p_target = 0.5,
-    mu_mean = -1.7346, mu_sd = 100)
 
   set.seed(20230515)
   res1 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
@@ -67,12 +78,6 @@ test_that("get_details works for bhm", {
   expect_equal(res1$MSE, unname(estim$berry[, 7]))
   expect_equal(res1$Lower_CL, unname(estim$berry[, 3]))
   expect_equal(res1$Upper_CL, unname(estim$berry[, 5]))
-
-  # Works without supplied data
-  res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
-    lambda = 0.9, tau_scale = 0.75, iter = 100)
-  expect_equal(length(res3), 7)
-  expect_equal(res3$Rejection_Probabilities[1], res3$FWER)
 
   # Error works
   data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
@@ -142,6 +147,8 @@ test_that("get_details works for exnex", {
   expect_equal(res1$Lower_CL, unname(estim$exnex[, 3]))
   expect_equal(res1$Upper_CL, unname(estim$exnex[, 5]))
 
+
+  skip_on_cran()
   # Works without supplied data
   res3 <- get_details(design = design, n = 10, p1 = c(0.15, 0.5, 0.5),
     lambda = 0.9, tau_scale = 0.75, w = 0.5, iter = 100)
@@ -224,25 +231,26 @@ test_that("get_details works for fujikawa", {
 
 test_that("switching off parallelization does not change the results of
           get_details.fujikawa()", {
-            # With 4 baskets
-            design <- setup_fujikawa(k = 4, p0 = 0.15)
-            set.seed(20240308)
-            res1 <- get_details(design = design, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
-                                lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1,
-                                iter = 100, use_future = TRUE)
-            set.seed(20240308)
-            res2 <- get_details(design = design, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
-                                lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1,
-                                iter = 100, use_future = FALSE)
+    skip_on_cran()
+    # With 4 baskets
+    design <- setup_fujikawa(k = 4, p0 = 0.15)
+    set.seed(20240308)
+    res1 <- get_details(design = design, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
+                        lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1,
+                        iter = 100, use_future = TRUE)
+    set.seed(20240308)
+    res2 <- get_details(design = design, n = 15, p1 = c(0.15, 0.3, 0.5, 0.15),
+                        lambda = 0.95, epsilon = 2, logbase = 2, tau = 0.1,
+                        iter = 100, use_future = FALSE)
 
-            # Compare with results from baskexact
-            expect_equal(res1$Rejection_Probabilities, res2$Rejection_Probabilities)
-            expect_equal(res1$FWER, res2$FWER)
-            expect_equal(res1$EWP, res2$EWP)
-            expect_equal(res1$Mean, res2$Mean)
-            expect_equal(res1$MSE, res2$MSE)
-            expect_equal(res1$ECD, res2$ECD)
-          })
+    # Compare with results from baskexact
+    expect_equal(res1$Rejection_Probabilities, res2$Rejection_Probabilities)
+    expect_equal(res1$FWER, res2$FWER)
+    expect_equal(res1$EWP, res2$EWP)
+    expect_equal(res1$Mean, res2$Mean)
+    expect_equal(res1$MSE, res2$MSE)
+    expect_equal(res1$ECD, res2$ECD)
+})
 
 test_that("get_details works for fujikawa with custom weights functions", {
   # With 3 baskets
@@ -445,6 +453,11 @@ test_that("get_details works for cpplim", {
   res_cpplim <- get_details.cpplim(design = design_cpplim, n = n, p1 = p1,
                                    lambda = lambda, tune_a = 1, tune_b = 1,
                                    iter = 100, data = data)
+  expect_gte(res_cpplim$FWER, 0)
+  expect_lte(res_cpplim$FWER, 1)
+
+  # Compare
+  skip_on_cran()
   res_cpp <- get_details.cpp(design = design_cpp, n = n, p1 = p1, lambda = lambda,
                              tune_a = 1, tune_b = 1, iter = 100, data = data)
 
@@ -466,6 +479,28 @@ test_that("get_details works for cpplim", {
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
   expect_error(get_details.cpplim(design = design_cpplim, n = c(10,20,30,40), p1 = NULL,
                                lambda = 0.95, pmp0 = 1, data = NULL, iter = 110))
+})
+
+test_that("CPP and LCPP work",{
+  # Do we need this at all? Looks very similar to the tests above.
+  skip_on_cran()
+  design_cpp <- setup_cpp(k = 3, p0 = 0.15, shape1 = 1, shape2 = 1)
+  design_cpplim <- setup_cpplim(k = 3, p0 = 0.15, shape1 = 1, shape2 = 1)
+
+  n <- c(10,20,30)
+  p <- c(rep(0.35,3))
+
+  set.seed(12042024)
+  data <- get_data(k = 3, n = n, p = p, iter = 100)
+
+  res_cpp <- get_details(design = design_cpp, n = n, p1 = p, lambda = 0.95,
+                         tune_a = 2, tune_b = 2, data = data, iter = 100)
+  res_cpplim <- get_details(design = design_cpplim, n = n, p1 = p, lambda = 0.95,
+                            tune_a = 2, tune_b = 2, data = data, iter = 100)
+
+  # Since basket 3 has the largest sample size, alpha_o = 1 and both models should
+  # have the same power in the largest basket.
+  expect_equal(res_cpp$Rejection_Probabilities[3], res_cpplim$Rejection_Probabilities[3])
 })
 
 test_that("get_details works for app", {
