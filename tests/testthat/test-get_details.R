@@ -74,10 +74,10 @@ test_that("get_details works for bhm", {
 
   # Results are equal with get_details and bhmbasket
   expect_equal(res1$Rejection_Probabilities, unname(unlist(res2))[-1])
-  expect_equal(res1$Mean, unname(estim$berry[, 1]))
-  expect_equal(res1$MSE, unname(estim$berry[, 7]))
-  expect_equal(res1$Lower_CL, unname(estim$berry[, 3]))
-  expect_equal(res1$Upper_CL, unname(estim$berry[, 5]))
+  expect_equal(res1$Mean, unname(estim$berry$scenario_1[, 1]))
+  expect_equal(res1$MSE, unname(estim$berry$scenario_1[, 7]))
+  expect_equal(res1$Lower_CL, unname(estim$berry$scenario_1[, 3]))
+  expect_equal(res1$Upper_CL, unname(estim$berry$scenario_1[, 5]))
 
   # Error works
   data <- get_data(k = 3, n = 20, p = 0.5, iter = 100)
@@ -142,10 +142,10 @@ test_that("get_details works for exnex", {
 
   # Results are equal with get_details and bhmbasket
   expect_equal(res1$Rejection_Probabilities, unname(unlist(res2))[-1])
-  expect_equal(res1$Mean, unname(estim$exnex[, 1]))
-  expect_equal(res1$MSE, unname(estim$exnex[, 7]))
-  expect_equal(res1$Lower_CL, unname(estim$exnex[, 3]))
-  expect_equal(res1$Upper_CL, unname(estim$exnex[, 5]))
+  expect_equal(res1$Mean, unname(estim$exnex$scenario_1[, 1]))
+  expect_equal(res1$MSE, unname(estim$exnex$scenario_1[, 7]))
+  expect_equal(res1$Lower_CL, unname(estim$exnex$scenario_1[, 3]))
+  expect_equal(res1$Upper_CL, unname(estim$exnex$scenario_1[, 5]))
 
 
   skip_on_cran()

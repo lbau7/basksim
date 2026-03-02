@@ -185,15 +185,14 @@ get_details.bhm <- function(design, n, p1 = NULL, lambda, level = 0.95,
   )$scenario_1$decisions_list$berry[, -1]
 
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
-    alpha_level = (1 - level))$berry
-
+    alpha_level = (1 - level))$berry$scenario_1
   list(
     Rejection_Probabilities = unname(colMeans(res)),
     FWER = mean(apply(res, 1, function(x) any(x[targ] == 1))),
-    Mean = unname(est[, 1]),
-    MSE = unname(est[, 7]),
-    Lower_CL = unname(est[, 3]),
-    Upper_CL = unname(est[, 5]),
+    Mean = unname(est[, "Mean"]),
+    MSE = unname(est[, "MSE"]),
+    Lower_CL = unname(est[, "2.5%"]),
+    Upper_CL = unname(est[, "97.5%"]),
     ECD = mean(rowSums(t(apply(res, 1, function(x) x != targ))))
   )
 }
@@ -264,15 +263,15 @@ get_details.exnex <- function(design, n, p1 = NULL, lambda, level = 0.95,
   )$scenario_1$decisions_list$exnex[, -1]
 
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
-    alpha_level = (1 - level))$exnex
+    alpha_level = (1 - level))$exnex$scenario_1
 
   list(
     Rejection_Probabilities = unname(colMeans(res)),
     FWER = mean(apply(res, 1, function(x) any(x[targ] == 1))),
-    Mean = unname(est[, 1]),
-    MSE = unname(est[, 7]),
-    Lower_CL = unname(est[, 3]),
-    Upper_CL = unname(est[, 5]),
+    Mean = unname(est[, "Mean"]),
+    MSE = unname(est[, "MSE"]),
+    Lower_CL = unname(est[, "2.5%"]),
+    Upper_CL = unname(est[, "97.5%"]),
     ECD = mean(rowSums(t(apply(res, 1, function(x) x != targ))))
   )
 }

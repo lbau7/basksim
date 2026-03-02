@@ -75,9 +75,8 @@ get_evaluation.bhm <- function(design, n, r, lambda, level = 0.95,
 
   est <- bhmbasket::getEstimates(analyses, point_estimator = "mean",
                                  alpha_level = (1 - level))$berry
-
   list(
-    Estimates = unname(est[, 1])
+    Estimates = unname(est$scenario_1[,"Mean"])
   )
 }
 
@@ -136,7 +135,7 @@ get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
                                  alpha_level = (1 - level))$exnex
 
   list(
-    Estimates = unname(est[, 1])
+    Estimates = unname(est$scenario_1[,"Mean"])
   )
 }
 

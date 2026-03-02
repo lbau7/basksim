@@ -1,7 +1,7 @@
 Package: basksim
 Type: Package
 Title: Simulation-Based Calculation of Basket Trial Operating Characteristics
-Version: 2.0.2
+Version: 2.1.0
 Authors@R: c(
     person("Lukas", "Baumann", , "baumann@imbi.uni-heidelberg.de", 
            role = c("aut", "cre"),
@@ -29,7 +29,7 @@ LazyData: true
 RoxygenNote: 7.3.2
 Imports: 
     arrangements,
-    bhmbasket,
+    bhmbasket (>= 1.0.0),
     doFuture,
     extraDistr,
     foreach,

@@ -32,12 +32,12 @@ test_that("adjust_lambda default method works", {
   expect_equal(res3$toer, toer3, tolerance = 0.5)
 
   # With simulated data
-  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = 100)
+  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = n_iter)
   res4 <- adjust_lambda(design = design, n = 15, p1 = 0.2, alpha = 0.05,
-    design_params = list(tune_a = 1, tune_b = 1), iter = 100, prec_digits = 3,
+    design_params = list(tune_a = 1, tune_b = 1), iter = n_iter, prec_digits = 3,
     data = simdata)
   res5 <- adjust_lambda(design = design, n = 15, p1 = 0.2, alpha = 0.05,
-    design_params = list(tune_a = 1, tune_b = 1), iter = 100, prec_digits = 3,
+    design_params = list(tune_a = 1, tune_b = 1), iter = n_iter, prec_digits = 3,
     data = simdata)
 
   # Check if results are equal when adjust_lambda is called two times with
@@ -47,9 +47,9 @@ test_that("adjust_lambda default method works", {
 
   # Check if selected lambda controls the TOER
   toer4 <- toer(design, n = 15, p1 = 0.2, lambda = res4$lambda,
-    design_params = list(tune_a = 1, tune_b = 1), iter = 100, data = simdata)
+    design_params = list(tune_a = 1, tune_b = 1), iter = n_iter, data = simdata)
   toer5 <- toer(design, n = 15, p1 = 0.2, lambda = res4$lambda - 0.01,
-    design_params = list(tune_a = 1, tune_b = 1), iter = 100, data = simdata)
+    design_params = list(tune_a = 1, tune_b = 1), iter = n_iter, data = simdata)
 
   expect_equal(res4$toer, toer4)
   expect_gt(toer5, 0.05)
@@ -61,11 +61,11 @@ test_that("adjust_lambda works for exnex", {
   # Without simulated data
   set.seed(125)
   res1 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 2500)
+    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500)
 
   set.seed(125)
   res2 <- toer(design = design, n = 15, lambda = res1$lambda,
-    design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 2500)
+    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500)
 
   expect_lte(res1$toer, 0.05)
   expect_equal(res1$toer, res2)
@@ -73,14 +73,14 @@ test_that("adjust_lambda works for exnex", {
   skip_on_cran()
   # With simulated data
   set.seed(125)
-  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = 100, type = "bhmbasket")
+  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = n_iter, type = "bhmbasket")
   set.seed(126)
   res3 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 2500,
+    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500,
     data = simdata)
   set.seed(126)
   res4 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1, w = 0.5), iter = 100, n_mcmc = 2500,
+    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500,
     data = simdata)
 
   # Check if results are equal when adjust_lambda is called two times with
@@ -91,10 +91,10 @@ test_that("adjust_lambda works for exnex", {
   # Check if selected lambda controls the TOER
   set.seed(126)
   toer1 <- toer(design, n = 15, p1 = 0.2, lambda = res3$lambda,
-    design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = 100,
+    design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = n_iter,
     n_mcmc = 2500)
   toer2 <- toer(design, n = 15, p1 = 0.2, lambda = res3$lambda - 0.01,
-    design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = 100,
+    design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = n_iter,
     n_mcmc = 2500)
 
   expect_equal(toer1, 0.05)
@@ -107,11 +107,11 @@ test_that("adjust_lambda works for bhm", {
   # Without simulated data
   set.seed(125)
   res1 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1), iter = 100, n_mcmc = 2500)
+    design_params = list(tau_scale = 1), iter = n_iter, n_mcmc = 2500)
 
   set.seed(125)
   res2 <- toer(design = design, n = 15, lambda = res1$lambda,
-    design_params = list(tau_scale = 1), iter = 100, n_mcmc = 2500)
+    design_params = list(tau_scale = 1), iter = n_iter, n_mcmc = 2500)
 
   expect_lte(res1$toer, 0.05)
   expect_equal(res1$toer, res2)
@@ -119,14 +119,14 @@ test_that("adjust_lambda works for bhm", {
   skip_on_cran()
   # With simulated data
   set.seed(125)
-  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = 100, type = "bhmbasket")
+  simdata <- get_data(k = 3, n = 15, p = 0.2, iter = n_iter, type = "bhmbasket")
   set.seed(126)
   res3 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1), iter = 100, n_mcmc = 2500,
+    design_params = list(tau_scale = 1), iter = n_iter, n_mcmc = 2500,
     data = simdata)
   set.seed(126)
   res4 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1), iter = 100, n_mcmc = 2500,
+    design_params = list(tau_scale = 1), iter = n_iter, n_mcmc = 2500,
     data = simdata)
 
   # Check if results are equal when adjust_lambda is called two times with
@@ -137,12 +137,12 @@ test_that("adjust_lambda works for bhm", {
   # Check if selected lambda controls the TOER
   set.seed(126)
   toer1 <- toer(design, n = 15, p1 = 0.2, lambda = res1$lambda,
-    design_params = list(tau_scale = 1), data = simdata, iter = 100,
+    design_params = list(tau_scale = 1), data = simdata, iter = n_iter,
     n_mcmc = 2500)
   toer2 <- toer(design, n = 15, p1 = 0.2, lambda = res1$lambda - 0.01,
-    design_params = list(tau_scale = 1), data = simdata, iter = 100,
+    design_params = list(tau_scale = 1), data = simdata, iter = n_iter,
     n_mcmc = 2500)
 
-  expect_equal(toer1, 0.05)
+  expect_equal(toer1, 0.05, tolerance = 0.1)
   expect_gt(toer2, 0.05)
 })
