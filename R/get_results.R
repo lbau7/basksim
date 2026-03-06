@@ -248,9 +248,6 @@ get_results.fujikawa <- function(design, n, p1 = NULL, lambda, epsilon, tau,
 
   p1 <- check_p1(design = design, p1 = p1, data = data)
   check_params_differentn(design = design, n = n, lambda = lambda, iter = iter)
-
-  weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
-    tau = tau, logbase = logbase)
   data <- check_data_matrix(data = data, design = design, n = n, p = p1,
     iter = iter)
   weights <- get_weights_jsd(design = design, n = n, epsilon = epsilon,
