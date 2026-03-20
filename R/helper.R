@@ -1,5 +1,5 @@
-# Check function for designs based on the beta-binomial distribution
-validate_betabin <- function(x) {
+# Check function for parameters k and n
+validate_basics <- function(x) {
   if ((x$k %% 1) != 0) {
     stop("k must be an integer")
   }
@@ -9,6 +9,12 @@ validate_betabin <- function(x) {
   if (x$p0 <= 0 | x$p0 >= 1) {
     stop("p0 must be between 0 and 1")
   }
+  x
+}
+
+# Check function for designs based on the beta-binomial distribution
+validate_betabin <- function(x) {
+  validate_basics(x)
   if (x$shape1 <= 0 | x$shape2 <= 0) {
     stop("shape1 and shape2 must be greater than 0")
   }
@@ -60,7 +66,31 @@ check_p1 <- function(design, p1, data) {
   p1
 }
 
+check_params_differentn_frequentist <- function(design, n, alpha) {
+  check_differentn(design, n)
+  if (alpha <= 0 | alpha >= 1) {
+    stop(paste0("alpha must be between 0 and 1. ", "alpha is ", alpha, "."))
+  }
+}
+
 check_params_differentn <- function(design, n, lambda, iter) {
+  check_differentn(design, n)
+  check_lambda(lambda)
+  check_iter(iter)
+}
+
+check_params <- function(n, lambda, iter) {
+  if (length(n) != 1) {
+    stop(paste0("n must have length 1. The current length is ", length(n), "."))
+  }
+  if ((n <= 0) | (n %% 1 != 0)) {
+    stop(paste0("n must be a positive integer. ", "n is ", n, "."))
+  }
+  check_lambda(lambda)
+  check_iter(iter)
+}
+
+check_differentn <- function(design, n) {
   # n must be passed in the correct form
   if ((length(n) < design$k & length(n) != 1) | length(n) > design$k) {
     stop("n must either have length 1 or k")
@@ -73,23 +103,15 @@ check_params_differentn <- function(design, n, lambda, iter) {
       ")."
     ))
   }
-  check_lambda_iter(lambda, iter)
 }
 
-check_params <- function(n, lambda, iter) {
-  if (length(n) != 1) {
-    stop(paste0("n must have length 1. The current length is ", length(n), "."))
-  }
-  if ((n <= 0) | (n %% 1 != 0)) {
-    stop(paste0("n must be a positive integer. ", "n is ", n, "."))
-  }
-  check_lambda_iter(lambda, iter)
-}
-
-check_lambda_iter <- function(lambda, iter) {
+check_lambda <- function(lambda) {
   if (lambda <= 0 | lambda >= 1) {
     stop(paste0("lambda must be between 0 and 1. ", "lambda is ", lambda, "."))
   }
+}
+
+check_iter <- function(iter) {
   if ((iter <= 0) | (iter %% 1 != 0)) {
     stop(paste0("iter must be a positive integer. ", "iter is ", iter, "."))
   }

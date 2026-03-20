@@ -327,3 +327,30 @@ setup_app <- function(k, p0, shape1 = 1, shape2 = 1) {
     class = "app"
   ))
 }
+
+
+#' Set Up Frequentist Binomial Design Object
+#'
+#' @template k
+#' @template p0
+#' @template pool
+#'
+#' @details The class \code{binomial} implements a basket trial
+#' design, in which each null hypothesis is tested using the
+#' frequentist binomial test without multiplicity correction. All baskets are
+#' either tested separately (the default) or pooled.
+#'
+#' @return An S3 object of class \code{binomial}
+#' @export
+#'
+#' @examples
+#' design_binomial <- setup_binomial(k = 3, p0 = 0.2)
+setup_binomial <- function(k, p0, pool = FALSE) {
+  if (!is.logical(pool)) {
+    stop("pool must be boolean.")
+  }
+  validate_basics(structure(
+    list(k = k, p0 = p0, pool = pool),
+    class = "binomial"
+  ))
+}

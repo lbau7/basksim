@@ -916,3 +916,78 @@ get_details.app <- function(
     Upper_CL = colMeans(res[[4]])
   )
 }
+
+#' Get Details of a Basket Trial with the Frequentist Binomial Design
+#'
+#' This basic frequentist design conducts a separate binomial test for each
+#' basket. All tests are one-sided, and the alternative is greater than the
+#' null hypothesis. These details are calculated exactly, not simulated.
+#'
+#' @template design_binomial
+#' @template n
+#' @template p1
+#' @template alpha
+#' @template dotdotdot
+#'
+#' @return A list containing the rejection probabilities, critical values
+#' and expected number of correct decisions.
+#' @export
+#'
+#' @examples
+#' design <- setup_binomial(k = 3, p0 = 0.2)
+#' p1 <- c(0.2, 0.5, 0.5)
+#' get_details(design = design, n = 20, p1 = p1)
+#' design_pool <- setup_binomial(k = 3, p0 = 0.2)
+#' get_details(design = design_pool, n = 20, p1 = p1)
+get_details.binomial <- function(
+  design,
+  n,
+  p1 = NULL,
+  alpha = 0.025,
+  ...
+) {
+  p1 <- check_p1(design = design, p1 = p1, data = NULL)
+  check_params_differentn_frequentist(
+    design = design,
+    n = n,
+    alpha = alpha
+  )
+  if (length(n) == 1) {
+    n <- c(rep(n, design$k))
+  }
+  if (design$pool) {
+    stop("The pool design is not yet implemented.")
+  } else {
+    Critical_Values <- qbinom(
+      p = alpha,
+      size = n,
+      prob = design$p0,
+      lower.tail = F
+    )
+    Rejection_Probabilities <- mapply(
+      FUN = function(q, n, p1) {
+        pbinom(
+          q = q,
+          size = n,
+          prob = p1,
+          lower.tail = F
+        )
+      },
+      q = Critical_Values,
+      n = n,
+      p1 = p1
+    )
+
+    targ <- design$p0 == p1
+
+    res_list <- list(
+      Rejection_Probabilities = Rejection_Probabilities,
+      Critical_Values = Critical_Values,
+      FWER = 1 - prod(1 - Rejection_Probabilities[targ]),
+      EWP = 1 - prod(1 - Rejection_Probabilities[!targ]),
+      ECD = sum(1 - Rejection_Probabilities[targ]) +
+        sum(Rejection_Probabilities[!targ])
+    )
+  }
+  return(res_list)
+}
