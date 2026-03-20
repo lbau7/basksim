@@ -93,8 +93,10 @@ setup_mmlglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @examples
 #' design_bhm <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
-  if (is.null(mu_mean)) mu_mean <- bhmbasket::logit(p0) -
+  if (is.null(mu_mean)) {
+    mu_mean <- bhmbasket::logit(p0) -
       bhmbasket::logit(p_target)
+  }
   structure(
     list(k = k, p0 = p0, p_target = p_target, mu_mean = mu_mean, mu_sd = mu_sd),
     class = "bhm"
@@ -129,13 +131,29 @@ setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
 #'
 #' @examples
 #' design_exnex <- setup_exnex(k = 3, p0 = 0.2)
-setup_exnex <- function(k, p0, basket_mean = NULL, basket_sd = 100,
-                        mu_mean = NULL, mu_sd = 100) {
-  if (is.null(basket_mean)) basket_mean <- bhmbasket::logit(p0)
-  if (is.null(mu_mean)) mu_mean <- bhmbasket::logit(p0)
+setup_exnex <- function(
+  k,
+  p0,
+  basket_mean = NULL,
+  basket_sd = 100,
+  mu_mean = NULL,
+  mu_sd = 100
+) {
+  if (is.null(basket_mean)) {
+    basket_mean <- bhmbasket::logit(p0)
+  }
+  if (is.null(mu_mean)) {
+    mu_mean <- bhmbasket::logit(p0)
+  }
   structure(
-    list(k = k, p0 = p0, basket_mean = basket_mean, basket_sd = basket_sd,
-      mu_mean = mu_mean, mu_sd = mu_sd),
+    list(
+      k = k,
+      p0 = p0,
+      basket_mean = basket_mean,
+      basket_sd = basket_sd,
+      mu_mean = mu_mean,
+      mu_sd = mu_sd
+    ),
     class = "exnex"
   )
 }

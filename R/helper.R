@@ -17,8 +17,7 @@ validate_betabin <- function(x) {
 
 # Calculate Posterior probabilities of a Beta Distribution
 post_beta <- function(shape, p0) {
-  stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],
-    lower.tail = FALSE)
+  stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ], lower.tail = FALSE)
 }
 
 cfun1 <- function(x, y) {
@@ -49,7 +48,9 @@ check_scenarios <- function(scenarios, design) {
 }
 
 check_p1 <- function(design, p1, data) {
-  if (is.null(p1) & is.null(data)) p1 <- rep(design$p0, design$k)
+  if (is.null(p1) & is.null(data)) {
+    p1 <- rep(design$p0, design$k)
+  }
   if (any(p1 < design$p0)) {
     stop("all p1 must be greater than or equal to p0")
   }
@@ -61,33 +62,39 @@ check_p1 <- function(design, p1, data) {
 
 check_params_differentn <- function(design, n, lambda, iter) {
   # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+  if ((length(n) < design$k & length(n) != 1) | length(n) > design$k) {
     stop("n must either have length 1 or k")
   }
   if (any((n <= 0)) | any((n %% 1 != 0))) {
-    stop(paste0("n must be a vector of positive integers. ",
-                "n is c(", do.call(paste, c(as.list(n),
-                                          sep = ", ")), ")."))
+    stop(paste0(
+      "n must be a vector of positive integers. ",
+      "n is c(",
+      do.call(paste, c(as.list(n), sep = ", ")),
+      ")."
+    ))
   }
   check_lambda_iter(lambda, iter)
 }
 
 check_params <- function(n, lambda, iter) {
-  if (length(n) != 1) stop(paste0("n must have length 1. The current length is ",
-                                 length(n), "."))
-  if ((n <= 0) | (n %% 1 != 0)) stop(paste0("n must be a positive integer. ",
-                                           "n is ", n, "."))
+  if (length(n) != 1) {
+    stop(paste0("n must have length 1. The current length is ", length(n), "."))
+  }
+  if ((n <= 0) | (n %% 1 != 0)) {
+    stop(paste0("n must be a positive integer. ", "n is ", n, "."))
+  }
   check_lambda_iter(lambda, iter)
 }
 
-check_lambda_iter <- function(lambda, iter){
-  if (lambda <= 0 | lambda >= 1) stop(paste0("lambda must be between 0 and 1. ",
-                                             "lambda is ", lambda, "."))
-  if ((iter <= 0) | (iter %% 1 != 0)) stop(paste0("iter must be a positive integer. ",
-                                                  "iter is ", iter, "."))
+check_lambda_iter <- function(lambda, iter) {
+  if (lambda <= 0 | lambda >= 1) {
+    stop(paste0("lambda must be between 0 and 1. ", "lambda is ", lambda, "."))
+  }
+  if ((iter <= 0) | (iter %% 1 != 0)) {
+    stop(paste0("iter must be a positive integer. ", "iter is ", iter, "."))
+  }
 }
 
-mcse_rate <- function(rate, iter){
-  return(sqrt(rate *  (1 - rate) /  iter))
+mcse_rate <- function(rate, iter) {
+  return(sqrt(rate * (1 - rate) / iter))
 }
-
