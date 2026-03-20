@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_exnex}
 \alias{setup_exnex}
-\title{Setup EXNEX Design Object}
+\title{Set Up EXNEX Design Object}
 \usage{
 setup_exnex(
   k,
@@ -34,7 +34,7 @@ distribution for the mean of the thetas (EX part).}
 An S3 object of class \code{exnex}
 }
 \description{
-Setup EXNEX Design Object
+Set Up EXNEX Design Object
 }
 \details{
 The class \code{exnex} implements the EXNEX model proposed by

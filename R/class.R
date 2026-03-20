@@ -1,4 +1,4 @@
-#' Setup mml Design Object
+#' Set Up mml Design Object
 #'
 #' Creates an object of class \code{mml}.
 #'
@@ -32,7 +32,7 @@ setup_mml <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup mmlglobal Design Object
+#' Set Up mmlglobal Design Object
 #'
 #' Creates an object of class \code{mmlglobal}.
 #'
@@ -65,7 +65,7 @@ setup_mmlglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 }
 
 
-#' Setup BHM Design Object
+#' Set Up BHM Design Object
 #'
 #' @template k
 #' @template p0
@@ -104,7 +104,7 @@ setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
 }
 
 
-#' Setup EXNEX Design Object
+#' Set Up EXNEX Design Object
 #'
 #' @template k
 #' @template p0
@@ -159,7 +159,7 @@ setup_exnex <- function(
 }
 
 
-#' Setup Fujikawa Design Object
+#' Set Up Fujikawa Design Object
 #'
 #' @template k
 #' @template p0
@@ -187,7 +187,7 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Global JSD Design Object
+#' Set Up Global JSD Design Object
 #'
 #' @template k
 #' @template p0
@@ -214,7 +214,7 @@ setup_jsdglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Calibrated Power Prior Design Object
+#' Set Up Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -241,7 +241,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Global Calibrated Power Prior Design Object
+#' Set Up Global Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -269,7 +269,7 @@ setup_cppglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Limited Calibrated Power Prior Design Object
+#' Set Up Limited Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -303,7 +303,7 @@ setup_cpplim <- function(k, p0, shape1 = 1, shape2 = 1) {
 }
 
 
-#' Setup Adaptive Power Prior Design Object
+#' Set Up Adaptive Power Prior Design Object
 #'
 #' @template k
 #' @template p0

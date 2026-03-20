@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_mmlglobal}
 \alias{setup_mmlglobal}
-\title{Setup mmlglobal Design Object}
+\title{Set Up mmlglobal Design Object}
 \usage{
 setup_mmlglobal(k, p0, shape1 = 1, shape2 = 1)
 }
