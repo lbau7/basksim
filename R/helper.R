@@ -15,7 +15,7 @@ validate_betabin <- function(x) {
   x
 }
 
-# Calculate Posterior Probabilites of a Beta Distribution
+# Calculate Posterior probabilities of a Beta Distribution
 post_beta <- function(shape, p0) {
   stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],
     lower.tail = FALSE)
@@ -27,13 +27,6 @@ cfun1 <- function(x, y) {
     rbind(x[[2]], y[[2]]),
     rbind(x[[3]], y[[3]]),
     rbind(x[[4]], y[[4]])
-  )
-}
-
-cfun2 <- function(x, y) {
-  list(
-    rbind(x[[1]], y[[1]]),
-    rbind(x[[2]], y[[2]])
   )
 }
 
@@ -66,15 +59,32 @@ check_p1 <- function(design, p1, data) {
   p1
 }
 
+check_params_differentn <- function(design, n, lambda, iter) {
+  # n must be passed in the correct form
+  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
+    stop("n must either have length 1 or k")
+  }
+  if (any((n <= 0)) | any((n %% 1 != 0))) {
+    stop(paste0("n must be a vector of positive integers. ",
+                "n is c(", do.call(paste, c(as.list(n),
+                                          sep = ", ")), ")."))
+  }
+  check_lambda_iter(lambda, iter)
+}
+
 check_params <- function(n, lambda, iter) {
   if (length(n) != 1) stop(paste0("n must have length 1. The current length is ",
                                  length(n), "."))
   if ((n <= 0) | (n %% 1 != 0)) stop(paste0("n must be a positive integer. ",
                                            "n is ", n, "."))
+  check_lambda_iter(lambda, iter)
+}
+
+check_lambda_iter <- function(lambda, iter){
   if (lambda <= 0 | lambda >= 1) stop(paste0("lambda must be between 0 and 1. ",
-                                            "lambda is ", lambda, "."))
+                                             "lambda is ", lambda, "."))
   if ((iter <= 0) | (iter %% 1 != 0)) stop(paste0("iter must be a positive integer. ",
-                                                 "iter is ", iter, "."))
+                                                  "iter is ", iter, "."))
 }
 
 mcse_rate <- function(rate, iter){

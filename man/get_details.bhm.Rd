@@ -20,7 +20,7 @@
 \arguments{
 \item{design}{An object of class \code{bhm}.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities used for the simulation. If \code{NULL}
 then all probabilities are set to p0.}
@@ -43,7 +43,7 @@ function \code{bhmbasket::simulateScenarios}.}
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilites, posterior means,
+A list containing the rejection probabilities, posterior means,
 mean squared errors and mean limits of HDI intervals for all baskets as well
 as the family-wise error rate.
 }
@@ -52,6 +52,13 @@ Get Details of a BHM Basket Trial Simulation
 }
 \examples{
 design <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
-\donttest{get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
-  lambda = 0.95, tau_scale = 1, iter = 100)}
+\donttest{
+# Equal sample sizes
+get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+  lambda = 0.95, tau_scale = 1, iter = 100)
+
+# Unequal sample sizes
+get_details(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+  lambda = 0.95, tau_scale = 1, iter = 100)
+}
 }

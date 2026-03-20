@@ -21,7 +21,7 @@ Design}
 \arguments{
 \item{design}{An object of class \code{cpp}.}
 
-\item{n}{The sample size per basket.}
+\item{n}{The sample sizes of the baskets. A vector must be used for varying sample sizes.}
 
 \item{p1}{Probabilities used for the simulation. If \code{NULL}
 then all probabilities are set to p0.}
@@ -46,7 +46,7 @@ then \code{iter} is ignored.}
 \item{...}{Further arguments.}
 }
 \value{
-A list containing the rejection probabilites, posterior means,
+A list containing the rejection probabilities, posterior means,
 mean squared errors and mean limits of HDI intervals for all baskets as well
 as the family-wise error rate.
 }
@@ -56,6 +56,12 @@ Design
 }
 \examples{
 design <- setup_cpp(k = 3, p0 = 0.2)
-get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5), lambda = 0.95,
-  tune_a = 1, tune_b = 1, iter = 100)
+
+# Equal sample sizes
+get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
+  lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
+
+# Unequal sample sizes
+get_details(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
+  lambda = 0.95, tune_a = 1, tune_b = 1, iter = 100)
 }

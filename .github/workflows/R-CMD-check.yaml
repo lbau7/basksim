@@ -7,8 +7,6 @@ on:
     branches: [main, master]
   workflow_dispatch:
 
-
-
 name: R-CMD-check
 
 jobs:
@@ -25,7 +23,7 @@ jobs:
           # fine on our own systems
           #- {os: macos-latest,   r: 'release'}
           #- {os: windows-latest, r: 'release'}
-          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          #- {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,   r: 'release'}
           - {os: ubuntu-latest,   r: 'oldrel-1'}
 
@@ -43,19 +41,18 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
-
-      - name: Install jags (macOS)
-        if: runner.os == 'macOS'
-        run : |
-          brew install jags
-
-      - name: Install jags (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
-          wjags.exe /S
-          del wjags.exe
-        shell: cmd
+      # - name: Install jags (macOS)
+      #   if: runner.os == 'macOS'
+      #   run : |
+      #     brew install jags
+      #
+      # - name: Install jags (Windows)
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #     curl.exe -o wjags.exe --url https://deac-fra.dl.sourceforge.net/project/mcmc-jags/JAGS/4.x/Windows/JAGS-4.3.1.exe
+      #     wjags.exe /S
+      #     del wjags.exe
+      #   shell: cmd
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
