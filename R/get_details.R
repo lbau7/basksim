@@ -937,7 +937,7 @@ get_details.app <- function(
 #' design <- setup_binomial(k = 3, p0 = 0.2)
 #' p1 <- c(0.2, 0.5, 0.5)
 #' get_details(design = design, n = 20, p1 = p1)
-#' design_pool <- setup_binomial(k = 3, p0 = 0.2)
+#' design_pool <- setup_binomial(k = 3, p0 = 0.2, pool = TRUE)
 #' get_details(design = design_pool, n = 20, p1 = p1)
 get_details.binomial <- function(
   design,
