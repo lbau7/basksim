@@ -951,3 +951,62 @@ test_that("get_details works for app", {
     iter = 110
   ))
 })
+
+test_that("get_details works for binomial", {
+  design <- setup_binomial(k = 4, p0 = 0.2)
+  n <- c(10, 25, 50, 100)
+  p1 <- c(0.2, 0.3, 0.5, 0.2)
+  details <- get_details(design = design, n = n, p1 = p1)
+  # Comparing with results calculated by PASS 2024, v24.0.7
+  # PASS 2024 Power Analysis and Sample Size Software (2024). NCSS, LLC.
+  # Kaysville, Utah, USA, ncss.com/software/pass.
+  alpha_actual <- c(0.00637, 0.01733, 0.01444, 0.02002)
+  power <- c(NA_real_, 0.18944, 0.99233, NA_real_)
+  reject_h0_if_R_geq <- c(6, 10, 17, 29)
+  expect_equal(
+    details$Rejection_Probabilities,
+    c(alpha_actual[1], power[2:3], alpha_actual[4]),
+    tolerance = 0.0001
+  )
+  expect_equal(
+    details$Critical_Values,
+    reject_h0_if_R_geq - 1,
+    tolerance = 0.0001
+  )
+  expect_equal(
+    details$FWER,
+    1 - (1 - alpha_actual[1]) * (1 - alpha_actual[4]),
+    tolerance = 0.0001
+  )
+  expect_equal(
+    details$EWP,
+    1 - (1 - power[2]) * (1 - power[3]),
+    tolerance = 0.0001
+  )
+  expect_equal(
+    details$ECD,
+    (1 - alpha_actual[1]) + (1 - alpha_actual[4]) + power[2] + power[3],
+    tolerance = 0.00001
+  )
+  # Equal n and p1
+  details_all_equal <- get_details(design = design, n = 50, p1 = 0.5)
+  expect_equal(
+    details_all_equal$Rejection_Probabilities,
+    rep(power[3], 4),
+    tolerance = 0.0001
+  )
+  expect_equal(details_all_equal$FWER, 0)
+  # Error because pooled design is not yet implemented.
+  expect_error(get_details(
+    design = setup_binomial(k = 4, p0 = 0.2, pool = T),
+    n = n,
+    p1 = p1
+  ))
+  # Error for wrong alpha
+  expect_error(get_details(
+    design = design,
+    n = n,
+    p1 = p1,
+    alpha = 1.3
+  ))
+})

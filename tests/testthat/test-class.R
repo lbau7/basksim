@@ -38,9 +38,15 @@ test_that("setup_cppglobal works", {
   expect_s3_class(design, "cppglobal")
 })
 
+test_that("setup_binomial works", {
+  design <- setup_binomial(k = 3, p0 = 0.2)
+  expect_s3_class(design, "binomial")
+})
+
 test_that("errors in setup functions work", {
   expect_error(setup_fujikawa(k = 0, p0 = 0.2))
   expect_error(setup_jsdglobal(k = 3, p0 = 1))
   expect_error(setup_cpp(k = 2.5, p0 = 0.5))
   expect_error(setup_cppglobal(k = 3, p0 = 0.2, shape1 = 0, shape2 = 0))
+  expect_error(setup_binomial(k = 3, p0 = 0.2, pool = "not boolean"))
 })

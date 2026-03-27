@@ -930,7 +930,9 @@ get_details.app <- function(
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilities, critical values
-#' and expected number of correct decisions.
+#' and expected number of correct decisions. Critical values \eqn{c} are defined
+#' so that the null hypothesis is rejected if the observed number of responses
+#' \eqn{r} is greater than \eqn{c}, i.e. \eqn{r > c} rejects \eqn{H_0}.
 #' @export
 #'
 #' @examples
@@ -956,7 +958,7 @@ get_details.binomial <- function(
   if (design$pool) {
     stop("The pool design is not yet implemented.")
   } else {
-    Critical_Values <- qbinom(
+    Critical_Values <- stats::qbinom(
       p = alpha,
       size = n,
       prob = design$p0,
@@ -964,7 +966,7 @@ get_details.binomial <- function(
     )
     Rejection_Probabilities <- mapply(
       FUN = function(q, n, p1) {
-        pbinom(
+        stats::pbinom(
           q = q,
           size = n,
           prob = p1,
