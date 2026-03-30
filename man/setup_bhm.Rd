@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_bhm}
 \alias{setup_bhm}
-\title{Setup BHM Design Object}
+\title{Set Up BHM Design Object}
 \usage{
 setup_bhm(k, p0, p_target, mu_mean = NULL, mu_sd = 100)
 }
@@ -23,7 +23,7 @@ mean of the thetas.}
 An S3 object of class \code{bhm}
 }
 \description{
-Setup BHM Design Object
+Set Up BHM Design Object
 }
 \details{
 The class \code{bhm} implements the Bayesian Hierarchical Model

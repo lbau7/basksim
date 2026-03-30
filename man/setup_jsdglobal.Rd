@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_jsdglobal}
 \alias{setup_jsdglobal}
-\title{Setup Global JSD Design Object}
+\title{Set Up Global JSD Design Object}
 \usage{
 setup_jsdglobal(k, p0, shape1 = 1, shape2 = 1)
 }
@@ -19,7 +19,7 @@ setup_jsdglobal(k, p0, shape1 = 1, shape2 = 1)
 An S3 object of class \code{jsdglobal}
 }
 \description{
-Setup Global JSD Design Object
+Set Up Global JSD Design Object
 }
 \details{
 The class \code{jsdglobal} implements a version of the power prior

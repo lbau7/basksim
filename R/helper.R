@@ -1,5 +1,5 @@
-# Check function for designs based on the beta-binomial distribution
-validate_betabin <- function(x) {
+# Check function for parameters k and n
+validate_basics <- function(x) {
   if ((x$k %% 1) != 0) {
     stop("k must be an integer")
   }
@@ -9,6 +9,12 @@ validate_betabin <- function(x) {
   if (x$p0 <= 0 | x$p0 >= 1) {
     stop("p0 must be between 0 and 1")
   }
+  x
+}
+
+# Check function for designs based on the beta-binomial distribution
+validate_betabin <- function(x) {
+  validate_basics(x)
   if (x$shape1 <= 0 | x$shape2 <= 0) {
     stop("shape1 and shape2 must be greater than 0")
   }
@@ -17,8 +23,7 @@ validate_betabin <- function(x) {
 
 # Calculate Posterior probabilities of a Beta Distribution
 post_beta <- function(shape, p0) {
-  stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ],
-    lower.tail = FALSE)
+  stats::pbeta(p0, shape1 = shape[1, ], shape2 = shape[2, ], lower.tail = FALSE)
 }
 
 cfun1 <- function(x, y) {
@@ -49,7 +54,9 @@ check_scenarios <- function(scenarios, design) {
 }
 
 check_p1 <- function(design, p1, data) {
-  if (is.null(p1) & is.null(data)) p1 <- rep(design$p0, design$k)
+  if (is.null(p1) & is.null(data)) {
+    p1 <- rep(design$p0, design$k)
+  }
   if (any(p1 < design$p0)) {
     stop("all p1 must be greater than or equal to p0")
   }
@@ -59,35 +66,57 @@ check_p1 <- function(design, p1, data) {
   p1
 }
 
+check_params_differentn_frequentist <- function(design, n, alpha) {
+  check_differentn(design, n)
+  if (alpha <= 0 | alpha >= 1) {
+    stop(paste0("alpha must be between 0 and 1. ", "alpha is ", alpha, "."))
+  }
+}
+
 check_params_differentn <- function(design, n, lambda, iter) {
-  # n must be passed in the correct form
-  if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
-    stop("n must either have length 1 or k")
-  }
-  if (any((n <= 0)) | any((n %% 1 != 0))) {
-    stop(paste0("n must be a vector of positive integers. ",
-                "n is c(", do.call(paste, c(as.list(n),
-                                          sep = ", ")), ")."))
-  }
-  check_lambda_iter(lambda, iter)
+  check_differentn(design, n)
+  check_lambda(lambda)
+  check_iter(iter)
 }
 
 check_params <- function(n, lambda, iter) {
-  if (length(n) != 1) stop(paste0("n must have length 1. The current length is ",
-                                 length(n), "."))
-  if ((n <= 0) | (n %% 1 != 0)) stop(paste0("n must be a positive integer. ",
-                                           "n is ", n, "."))
-  check_lambda_iter(lambda, iter)
+  if (length(n) != 1) {
+    stop(paste0("n must have length 1. The current length is ", length(n), "."))
+  }
+  if ((n <= 0) | (n %% 1 != 0)) {
+    stop(paste0("n must be a positive integer. ", "n is ", n, "."))
+  }
+  check_lambda(lambda)
+  check_iter(iter)
 }
 
-check_lambda_iter <- function(lambda, iter){
-  if (lambda <= 0 | lambda >= 1) stop(paste0("lambda must be between 0 and 1. ",
-                                             "lambda is ", lambda, "."))
-  if ((iter <= 0) | (iter %% 1 != 0)) stop(paste0("iter must be a positive integer. ",
-                                                  "iter is ", iter, "."))
+check_differentn <- function(design, n) {
+  # n must be passed in the correct form
+  if ((length(n) < design$k & length(n) != 1) | length(n) > design$k) {
+    stop("n must either have length 1 or k")
+  }
+  if (any((n <= 0)) | any((n %% 1 != 0))) {
+    stop(paste0(
+      "n must be a vector of positive integers. ",
+      "n is c(",
+      do.call(paste, c(as.list(n), sep = ", ")),
+      ")."
+    ))
+  }
 }
 
-mcse_rate <- function(rate, iter){
-  return(sqrt(rate *  (1 - rate) /  iter))
+check_lambda <- function(lambda) {
+  if (lambda <= 0 | lambda >= 1) {
+    stop(paste0("lambda must be between 0 and 1. ", "lambda is ", lambda, "."))
+  }
 }
 
+check_iter <- function(iter) {
+  if ((iter <= 0) | (iter %% 1 != 0)) {
+    stop(paste0("iter must be a positive integer. ", "iter is ", iter, "."))
+  }
+}
+
+mcse_rate <- function(rate, iter) {
+  return(sqrt(rate * (1 - rate) / iter))
+}

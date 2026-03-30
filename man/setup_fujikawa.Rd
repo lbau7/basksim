@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_fujikawa}
 \alias{setup_fujikawa}
-\title{Setup Fujikawa Design Object}
+\title{Set Up Fujikawa Design Object}
 \usage{
 setup_fujikawa(k, p0, shape1 = 1, shape2 = 1)
 }
@@ -19,7 +19,7 @@ setup_fujikawa(k, p0, shape1 = 1, shape2 = 1)
 An S3 object of class \code{fujikawa}
 }
 \description{
-Setup Fujikawa Design Object
+Set Up Fujikawa Design Object
 }
 \details{
 The class \code{fujikawa} implements a design by Fujikawa et al.

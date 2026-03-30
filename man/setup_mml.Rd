@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_mml}
 \alias{setup_mml}
-\title{Setup mml Design Object}
+\title{Set Up mml Design Object}
 \usage{
 setup_mml(k, p0, shape1 = 1, shape2 = 1)
 }

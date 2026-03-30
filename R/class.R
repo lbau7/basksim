@@ -1,4 +1,4 @@
-#' Setup mml Design Object
+#' Set Up mml Design Object
 #'
 #' Creates an object of class \code{mml}.
 #'
@@ -32,7 +32,7 @@ setup_mml <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup mmlglobal Design Object
+#' Set Up mmlglobal Design Object
 #'
 #' Creates an object of class \code{mmlglobal}.
 #'
@@ -65,7 +65,7 @@ setup_mmlglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 }
 
 
-#' Setup BHM Design Object
+#' Set Up BHM Design Object
 #'
 #' @template k
 #' @template p0
@@ -93,8 +93,10 @@ setup_mmlglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @examples
 #' design_bhm <- setup_bhm(k = 3, p0 = 0.2, p_target = 0.5)
 setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
-  if (is.null(mu_mean)) mu_mean <- bhmbasket::logit(p0) -
+  if (is.null(mu_mean)) {
+    mu_mean <- bhmbasket::logit(p0) -
       bhmbasket::logit(p_target)
+  }
   structure(
     list(k = k, p0 = p0, p_target = p_target, mu_mean = mu_mean, mu_sd = mu_sd),
     class = "bhm"
@@ -102,7 +104,7 @@ setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
 }
 
 
-#' Setup EXNEX Design Object
+#' Set Up EXNEX Design Object
 #'
 #' @template k
 #' @template p0
@@ -129,19 +131,35 @@ setup_bhm <- function(k, p0, p_target, mu_mean = NULL, mu_sd = 100) {
 #'
 #' @examples
 #' design_exnex <- setup_exnex(k = 3, p0 = 0.2)
-setup_exnex <- function(k, p0, basket_mean = NULL, basket_sd = 100,
-                        mu_mean = NULL, mu_sd = 100) {
-  if (is.null(basket_mean)) basket_mean <- bhmbasket::logit(p0)
-  if (is.null(mu_mean)) mu_mean <- bhmbasket::logit(p0)
+setup_exnex <- function(
+  k,
+  p0,
+  basket_mean = NULL,
+  basket_sd = 100,
+  mu_mean = NULL,
+  mu_sd = 100
+) {
+  if (is.null(basket_mean)) {
+    basket_mean <- bhmbasket::logit(p0)
+  }
+  if (is.null(mu_mean)) {
+    mu_mean <- bhmbasket::logit(p0)
+  }
   structure(
-    list(k = k, p0 = p0, basket_mean = basket_mean, basket_sd = basket_sd,
-      mu_mean = mu_mean, mu_sd = mu_sd),
+    list(
+      k = k,
+      p0 = p0,
+      basket_mean = basket_mean,
+      basket_sd = basket_sd,
+      mu_mean = mu_mean,
+      mu_sd = mu_sd
+    ),
     class = "exnex"
   )
 }
 
 
-#' Setup Fujikawa Design Object
+#' Set Up Fujikawa Design Object
 #'
 #' @template k
 #' @template p0
@@ -169,7 +187,7 @@ setup_fujikawa <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Global JSD Design Object
+#' Set Up Global JSD Design Object
 #'
 #' @template k
 #' @template p0
@@ -196,7 +214,7 @@ setup_jsdglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Calibrated Power Prior Design Object
+#' Set Up Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -223,7 +241,7 @@ setup_cpp <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Global Calibrated Power Prior Design Object
+#' Set Up Global Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -251,7 +269,7 @@ setup_cppglobal <- function(k, p0, shape1 = 1, shape2 = 1) {
   ))
 }
 
-#' Setup Limited Calibrated Power Prior Design Object
+#' Set Up Limited Calibrated Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -285,7 +303,7 @@ setup_cpplim <- function(k, p0, shape1 = 1, shape2 = 1) {
 }
 
 
-#' Setup Adaptive Power Prior Design Object
+#' Set Up Adaptive Power Prior Design Object
 #'
 #' @template k
 #' @template p0
@@ -307,5 +325,32 @@ setup_app <- function(k, p0, shape1 = 1, shape2 = 1) {
   validate_betabin(structure(
     list(k = k, p0 = p0, shape1 = shape1, shape2 = shape2),
     class = "app"
+  ))
+}
+
+
+#' Set Up Frequentist Binomial Design Object
+#'
+#' @template k
+#' @template p0
+#' @template pool
+#'
+#' @details The class \code{binomial} implements a basket trial
+#' design, in which each null hypothesis is tested using the
+#' frequentist binomial test without multiplicity correction. All baskets are
+#' either tested separately (the default) or pooled (not implemented yet).
+#'
+#' @return An S3 object of class \code{binomial}
+#' @export
+#'
+#' @examples
+#' design_binomial <- setup_binomial(k = 3, p0 = 0.2)
+setup_binomial <- function(k, p0, pool = FALSE) {
+  if (!is.logical(pool)) {
+    stop("pool must be boolean.")
+  }
+  validate_basics(structure(
+    list(k = k, p0 = p0, pool = pool),
+    class = "binomial"
   ))
 }

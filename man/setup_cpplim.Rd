@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_cpplim}
 \alias{setup_cpplim}
-\title{Setup Limited Calibrated Power Prior Design Object}
+\title{Set Up Limited Calibrated Power Prior Design Object}
 \usage{
 setup_cpplim(k, p0, shape1 = 1, shape2 = 1)
 }
@@ -19,7 +19,7 @@ setup_cpplim(k, p0, shape1 = 1, shape2 = 1)
 An S3 object of class \code{cpplim}
 }
 \description{
-Setup Limited Calibrated Power Prior Design Object
+Set Up Limited Calibrated Power Prior Design Object
 }
 \details{
 The class \code{cpplim} implements a combined version of the adaptive power

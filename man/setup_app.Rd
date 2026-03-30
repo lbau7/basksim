@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_app}
 \alias{setup_app}
-\title{Setup Adaptive Power Prior Design Object}
+\title{Set Up Adaptive Power Prior Design Object}
 \usage{
 setup_app(k, p0, shape1 = 1, shape2 = 1)
 }
@@ -19,7 +19,7 @@ setup_app(k, p0, shape1 = 1, shape2 = 1)
 An S3 object of class \code{app}
 }
 \description{
-Setup Adaptive Power Prior Design Object
+Set Up Adaptive Power Prior Design Object
 }
 \details{
 The class \code{app} implements the adaptive power prior design for

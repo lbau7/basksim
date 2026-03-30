@@ -2,7 +2,7 @@
 % Please edit documentation in R/class.R
 \name{setup_cpp}
 \alias{setup_cpp}
-\title{Setup Calibrated Power Prior Design Object}
+\title{Set Up Calibrated Power Prior Design Object}
 \usage{
 setup_cpp(k, p0, shape1 = 1, shape2 = 1)
 }
@@ -19,7 +19,7 @@ setup_cpp(k, p0, shape1 = 1, shape2 = 1)
 An S3 object of class \code{cpp}
 }
 \description{
-Setup Calibrated Power Prior Design Object
+Set Up Calibrated Power Prior Design Object
 }
 \details{
 The class \code{cpp} implements a version of the power prior design,
