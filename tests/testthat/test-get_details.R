@@ -979,6 +979,11 @@ test_that("get_details works for binomial", {
     tolerance = 0.0001
   )
   expect_equal(
+    details$FWER_nominal,
+    1 - (1 - 0.025)^2,
+    tolerance = 0.0001
+  )
+  expect_equal(
     details$EWP,
     1 - (1 - power[2]) * (1 - power[3]),
     tolerance = 0.0001
