@@ -984,6 +984,7 @@ get_details.binomial <- function(
       Rejection_Probabilities = Rejection_Probabilities,
       Critical_Values = Critical_Values,
       FWER = 1 - prod(1 - Rejection_Probabilities[targ]),
+      FWER_nominal = 1 - (1 - alpha)^sum(targ),
       EWP = 1 - prod(1 - Rejection_Probabilities[!targ]),
       ECD = sum(1 - Rejection_Probabilities[targ]) +
         sum(Rejection_Probabilities[!targ])
