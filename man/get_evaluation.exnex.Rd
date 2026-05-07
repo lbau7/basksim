@@ -11,7 +11,7 @@
   lambda,
   level = 0.95,
   tau_scale,
-  w,
+  w_j,
   n_mcmc = 10000,
   ...
 )
@@ -30,7 +30,7 @@
 \item{tau_scale}{Standard deviation of the half normal prior exchangeability
 distribution for the variance of the thetas.}
 
-\item{w}{Fixed prior weight for the exchangeability part of the model.}
+\item{w_j}{Fixed prior weight for the exchangeability part of the model.}
 
 \item{n_mcmc}{Number of MCMC samples.}
 
@@ -47,9 +47,9 @@ design <- setup_exnex(k = 3, p0 = 0.2)
 
 # Equal sample sizes
 get_evaluation(design = design, n = c(20, 20, 20), r = c(10, 15, 5),
-  lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+  lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 
 # Unequal sample sizes
 get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
-  lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+  lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 }

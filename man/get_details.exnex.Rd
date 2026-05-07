@@ -11,7 +11,7 @@
   lambda,
   level = 0.95,
   tau_scale,
-  w,
+  w_j,
   iter = 1000,
   n_mcmc = 10000,
   data = NULL,
@@ -33,7 +33,7 @@ then all probabilities are set to p0.}
 \item{tau_scale}{Standard deviation of the half normal prior exchangeability
 distribution for the variance of the thetas.}
 
-\item{w}{Fixed prior weight for the exchangeability part of the model.}
+\item{w_j}{Fixed prior weight for the exchangeability part of the model.}
 
 \item{iter}{The number of iterations in the simulation. Is ignored if
 \code{data} is specified.}
@@ -59,10 +59,10 @@ design <- setup_exnex(k = 3, p0 = 0.2)
 
 # Equal sample sizes
 get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
-  lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+  lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 
 # Unequal sample sizes
 get_details(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
-  lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+  lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 }
 }

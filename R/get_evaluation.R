@@ -103,13 +103,13 @@ get_evaluation.bhm <- function(design, n, r, lambda, level = 0.95,
 #'
 #' # Equal sample sizes
 #' get_evaluation(design = design, n = c(20, 20, 20), r = c(10, 15, 5),
-#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'   lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 #'
 #' # Unequal sample sizes
 #' get_evaluation(design = design, n = c(15, 20, 25), r = c(10, 15, 17),
-#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'   lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
-                              tau_scale, w, n_mcmc = 10000, ...) {
+                              tau_scale, w_j, n_mcmc = 10000, ...) {
 
   # n must be passed in the correct form
   if((length(n) < design$k & length(n) != 1) | length(n) > design$k){
@@ -126,7 +126,7 @@ get_evaluation.exnex <- function(design, n, r, lambda, level = 0.95,
       tau_scale = tau_scale,
       mu_j = rep(design$basket_mean, design$k),
       tau_j = rep(design$basket_sd, design$k),
-      w_j = w
+      w_j = w_j
     ),
     n_mcmc_iterations = n_mcmc
   ))
