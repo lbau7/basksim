@@ -12,7 +12,8 @@ setup_binomial(k, p0, pool = FALSE)
 \item{p0}{A common probability under the null hypothesis.}
 
 \item{pool}{A logical, should data from all baskets be pooled? Default is
-`FALSE`.}
+\code{FALSE}. Currently \code{FALSE} is the only working option, reserved for
+future implementation.}
 }
 \value{
 An S3 object of class \code{binomial}
@@ -24,7 +25,7 @@ Set Up Frequentist Binomial Design Object
 The class \code{binomial} implements a basket trial
 design, in which each null hypothesis is tested using the
 frequentist binomial test without multiplicity correction. All baskets are
-either tested separately (the default) or pooled.
+either tested separately (the default) or pooled (not implemented yet).
 }
 \examples{
 design_binomial <- setup_binomial(k = 3, p0 = 0.2)

@@ -20,7 +20,13 @@ then all probabilities are set to p0.}
 }
 \value{
 A list containing the rejection probabilities, critical values
-and expected number of correct decisions.
+and expected number of correct decisions. Critical values \eqn{c} are defined
+so that the null hypothesis is rejected if the observed number of responses
+\eqn{r} is greater than \eqn{c}, i.e. \eqn{r > c} rejects \eqn{H_0}.
+The nominal FWER is the (theoretical) FWER of a multiple testing problem
+with k hypothesis tests at significance level \eqn{\alpha}. The actual FWER is
+usually lower than the nominal FWER, as the binomial test does not exhaust
+its significance level.
 }
 \description{
 This basic frequentist design conducts a separate binomial test for each
@@ -31,6 +37,4 @@ null hypothesis. These details are calculated exactly, not simulated.
 design <- setup_binomial(k = 3, p0 = 0.2)
 p1 <- c(0.2, 0.5, 0.5)
 get_details(design = design, n = 20, p1 = p1)
-design_pool <- setup_binomial(k = 3, p0 = 0.2)
-get_details(design = design_pool, n = 20, p1 = p1)
 }

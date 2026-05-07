@@ -930,7 +930,13 @@ get_details.app <- function(
 #' @template dotdotdot
 #'
 #' @return A list containing the rejection probabilities, critical values
-#' and expected number of correct decisions.
+#' and expected number of correct decisions. Critical values \eqn{c} are defined
+#' so that the null hypothesis is rejected if the observed number of responses
+#' \eqn{r} is greater than \eqn{c}, i.e. \eqn{r > c} rejects \eqn{H_0}.
+#' The nominal FWER is the (theoretical) FWER of a multiple testing problem
+#' with k hypothesis tests at significance level \eqn{\alpha}. The actual FWER is
+#' usually lower than the nominal FWER, as the binomial test does not exhaust
+#' its significance level.
 #' @export
 #'
 #' @examples
@@ -956,7 +962,7 @@ get_details.binomial <- function(
   if (design$pool) {
     stop("The pool design is not yet implemented.")
   } else {
-    Critical_Values <- qbinom(
+    Critical_Values <- stats::qbinom(
       p = alpha,
       size = n,
       prob = design$p0,
@@ -964,7 +970,7 @@ get_details.binomial <- function(
     )
     Rejection_Probabilities <- mapply(
       FUN = function(q, n, p1) {
-        pbinom(
+        stats::pbinom(
           q = q,
           size = n,
           prob = p1,
@@ -982,6 +988,7 @@ get_details.binomial <- function(
       Rejection_Probabilities = Rejection_Probabilities,
       Critical_Values = Critical_Values,
       FWER = 1 - prod(1 - Rejection_Probabilities[targ]),
+      FWER_nominal = 1 - (1 - alpha)^sum(targ),
       EWP = 1 - prod(1 - Rejection_Probabilities[!targ]),
       ECD = sum(1 - Rejection_Probabilities[targ]) +
         sum(Rejection_Probabilities[!targ])
