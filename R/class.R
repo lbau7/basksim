@@ -338,7 +338,7 @@ setup_app <- function(k, p0, shape1 = 1, shape2 = 1) {
 #' @details The class \code{binomial} implements a basket trial
 #' design, in which each null hypothesis is tested using the
 #' frequentist binomial test without multiplicity correction. All baskets are
-#' either tested separately (the default) or pooled.
+#' either tested separately (the default) or pooled (not implemented yet).
 #'
 #' @return An S3 object of class \code{binomial}
 #' @export
