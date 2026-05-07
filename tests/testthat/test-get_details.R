@@ -106,7 +106,7 @@ test_that("get_details works for bhm", {
     alpha_level = 0.05
   )
 
-  # Results are equal with get_details and bhmbasket
+  # Results are equal with get_details and 
   expect_equal(res1$Rejection_Probabilities, unname(unlist(res2))[-1])
   expect_equal(res1$Mean, unname(estim$berry$scenario_1[, 1]))
   expect_equal(res1$MSE, unname(estim$berry$scenario_1[, 7]))
@@ -190,7 +190,7 @@ test_that("get_details works for exnex", {
       tau_scale = 0.75,
       mu_j = rep(bhmbasket:::logit(0.15), 3),
       tau_j = rep(100, 3),
-      w = 0.5
+      w_j = 0.5
     )
   ))
 
