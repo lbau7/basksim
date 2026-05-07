@@ -65,7 +65,7 @@ test_that("adjust_lambda works for exnex", {
 
   set.seed(125)
   res2 <- toer(design = design, n = 15, lambda = res1$lambda,
-    design_params = list(tau_scale = 1, w_j = 0.5), iter = n_iter, n_mcmc = 2500)
+               design_params = list(tau_scale = 1, w_j = 0.5), iter = n_iter, n_mcmc = 2500)
 
   expect_lte(res1$toer, 0.05)
   expect_equal(res1$toer, res2)
