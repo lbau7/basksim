@@ -147,12 +147,12 @@ adjust_lambda.default <- function(design, n, p1 = NULL, alpha = 0.05,
 #' \donttest{
 #' # Equal sample sizes
 #' adjust_lambda(design = design, n = 15,
-#'   design_params = list(tau_scale = 1, w = 0.5),
+#'   design_params = list(tau_scale = 1, w_j = 0.5),
 #'   iter = 100, n_mcmc = 5000)
 #'
 #' # Unequal sample sizes
 #' adjust_lambda(design = design, n = c(15, 20, 25),
-#'   design_params = list(tau_scale = 1, w = 0.5),
+#'   design_params = list(tau_scale = 1, w_j = 0.5),
 #'   iter = 100, n_mcmc = 5000)
 #'   }
 adjust_lambda.exnex <- function(design, n, p1 = NULL, alpha = 0.05,
