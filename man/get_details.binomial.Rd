@@ -23,6 +23,10 @@ A list containing the rejection probabilities, critical values
 and expected number of correct decisions. Critical values \eqn{c} are defined
 so that the null hypothesis is rejected if the observed number of responses
 \eqn{r} is greater than \eqn{c}, i.e. \eqn{r > c} rejects \eqn{H_0}.
+The nominal FWER is the (theoretical) FWER of a multiple testing problem
+with k hypothesis tests at significance level \eqn{\alpha}. The actual FWER is
+usually lower than the nominal FWER, as the binomial test does not exhaust
+its significance level.
 }
 \description{
 This basic frequentist design conducts a separate binomial test for each

@@ -5,3 +5,5 @@
 ^codecov\.yml$
 ^man-roxygen$
 ^LICENSE\.md$
+^\.positai$
+^\.claude$

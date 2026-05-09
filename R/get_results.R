@@ -175,13 +175,13 @@ get_results.bhm <- function(design, n, p1 = NULL, lambda, tau_scale,
 #' \donttest{
 #' # Equal sample sizes
 #' get_results(design, n = 20, p1 = c(0.2, 0.5, 0.5),
-#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'   lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 #'
 #' # Unequal sample sizes
 #' get_results(design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
-#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'   lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 #' }
-get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
+get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w_j,
                               iter = 1000, n_mcmc = 10000, data = NULL, ...) {
 
   p1 <- check_p1(design = design, p1 = p1, data = data)
@@ -199,7 +199,7 @@ get_results.exnex <- function(design, n, p1 = NULL, lambda, tau_scale, w,
       tau_scale = tau_scale,
       mu_j = rep(design$basket_mean, design$k),
       tau_j = rep(design$basket_sd, design$k),
-      w_j = w
+      w_j = w_j
     ),
     n_mcmc_iterations = n_mcmc
   ))

@@ -61,11 +61,11 @@ test_that("adjust_lambda works for exnex", {
   # Without simulated data
   set.seed(125)
   res1 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500)
+    design_params = list(tau_scale = 1, w_j = 0.5), iter = n_iter, n_mcmc = 2500)
 
   set.seed(125)
   res2 <- toer(design = design, n = 15, lambda = res1$lambda,
-    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500)
+               design_params = list(tau_scale = 1, w_j = 0.5), iter = n_iter, n_mcmc = 2500)
 
   expect_lte(res1$toer, 0.05)
   expect_equal(res1$toer, res2)
@@ -76,11 +76,11 @@ test_that("adjust_lambda works for exnex", {
   simdata <- get_data(k = 3, n = 15, p = 0.2, iter = n_iter, type = "bhmbasket")
   set.seed(126)
   res3 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500,
+    design_params = list(tau_scale = 1, w_j = 0.5), iter = n_iter, n_mcmc = 2500,
     data = simdata)
   set.seed(126)
   res4 <- adjust_lambda(design = design, n = 15,
-    design_params = list(tau_scale = 1, w = 0.5), iter = n_iter, n_mcmc = 2500,
+    design_params = list(tau_scale = 1, w_j = 0.5), iter = n_iter, n_mcmc = 2500,
     data = simdata)
 
   # Check if results are equal when adjust_lambda is called two times with
@@ -91,10 +91,10 @@ test_that("adjust_lambda works for exnex", {
   # Check if selected lambda controls the TOER
   set.seed(126)
   toer1 <- toer(design, n = 15, p1 = 0.2, lambda = res3$lambda,
-    design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = n_iter,
+    design_params = list(tau_scale = 1, w_j = 0.5), data = simdata, iter = n_iter,
     n_mcmc = 2500)
   toer2 <- toer(design, n = 15, p1 = 0.2, lambda = res3$lambda - 0.01,
-    design_params = list(tau_scale = 1, w = 0.5), data = simdata, iter = n_iter,
+    design_params = list(tau_scale = 1, w_j = 0.5), data = simdata, iter = n_iter,
     n_mcmc = 2500)
 
   expect_equal(toer1, 0.05)

@@ -289,11 +289,11 @@ get_details.bhm <- function(
 #'
 #' # Equal sample sizes
 #' get_details(design = design, n = 20, p1 = c(0.2, 0.5, 0.5),
-#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'   lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 #'
 #' # Unequal sample sizes
 #' get_details(design = design, n = c(15, 20, 25), p1 = c(0.2, 0.5, 0.5),
-#'   lambda = 0.95, tau_scale = 1, w = 0.5, iter = 100)
+#'   lambda = 0.95, tau_scale = 1, w_j = 0.5, iter = 100)
 #' }
 get_details.exnex <- function(
   design,
@@ -302,7 +302,7 @@ get_details.exnex <- function(
   lambda,
   level = 0.95,
   tau_scale,
-  w,
+  w_j,
   iter = 1000,
   n_mcmc = 10000,
   data = NULL,
@@ -330,7 +330,7 @@ get_details.exnex <- function(
       tau_scale = tau_scale,
       mu_j = rep(design$basket_mean, design$k),
       tau_j = rep(design$basket_sd, design$k),
-      w_j = w
+      w_j = w_j
     ),
     n_mcmc_iterations = n_mcmc
   ))
@@ -933,6 +933,10 @@ get_details.app <- function(
 #' and expected number of correct decisions. Critical values \eqn{c} are defined
 #' so that the null hypothesis is rejected if the observed number of responses
 #' \eqn{r} is greater than \eqn{c}, i.e. \eqn{r > c} rejects \eqn{H_0}.
+#' The nominal FWER is the (theoretical) FWER of a multiple testing problem
+#' with k hypothesis tests at significance level \eqn{\alpha}. The actual FWER is
+#' usually lower than the nominal FWER, as the binomial test does not exhaust
+#' its significance level.
 #' @export
 #'
 #' @examples
@@ -984,6 +988,7 @@ get_details.binomial <- function(
       Rejection_Probabilities = Rejection_Probabilities,
       Critical_Values = Critical_Values,
       FWER = 1 - prod(1 - Rejection_Probabilities[targ]),
+      FWER_nominal = 1 - (1 - alpha)^sum(targ),
       EWP = 1 - prod(1 - Rejection_Probabilities[!targ]),
       ECD = sum(1 - Rejection_Probabilities[targ]) +
         sum(Rejection_Probabilities[!targ])

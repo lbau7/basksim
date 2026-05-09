@@ -22,7 +22,7 @@ Install the development version with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("lbau7/basksim")
+pak::pak("lbau7/basksim")
 ```
 
 ## Usage
