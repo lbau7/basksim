@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# basksim
+# basksim <img src="man/figures/logo.png" align="right" height="139" />
 
 <!-- badges: start -->
 
@@ -21,7 +21,7 @@ trial designs based on simulation.
 Install the development version with:
 
 ``` r
-# install.packages("devtools")
+# install.packages("pak")
 pak::pak("lbau7/basksim")
 ```
 
